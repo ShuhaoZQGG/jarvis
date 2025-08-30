@@ -1,90 +1,124 @@
 # Next Cycle Tasks
 
-## Immediate Fixes Required (Before Merge)
+## Immediate Fixes Required (Cycle 3 Revision)
+These must be completed before the current cycle can be approved:
 
-### Critical TypeScript/Build Issues
-- [ ] Fix Pinecone client initialization (add environment parameter)
-- [ ] Fix OpenAI mock types in test files
-- [ ] Remove invalid CSS property in ChatWidget
-- [ ] Ensure all TypeScript compilation passes
-- [ ] Fix Jest configuration and ensure tests run
+### 1. Fix OpenAI Test Failures ⚠️ CRITICAL
+Add the following import at the top of these files:
+```typescript
+import 'openai/shims/node'
+```
+Files to fix:
+- `src/lib/embeddings/embeddings.ts`
+- `src/lib/chat/chat.ts`
+- `src/app/api/chat/route.ts`
 
-### Security & Validation
-- [ ] Add environment variable validation at startup
-- [ ] Implement input validation using Zod schemas
-- [ ] Add rate limiting to API endpoints
-- [ ] Configure CORS for widget endpoint
-- [ ] Add API key validation middleware
+### 2. Verify All Tests Pass
+Run `npm run test:ci` and ensure all test suites pass successfully.
 
-## Cycle 2: Core Features Enhancement
+### 3. Configure GitHub Repository
+Set up remote repository to enable PR creation and code pushing.
 
-### Authentication & User Management
-- [ ] Integrate Supabase for authentication
-- [ ] Create user registration/login flows
-- [ ] Implement user dashboard
-- [ ] Add bot ownership and permissions
-- [ ] Create user profile management
+## Cycle 4: Feature Completion
 
-### Data Persistence
-- [ ] Set up Supabase database schema
-- [ ] Store bot configurations
-- [ ] Persist conversation history
-- [ ] Track usage metrics
-- [ ] Implement bot analytics
+### High Priority Features
+1. **Stripe Payment Integration**
+   - Subscription tiers (Free, Pro, Enterprise)
+   - Usage-based billing
+   - Payment webhook handling
+   - Billing dashboard UI
 
-### Advanced Scraping
-- [ ] Multi-page crawling support
-- [ ] Sitemap parsing
-- [ ] JavaScript-rendered page support (Puppeteer)
-- [ ] Respect robots.txt
-- [ ] Implement crawl depth limits
+2. **Complete Vector Database Operations**
+   - Full Pinecone integration with real API keys
+   - Embedding generation pipeline
+   - Similarity search optimization
+   - Index management
 
-## Cycle 3: Monetization & Scale
+3. **Real-time Chat Streaming**
+   - Implement OpenAI streaming responses
+   - Add typing indicators
+   - Message queue for rate limiting
+   - Error recovery mechanisms
 
-### Billing Integration
-- [ ] Stripe payment integration
-- [ ] Subscription tiers implementation
-- [ ] Usage-based billing
-- [ ] Payment webhook handling
-- [ ] Invoice generation
+### Medium Priority Features
+4. **Advanced Web Scraping**
+   - Sitemap.xml parsing
+   - Multi-page crawling with depth control
+   - JavaScript-rendered content support
+   - Incremental updates
 
-### Performance & Monitoring
-- [ ] Add caching layer (Redis)
-- [ ] Implement request queuing
-- [ ] Add monitoring (Sentry/DataDog)
-- [ ] Performance metrics tracking
-- [ ] Error tracking and alerting
+5. **User & Workspace Management**
+   - Multi-tenant architecture completion
+   - Team collaboration features
+   - Role-based access control
+   - API key management
+
+6. **Bot Configuration UI**
+   - Custom greeting messages
+   - Suggested questions setup
+   - Appearance customization
+   - Behavior tuning
+
+### Low Priority (But Important)
+7. **Production Readiness**
+   - Comprehensive error handling
+   - Structured logging (Winston/Pino)
+   - Health check endpoints
+   - Performance monitoring
+
+8. **Analytics Dashboard**
+   - Conversation metrics
+   - User engagement tracking
+   - Response time analytics
+   - Usage statistics
 
 ## Technical Debt
-- [ ] Add comprehensive error boundaries
-- [ ] Implement proper logging system
-- [ ] Add integration tests
-- [ ] Create CI/CD pipeline
-- [ ] Add documentation for API endpoints
-- [ ] Implement health check endpoints
-- [ ] Add database migrations system
+- Improve TypeScript type definitions
+- Add integration tests
+- Implement proper caching strategy
+- Optimize bundle size
+- Add API documentation (OpenAPI/Swagger)
 
-## Feature Enhancements
-- [ ] Multiple widget types (modal, sidebar, inline)
-- [ ] Smart triggers (scroll, time, exit-intent)
-- [ ] Quick action buttons in chat
-- [ ] Context-aware responses
-- [ ] Suggested questions feature
-- [ ] Multi-language support
-- [ ] Custom branding options
-- [ ] Widget A/B testing
-
-## Platform Integrations
-- [ ] WordPress plugin development
-- [ ] Shopify app creation
-- [ ] Webhook system for events
-- [ ] REST API for developers
-- [ ] SDK development (JavaScript, Python)
+## Security Enhancements
+- Implement rate limiting properly (Redis)
+- Add CORS configuration for widget
+- Set up CSP headers
+- Implement request signing for widget-API communication
+- Add input sanitization middleware
 
 ## Documentation Needs
-- [ ] API documentation with examples
-- [ ] Widget integration guide
-- [ ] Security best practices
-- [ ] Deployment guide
-- [ ] Contributing guidelines
-- [ ] Architecture documentation
+- API documentation
+- Widget integration guide
+- Self-hosting instructions
+- Contributing guidelines
+- Architecture decision records (ADRs)
+
+## DevOps & Deployment
+- Set up CI/CD pipeline (GitHub Actions)
+- Configure Vercel deployment
+- Environment variable management
+- Database migrations setup
+- Monitoring and alerting (Sentry)
+
+## Performance Optimizations
+- Implement caching layer (Redis)
+- Optimize database queries
+- Add CDN for static assets
+- Lazy loading for dashboard
+- WebSocket for real-time updates
+
+---
+
+## Success Metrics to Track
+- [ ] All tests passing (100% green)
+- [ ] Build time < 60 seconds
+- [ ] Chat response time < 500ms
+- [ ] Widget bundle size < 100KB
+- [ ] Lighthouse score > 90
+
+## Notes for Next Cycle
+1. The foundation is solid - Cheerio build issue is resolved
+2. Authentication system is working with Supabase
+3. Dashboard UI is implemented but needs more features
+4. Focus should be on completing the chat functionality end-to-end
+5. Consider deploying a staging environment early for testing

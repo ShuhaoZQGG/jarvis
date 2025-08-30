@@ -1,3 +1,8 @@
+/**
+ * @jest-environment node
+ */
+
+import 'openai/shims/node'
 import { ChatService } from './chat'
 import { VectorStore } from '../vectorstore/vectorstore'
 import { EmbeddingsGenerator } from '../embeddings/embeddings'

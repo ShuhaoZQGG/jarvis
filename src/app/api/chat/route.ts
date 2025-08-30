@@ -1,3 +1,4 @@
+import 'openai/shims/node'
 import { NextRequest, NextResponse } from 'next/server'
 import { ChatService } from '@/lib/chat/chat'
 import { VectorStore } from '@/lib/vectorstore/vectorstore'
