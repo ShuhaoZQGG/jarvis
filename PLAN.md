@@ -1,307 +1,159 @@
-# Project Jarvis - Comprehensive Project Plan
+# Cycle 8: Complete AI Implementation & MVP Delivery
 
 ## Executive Summary
-Building an AI-powered chatbot SaaS platform that enables instant website-trained chatbot deployment, replicating SiteGPT's $15K MRR success model with enhanced features and superior UX.
+Cycle 8 focuses on completing the missing AI implementation from Cycle 7 and delivering a working MVP with core functionality. Based on the review feedback, Cycle 7 had solid planning but lacked actual implementation in the PR.
+
+## Critical Context
+- **Cycle 7 Status**: NEEDS_REVISION - documentation complete but implementation missing from PR
+- **Priority**: Complete AI features and ensure working end-to-end chatbot functionality
+- **Target**: Functional MVP with website crawling, embeddings, and RAG-based responses
 
 ## Requirements
 
 ### Functional Requirements
-1. **Core Features**
-   - URL-based website scraping with content extraction
-   - AI chatbot training via RAG (Retrieval Augmented Generation)
-   - Embeddable chat widget (60-second setup)
-   - Real-time conversation handling
-   - Multi-tenant workspace management
+1. **Website Crawling**
+   - Scrape and parse website content
+   - Handle JavaScript-rendered pages
+   - Respect robots.txt
+   - Extract clean text content
 
-2. **Differentiators**
-   - Multiple widget types (bubble, sidebar, modal, inline)
-   - Smart triggers (scroll, time, exit-intent)
-   - Context-aware greetings per page
-   - Quick action buttons (Book Demo, Pricing, Contact)
-   - Conversation memory across navigation
-   - Platform integrations (Shopify, WordPress, SaaS dashboards)
+2. **Vector Processing**
+   - Generate embeddings using OpenAI
+   - Store vectors in Pinecone
+   - Enable similarity search
+   - Manage bot-specific namespaces
+
+3. **RAG Engine**
+   - Retrieve relevant context
+   - Generate contextual responses
+   - Manage conversation history
+   - Implement response caching
+
+4. **API Integration**
+   - Connect AI components to existing bot endpoints
+   - Add proper error handling
+   - Implement rate limiting
+   - Validate environment variables
 
 ### Non-Functional Requirements
-- **Performance**: Widget <200ms load, <2s chat response
-- **Scalability**: Support 10k+ concurrent users
-- **Security**: SOC 2 compliance ready, data encryption
-- **Availability**: 99.9% uptime SLA
-- **Accessibility**: WCAG 2.1 AA compliance
+- Response time < 2 seconds
+- 99.5% uptime for chat service
+- Support 100 concurrent conversations
+- < 50KB widget bundle size
+- All tests passing (100% green)
 
 ## Architecture
 
-### Tech Stack (Finalized)
-```yaml
-Frontend:
-  - Framework: Next.js 14 (App Router)
-  - UI: Tailwind CSS + Radix UI
-  - State: Zustand
-  - Data: TanStack Query
+### Tech Stack
+- **Backend**: Node.js, TypeScript, Next.js 14
+- **Database**: Supabase (PostgreSQL)
+- **Vector DB**: Pinecone
+- **AI/ML**: OpenAI (GPT-4, Ada-002)
+- **Queue**: BullMQ + Redis
+- **Web Scraping**: Playwright
+- **Testing**: Jest, Playwright (E2E)
 
-Backend:
-  - Runtime: Node.js + TypeScript
-  - API: REST → tRPC migration
-  - Database: PostgreSQL (Supabase)
-  - Auth: Supabase Auth
-  - Cache: Redis (Upstash)
-
-AI/ML:
-  - Embeddings: OpenAI Ada-002
-  - Vector DB: Pinecone
-  - LLM: GPT-4 Turbo
-  - Scraping: Playwright + JSDOM
-
-Infrastructure:
-  - Hosting: Vercel
-  - CDN: Cloudflare
-  - Queue: BullMQ (Redis)
-  - Storage: S3 (attachments)
+### Component Architecture
 ```
-
-### System Architecture
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│   Widget    │────▶│  CDN/Edge    │────▶│   API       │
-└─────────────┘     └──────────────┘     └─────────────┘
-                                                │
-                    ┌───────────────────────────┼───────────────┐
-                    │                           │               │
-              ┌─────▼─────┐           ┌────────▼──────┐  ┌─────▼────┐
-              │  Scraper  │           │   Embeddings  │  │   Chat   │
-              └─────┬─────┘           └────────┬──────┘  └─────┬────┘
-                    │                          │                │
-              ┌─────▼─────┐           ┌────────▼──────┐  ┌─────▼────┐
-              │ Queue/Job │           │   Pinecone    │  │  OpenAI  │
-              └───────────┘           └───────────────┘  └──────────┘
+┌─────────────────────────────────────────┐
+│           API Gateway (Next.js)         │
+├─────────────────────────────────────────┤
+│     Authentication & Rate Limiting      │
+├──────────┬──────────┬──────────────────┤
+│ Crawler  │ Embeddings│    RAG Engine   │
+│ Service  │  Service  │                 │
+├──────────┴──────────┴──────────────────┤
+│  Pinecone  │ OpenAI API │   Supabase   │
+└────────────┴────────────┴──────────────┘
 ```
 
 ## Implementation Phases
 
-### Phase 1: Foundation (Cycles 1-6) ✅ COMPLETED
-- Next.js setup with TypeScript
-- Authentication middleware (HOF pattern)
-- Workspace management
-- Rate limiting (tiered)
-- Stripe billing integration
-- Frontend components (Dashboard, Bot Config, Widget)
-- 92 tests passing
+### Phase 1: Complete Missing AI Implementation (Priority 1)
+**Files to implement:**
+1. `src/lib/crawler/crawler.ts`
+   - Playwright setup
+   - URL discovery
+   - Content extraction
+   - Text cleaning
 
-### Phase 2: Core AI (Cycles 7-9) 🚧 CURRENT
-**Cycle 7 Focus (Current):**
-1. Website crawler implementation
-   - Playwright-based scraping
-   - JavaScript rendering support
-   - Robots.txt compliance
-   - Clean text extraction
-
-2. Vector embedding pipeline
-   - OpenAI Ada-002 integration
+2. `src/lib/embeddings/embeddings.ts`
+   - OpenAI client setup
    - Text chunking (512 tokens)
    - Batch processing
-   - Error recovery
+   - Error retry logic
 
-3. Pinecone integration
-   - Namespace per bot
-   - Metadata structure
-   - Query optimization
-   - Index management
+3. `src/lib/vectors/pinecone.ts`
+   - Index initialization
+   - Namespace management
+   - Upsert operations
+   - Similarity search
 
-4. Basic RAG implementation
+4. `src/lib/rag/rag.ts`
    - Context retrieval
-   - Prompt engineering
+   - Prompt construction
    - Response generation
+   - Cache management
 
-**Cycle 8:**
-- OpenAI chat completion
-- Conversation context
-- Response optimization
-- Streaming responses
+### Phase 2: API Integration (Priority 2)
+1. Update bot endpoints to use AI services
+2. Add training endpoint for website crawling
+3. Implement chat endpoint with RAG
+4. Add status/progress tracking
 
-**Cycle 9:**
-- WebSocket support
-- Conversation persistence
-- Analytics tracking
-- Performance tuning
+### Phase 3: Testing & Quality (Priority 3)
+1. Fix test infrastructure issues
+2. Add unit tests for all components
+3. Integration tests for API flows
+4. E2E test for complete chat flow
 
-### Phase 3: Widget Excellence (Cycles 10-11)
-- Multiple widget variants
-- Smart triggers
-- Quick actions
-- Mobile optimization
-- A/B testing
-
-### Phase 4: Enterprise (Cycles 12-13)
-- White-label support
-- SSO integration
-- Advanced analytics
-- Compliance features
-
-### Phase 5: Platform Integrations (Cycles 14-15)
-- Shopify app
-- WordPress plugin
-- Slack integration
-- Webhook system
-
-## Risk Assessment
+## Risk Mitigation
 
 ### Technical Risks
-| Risk | Impact | Likelihood | Mitigation |
-|------|--------|------------|------------|
-| OpenAI rate limits | High | Medium | Caching, fallback models, queue management |
-| Scraping blocks | Medium | High | Rotating proxies, respectful crawling, caching |
-| Vector search latency | Medium | Low | Query optimization, caching layer |
-| Widget performance | High | Low | Code splitting, lazy loading, CDN |
-| Scaling costs | High | Medium | Usage-based pricing, cost optimization |
+1. **Missing Dependencies**
+   - Risk: Package.json not updated
+   - Mitigation: Audit and add all required packages
 
-### Business Risks
-| Risk | Impact | Likelihood | Mitigation |
-|------|--------|------------|------------|
-| Market competition | High | High | Rapid iteration, unique features |
-| Compliance issues | High | Low | Early legal consultation, data policies |
-| Customer churn | Medium | Medium | Superior UX, quick onboarding |
+2. **Test Failures**
+   - Risk: Tests timing out
+   - Mitigation: Fix mock setup and async handling
 
-## Development Priorities (Cycle 7)
+3. **API Rate Limits**
+   - Risk: OpenAI/Pinecone throttling
+   - Mitigation: Implement exponential backoff
 
-### 1. Website Crawler (src/lib/crawler/)
-```typescript
-interface CrawlerConfig {
-  maxPages: number;
-  respectRobotsTxt: boolean;
-  jsRendering: boolean;
-  timeout: number;
-}
-```
+### Operational Risks
+1. **Cost Overruns**
+   - Risk: High API usage costs
+   - Mitigation: Implement caching, batch processing
 
-### 2. Embedding Service (src/lib/embeddings/)
-```typescript
-interface EmbeddingService {
-  generateEmbeddings(texts: string[]): Promise<number[][]>;
-  chunkText(text: string, maxTokens: number): string[];
-}
-```
-
-### 3. Vector Storage (src/lib/vectors/)
-```typescript
-interface VectorStore {
-  upsert(vectors: Vector[]): Promise<void>;
-  query(vector: number[], k: number): Promise<Match[]>;
-  deleteNamespace(namespace: string): Promise<void>;
-}
-```
-
-### 4. RAG Engine (src/lib/rag/)
-```typescript
-interface RAGEngine {
-  retrieveContext(query: string): Promise<Context[]>;
-  generateResponse(query: string, context: Context[]): Promise<string>;
-}
-```
-
-## Success Metrics
-
-### Technical KPIs
-- Build success: 100%
-- Test coverage: >85%
-- Response time: <2s p95
-- Widget size: <50KB
-- Uptime: >99.9%
-
-### Business KPIs
-- Activation rate: >40%
-- Monthly churn: <5%
-- Response accuracy: >85%
-- Support reduction: >30%
-- MRR growth: 20% MoM
-
-## Resource Requirements
-
-### Infrastructure Costs (Monthly)
-- Vercel: $20-100
-- Supabase: $25-100
-- Pinecone: $70-500
-- OpenAI: $100-1000
-- Redis: $10-50
-- **Total**: $225-1750
-
-### Scaling Projections
-- 100 users: ~$500/month
-- 1,000 users: ~$2,000/month
-- 5,000 users: ~$8,000/month
-- 10,000 users: ~$15,000/month
-
-## Timeline
-
-### Immediate (Cycle 7 - This Week)
-- [ ] Implement website crawler
-- [ ] Setup Pinecone integration
-- [ ] Create embedding pipeline
-- [ ] Basic RAG implementation
-
-### Short-term (2-4 weeks)
-- Complete AI chat functionality
-- Launch beta version
-- Onboard 10 beta users
-- Gather feedback
-
-### Medium-term (1-3 months)
-- Production deployment
-- Marketing website
-- 100 paying customers
-- $5K MRR milestone
-
-### Long-term (3-6 months)
-- Platform integrations
-- Enterprise features
-- $15K MRR target
-- Series A preparation
-
-## Quality Assurance
-
-### Testing Strategy
-- Unit tests: Business logic (Jest)
-- Integration tests: API endpoints
-- E2E tests: Critical flows (Playwright)
-- Load tests: Performance (k6)
-- Security tests: OWASP compliance
-
-### Monitoring Stack
-- Errors: Sentry
-- Performance: Vercel Analytics
-- Uptime: Better Uptime
-- Logs: Axiom
-- User: PostHog
-
-## Go-to-Market Strategy
-
-### Launch Plan
-1. Beta with 10 design partners
-2. Product Hunt launch
-3. SEO content marketing
-4. Developer community engagement
-5. Strategic partnerships
-
-### Pricing Strategy
-- **Free**: 1 bot, 100 chats/month
-- **Pro**: $29/mo, 5 bots, 5k chats
-- **Business**: $99/mo, unlimited bots, 25k chats
-- **Enterprise**: Custom pricing
+2. **Performance Issues**
+   - Risk: Slow response times
+   - Mitigation: Optimize vector search, add caching
 
 ## Success Criteria
+- [ ] All AI components implemented and in PR
+- [ ] 100% test pass rate
+- [ ] < 2s chat response time
+- [ ] Successful website crawl demo
+- [ ] Working end-to-end chat flow
+- [ ] PR approved and merged
 
-### MVP Launch (2 weeks)
-- Core functionality complete
-- 10 beta users onboarded
-- <2s response time
-- Zero critical bugs
+## Dependencies
+- OpenAI API key (GPT-4, Ada-002)
+- Pinecone API key and environment
+- Playwright for web scraping
+- Redis for queue management
 
-### Growth Phase (3 months)
-- 100 paying customers
-- $5K MRR
-- 85% satisfaction score
-- <5% monthly churn
+## Timeline
+- Implementation: 4 hours
+- Testing: 2 hours
+- Integration: 2 hours
+- Total: 8 hours
 
-### Scale Phase (6 months)
-- 500 paying customers
-- $15K MRR
-- Platform integrations live
-- Series A ready
+## Next Steps After Cycle 8
+1. Frontend UI implementation
+2. Widget development
+3. Production deployment
+4. Performance optimization
+5. Platform integrations
