@@ -20,6 +20,9 @@ const customJestConfig = {
     '<rootDir>/**/__tests__/**/*.{js,jsx,ts,tsx}',
     '<rootDir>/**/*.{spec,test}.{js,jsx,ts,tsx}',
   ],
+  transformIgnorePatterns: [
+    'node_modules/(?!(cheerio|htmlparser2|domhandler|dom-serializer|domutils|entities)/)',
+  ],
 }
 
 module.exports = createJestConfig(customJestConfig)

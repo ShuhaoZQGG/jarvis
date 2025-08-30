@@ -24,7 +24,6 @@ describe('VectorStore', () => {
     
     vectorStore = new VectorStore({
       apiKey: 'test-api-key',
-      environment: 'test-env',
       indexName: 'test-index',
     })
   })

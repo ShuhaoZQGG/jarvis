@@ -1,3 +1,4 @@
+import 'openai/shims/node'
 import OpenAI from 'openai'
 import { VectorStore, QueryResult } from '../vectorstore/vectorstore'
 import { EmbeddingsGenerator } from '../embeddings/embeddings'

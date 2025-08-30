@@ -22,10 +22,11 @@ describe('ChatService', () => {
       generateEmbedding: jest.fn(),
     } as any
 
+    const mockCreate = jest.fn()
     mockOpenAI = {
       chat: {
         completions: {
-          create: jest.fn(),
+          create: mockCreate,
         },
       },
     } as any
@@ -63,7 +64,7 @@ describe('ChatService', () => {
 
       mockEmbeddingsGenerator.generateEmbedding.mockResolvedValue(mockEmbedding)
       mockVectorStore.query.mockResolvedValue(mockContext)
-      mockOpenAI.chat.completions.create.mockResolvedValue({
+      ;(mockOpenAI.chat.completions.create as jest.Mock).mockResolvedValue({
         choices: [{
           message: {
             content: 'We offer 24/7 customer support through various channels.',
@@ -84,7 +85,7 @@ describe('ChatService', () => {
     it('should handle no context found', async () => {
       mockEmbeddingsGenerator.generateEmbedding.mockResolvedValue(new Array(1536).fill(0))
       mockVectorStore.query.mockResolvedValue([])
-      mockOpenAI.chat.completions.create.mockResolvedValue({
+      ;(mockOpenAI.chat.completions.create as jest.Mock).mockResolvedValue({
         choices: [{
           message: {
             content: "I don't have enough information to answer that question.",
@@ -108,7 +109,7 @@ describe('ChatService', () => {
 
       mockEmbeddingsGenerator.generateEmbedding.mockResolvedValue(new Array(1536).fill(0))
       mockVectorStore.query.mockResolvedValue([])
-      mockOpenAI.chat.completions.create.mockResolvedValue({
+      ;(mockOpenAI.chat.completions.create as jest.Mock).mockResolvedValue({
         choices: [{
           message: {
             content: 'As I mentioned, I am Jarvis.',
@@ -152,7 +153,7 @@ describe('ChatService', () => {
         },
       }
 
-      mockOpenAI.chat.completions.create.mockResolvedValue(mockStream as any)
+      ;(mockOpenAI.chat.completions.create as jest.Mock).mockResolvedValue(mockStream as any)
 
       const stream = await chatService.streamChat('Test question', 'test-namespace')
       const chunks: string[] = []

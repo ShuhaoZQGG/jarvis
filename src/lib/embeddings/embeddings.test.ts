@@ -8,9 +8,10 @@ describe('EmbeddingsGenerator', () => {
   let mockOpenAI: jest.Mocked<OpenAI>
 
   beforeEach(() => {
+    const mockCreate = jest.fn()
     mockOpenAI = {
       embeddings: {
-        create: jest.fn(),
+        create: mockCreate,
       },
     } as any
 
@@ -21,7 +22,7 @@ describe('EmbeddingsGenerator', () => {
   describe('generateEmbedding', () => {
     it('should generate embedding for text', async () => {
       const mockEmbedding = new Array(1536).fill(0).map(() => Math.random())
-      mockOpenAI.embeddings.create.mockResolvedValue({
+      ;(mockOpenAI.embeddings.create as jest.Mock).mockResolvedValue({
         data: [{ embedding: mockEmbedding }],
         model: 'text-embedding-ada-002',
         usage: { prompt_tokens: 10, total_tokens: 10 },
@@ -42,7 +43,7 @@ describe('EmbeddingsGenerator', () => {
     })
 
     it('should handle API errors', async () => {
-      mockOpenAI.embeddings.create.mockRejectedValue(new Error('API Error'))
+      ;(mockOpenAI.embeddings.create as jest.Mock).mockRejectedValue(new Error('API Error'))
 
       await expect(generator.generateEmbedding('Test text')).rejects.toThrow('Failed to generate embedding')
     })
@@ -55,7 +56,7 @@ describe('EmbeddingsGenerator', () => {
         new Array(1536).fill(0).map(() => Math.random())
       )
 
-      mockOpenAI.embeddings.create.mockResolvedValue({
+      ;(mockOpenAI.embeddings.create as jest.Mock).mockResolvedValue({
         data: mockEmbeddings.map(embedding => ({ embedding })),
         model: 'text-embedding-ada-002',
         usage: { prompt_tokens: 30, total_tokens: 30 },
@@ -77,7 +78,7 @@ describe('EmbeddingsGenerator', () => {
     it('should handle batch size limits', async () => {
       const texts = new Array(150).fill('Text')
       
-      mockOpenAI.embeddings.create.mockImplementation(({ input }: any) => {
+      ;(mockOpenAI.embeddings.create as jest.Mock).mockImplementation(({ input }: any) => {
         const inputArray = Array.isArray(input) ? input : [input]
         const embeddings = inputArray.map(() => 
           new Array(1536).fill(0).map(() => Math.random())

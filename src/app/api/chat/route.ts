@@ -2,28 +2,48 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ChatService } from '@/lib/chat/chat'
 import { VectorStore } from '@/lib/vectorstore/vectorstore'
 import { EmbeddingsGenerator } from '@/lib/embeddings/embeddings'
+import { env } from '@/lib/env'
+import { z } from 'zod'
+import { rateLimitMiddleware, chatRateLimiter } from '@/lib/ratelimit'
+
+const chatRequestSchema = z.object({
+  message: z.string().min(1),
+  botId: z.string().min(1),
+  history: z.array(z.object({
+    role: z.enum(['user', 'assistant']),
+    content: z.string(),
+  })).optional(),
+})
 
 export async function POST(request: NextRequest) {
-  try {
-    const { message, botId, history } = await request.json()
+  // Apply rate limiting
+  const rateLimitResult = rateLimitMiddleware(request, chatRateLimiter)
+  if (rateLimitResult) {
+    return rateLimitResult
+  }
 
-    if (!message || !botId) {
+  try {
+    const body = await request.json()
+    
+    const validationResult = chatRequestSchema.safeParse(body)
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Message and botId are required' },
+        { error: 'Invalid request', details: validationResult.error.issues },
         { status: 400 }
       )
     }
 
+    const { message, botId, history } = validationResult.data
+
     const vectorStore = new VectorStore({
-      apiKey: process.env.PINECONE_API_KEY!,
-      environment: process.env.PINECONE_ENVIRONMENT!,
-      indexName: process.env.PINECONE_INDEX_NAME!,
+      apiKey: env.PINECONE_API_KEY,
+      indexName: env.PINECONE_INDEX_NAME,
     })
 
-    const embeddingsGenerator = new EmbeddingsGenerator(process.env.OPENAI_API_KEY!)
+    const embeddingsGenerator = new EmbeddingsGenerator(env.OPENAI_API_KEY)
 
     const chatService = new ChatService({
-      openaiApiKey: process.env.OPENAI_API_KEY!,
+      openaiApiKey: env.OPENAI_API_KEY,
       vectorStore,
       embeddingsGenerator,
     })
@@ -33,6 +53,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response)
   } catch (error) {
     console.error('Chat API error:', error)
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid request format', details: error.issues },
+        { status: 400 }
+      )
+    }
+    
     return NextResponse.json(
       { error: 'Failed to process chat request' },
       { status: 500 }

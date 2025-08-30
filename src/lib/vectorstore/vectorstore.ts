@@ -14,7 +14,6 @@ export interface QueryResult {
 
 export interface VectorStoreConfig {
   apiKey: string
-  environment: string
   indexName: string
 }
 
