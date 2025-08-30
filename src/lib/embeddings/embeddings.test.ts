@@ -1,3 +1,8 @@
+/**
+ * @jest-environment node
+ */
+
+import 'openai/shims/node'
 import { EmbeddingsGenerator } from './embeddings'
 import OpenAI from 'openai'
 
