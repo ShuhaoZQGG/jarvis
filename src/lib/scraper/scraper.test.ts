@@ -98,6 +98,7 @@ describe('WebScraper', () => {
 
   describe('extractMetadata', () => {
     it('should extract metadata from HTML', () => {
+      const { JSDOM } = require('jsdom')
       const html = `
         <html>
           <head>
@@ -110,7 +111,8 @@ describe('WebScraper', () => {
         </html>
       `
 
-      const metadata = scraper.extractMetadata(html)
+      const dom = new JSDOM(html)
+      const metadata = scraper.extractMetadata(dom.window.document)
 
       expect(metadata).toEqual({
         title: 'Test Title',

@@ -1,4 +1,4 @@
-import * as cheerio from 'cheerio'
+import { JSDOM } from 'jsdom'
 
 export interface ScrapedPage {
   url: string
@@ -32,20 +32,23 @@ export class WebScraper {
       }
       const html = await response.text()
       
-      const $ = cheerio.load(html)
+      const dom = new JSDOM(html)
+      const document = dom.window.document
       
+      // Remove excluded tags
       this.excludeTags.forEach(tag => {
-        $(tag).remove()
+        const elements = document.querySelectorAll(tag)
+        elements.forEach(el => el.remove())
       })
       
-      const title = $('title').text().trim() || 'Untitled'
-      const content = $('body').text().replace(/\s+/g, ' ').trim()
-      const metadata = this.extractMetadata(html)
+      const title = document.querySelector('title')?.textContent?.trim() || 'Untitled'
+      const bodyText = document.body?.textContent?.replace(/\s+/g, ' ').trim() || ''
+      const metadata = this.extractMetadata(document)
       
       return {
         url,
         title,
-        content,
+        content: bodyText,
         metadata,
         timestamp: new Date(),
       }
@@ -69,14 +72,12 @@ export class WebScraper {
     return results.filter((result): result is ScrapedPage => result !== null)
   }
 
-  extractMetadata(html: string): PageMetadata {
-    const $ = cheerio.load(html)
-    
+  extractMetadata(document: Document): PageMetadata {
     return {
-      title: $('title').text().trim() || undefined,
-      description: $('meta[name="description"]').attr('content') || undefined,
-      ogTitle: $('meta[property="og:title"]').attr('content') || undefined,
-      ogDescription: $('meta[property="og:description"]').attr('content') || undefined,
+      title: document.querySelector('title')?.textContent?.trim() || undefined,
+      description: (document.querySelector('meta[name="description"]') as HTMLMetaElement)?.content || undefined,
+      ogTitle: (document.querySelector('meta[property="og:title"]') as HTMLMetaElement)?.content || undefined,
+      ogDescription: (document.querySelector('meta[property="og:description"]') as HTMLMetaElement)?.content || undefined,
     }
   }
 }
