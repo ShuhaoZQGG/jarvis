@@ -1,55 +1,85 @@
-# Cycle 6 Handoff Document
+# Cycle 7 Handoff Document
 
-Generated: Sat 30 Aug 2025 18:30:36 EDT
+Generated: Sat 30 Aug 2025 19:02:44 EDT
 
 ## Current State
-- Cycle Number: 6
-- Branch: cycle-6-successfully-completed-20250830-183036
-- Phase: review
+- Cycle Number: 7
+- Branch: cycle-7-successfully-completed-20250830-190244
+- Phase: development
 
 ## Completed Work
 <!-- Updated by each agent as they complete their phase -->
-- **Design**: Created UI/UX specifications and mockups
 - **Planning**: Created architectural plan and requirements
-- **Planning Phase**: Comprehensive architectural plan created with clear phases and priorities
-- **Key Decisions**: Tech stack confirmed (Next.js, Supabase, Pinecone, OpenAI)
-- **Risk Analysis**: Identified Cheerio build issue as critical blocker
-- **Cost Estimates**: ~$1,200/month initial operating costs
-- **Design Phase**: UI/UX specifications completed with mockups and responsive design
-- **Widget Variants**: 4 types defined (bubble, sidebar, modal, inline)
-- **Accessibility**: WCAG 2.1 AA compliance specs included
-- **Performance Targets**: <200ms widget load, <50KB bundle size
+### Planning Phase (Cycle 7)
+- ✅ Comprehensive project plan created in PLAN.md
+- ✅ Requirements analysis (functional & non-functional)
+- ✅ Tech stack finalized (Next.js, Supabase, Pinecone, OpenAI)
+- ✅ Implementation phases defined (15 cycles total)
+- ✅ Risk assessment with mitigation strategies
+- ✅ Success metrics and KPIs established
+- ✅ Resource requirements and cost projections
+- ✅ Cycle 7 priorities defined (Crawler, Embeddings, Pinecone, RAG)
+
+### Design Phase (Cycle 7)
+- ✅ UI/UX specifications created in DESIGN.md
+- ✅ User journeys defined (website owner, end user, admin)
+- ✅ Component design system with mockups
+- ✅ Responsive design specs (mobile, tablet, desktop)
+- ✅ WCAG 2.1 AA accessibility compliance
+- ✅ Visual design system (typography, colors, spacing)
+- ✅ Performance budgets (<50KB widget, <200KB dashboard)
+- ✅ Frontend stack recommendations (Next.js 14, Radix UI, Tailwind, Preact)
 
 ## Pending Items
 <!-- Items that need attention in the next phase or cycle -->
-- Implementation needs to fix Cheerio build issue first
-- Frontend components using Next.js 14 App Router
-- Widget should use Preact for smaller bundle size
-- Consider Shadow DOM for widget isolation
+### Design Constraints for Development
+- Widget bundle size limit: < 50KB gzipped
+- Use Preact for widget to minimize size
+- Implement lazy loading for non-critical features
+- Follow component library structure in DESIGN.md
+
+### For Development Phase  
+- Implement website crawler with Playwright
+- Setup Pinecone vector database
+- Create embedding pipeline with OpenAI
+- Build RAG engine for context retrieval
 
 ## Technical Decisions
 <!-- Important technical decisions made during this cycle -->
-- Replace Cheerio with JSDOM to fix build issues
-- Use Supabase for both database and authentication
-- Pinecone for vector storage (handles scale better than pgvector)
-- Vercel for hosting (optimal for Next.js)
-- Redis for production rate limiting
-- Frontend: Next.js 14 with App Router, Tailwind CSS, Radix UI
-- Widget: Preact + Shadow DOM for isolation
-- Animations: Framer Motion with 150-300ms micro-interactions
+### Frontend Framework Recommendations
+- **Dashboard**: Next.js 14 with App Router, Radix UI, Tailwind CSS
+- **Widget**: Preact for smaller bundle, CSS-in-JS, PostMessage API
+- **State Management**: Zustand (client), React Query (server)
+- **Component Structure**: Separate ui/, dashboard/, widget/, shared/ folders
+
+### Architecture Choices
+- **Scraping**: Playwright + JSDOM (replacing Cheerio for better compatibility)
+- **Vector DB**: Pinecone (scalable, managed service)
+- **Embeddings**: OpenAI Ada-002 (cost-effective, high quality)
+- **LLM**: GPT-4 Turbo (best quality/cost ratio)
+- **Queue**: BullMQ with Redis (for job processing)
+- **Infrastructure**: Vercel + Supabase + Upstash Redis
+
+### Development Approach
+- Text chunking: 512 tokens per chunk
+- Namespace strategy: One namespace per bot
+- RAG: Retrieve top 5 context chunks
+- Response caching for common queries
 
 ## Known Issues
 <!-- Issues discovered but not yet resolved -->
-- Cheerio ESM module incompatibility with Next.js webpack
-- 17 test failures need fixing after build issue resolution
-- Rate limiting currently in-memory, needs Redis for production
+- GitHub CLI not available for PR creation (manual creation required)
+- Need to verify Playwright compatibility with Vercel deployment
+- OpenAI rate limits need careful management
 
 ## Next Steps
 <!-- Clear action items for the next agent/cycle -->
-1. Design phase should focus on:
-   - Dashboard UI/UX for bot management
-   - Chat widget interface and customization
-   - Billing/subscription management UI
-   - Mobile responsive designs
-2. Implementation priority: Fix Cheerio build issue first
+1. **Design Phase**: Review architectural decisions and create UI/UX specs for new AI features
+2. **Development Phase**: Implement Cycle 7 priorities:
+   - Website crawler (src/lib/crawler/)
+   - Embedding service (src/lib/embeddings/)
+   - Vector storage (src/lib/vectors/)
+   - RAG engine (src/lib/rag/)
+3. **Testing Phase**: Create tests for AI components
+4. **Review Phase**: Validate implementation meets requirements
 
