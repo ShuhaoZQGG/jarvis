@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { withAuth, AuthContext } from '@/lib/auth/middleware'
 import { BotService } from '@/lib/bot/bot'
-import { DatabaseService } from '@/lib/database/database'
-import { AuthService } from '@/lib/auth/auth'
 import { EmbeddingsGenerator } from '@/lib/embeddings/embeddings'
 import { VectorStore } from '@/lib/vectorstore/vectorstore'
 import { WebScraper } from '@/lib/scraper/scraper'
@@ -19,26 +18,12 @@ const UpdateBotSchema = z.object({
   }).optional()
 })
 
-export async function GET(
+export const GET = withAuth(async (
   request: NextRequest,
-  { params }: { params: { botId: string } }
-) {
+  context: AuthContext & { params: { botId: string } }
+) => {
   try {
-    // Authenticate user
-    const authService = new AuthService(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    )
-    
-    const user = await authService.getCurrentUser()
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const dbService = new DatabaseService(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    )
+    const { user, dbService, params } = context
 
     const botService = new BotService(
       dbService,
@@ -58,7 +43,7 @@ export async function GET(
 
     // Verify user has access to this bot
     const workspace = await dbService.getWorkspace(bot.workspace_id)
-    if (!workspace || workspace.owner_id !== user.id) {
+    if (!workspace || workspace.owner_id !== user!.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -70,23 +55,14 @@ export async function GET(
       { status: 500 }
     )
   }
-}
+})
 
-export async function PUT(
+export const PUT = withAuth(async (
   request: NextRequest,
-  { params }: { params: { botId: string } }
-) {
+  context: AuthContext & { params: { botId: string } }
+) => {
   try {
-    // Authenticate user
-    const authService = new AuthService(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    )
-    
-    const user = await authService.getCurrentUser()
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const { user, dbService, params } = context
 
     // Parse and validate request body
     const body = await request.json()
@@ -98,11 +74,6 @@ export async function PUT(
         { status: 400 }
       )
     }
-
-    const dbService = new DatabaseService(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    )
 
     const botService = new BotService(
       dbService,
@@ -121,7 +92,7 @@ export async function PUT(
     }
 
     const workspace = await dbService.getWorkspace(existingBot.workspace_id)
-    if (!workspace || workspace.owner_id !== user.id) {
+    if (!workspace || workspace.owner_id !== user!.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -136,28 +107,14 @@ export async function PUT(
       { status: 500 }
     )
   }
-}
+})
 
-export async function DELETE(
+export const DELETE = withAuth(async (
   request: NextRequest,
-  { params }: { params: { botId: string } }
-) {
+  context: AuthContext & { params: { botId: string } }
+) => {
   try {
-    // Authenticate user
-    const authService = new AuthService(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    )
-    
-    const user = await authService.getCurrentUser()
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const dbService = new DatabaseService(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    )
+    const { user, dbService, params } = context
 
     const botService = new BotService(
       dbService,
@@ -176,7 +133,7 @@ export async function DELETE(
     }
 
     const workspace = await dbService.getWorkspace(existingBot.workspace_id)
-    if (!workspace || workspace.owner_id !== user.id) {
+    if (!workspace || workspace.owner_id !== user!.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -191,4 +148,4 @@ export async function DELETE(
       { status: 500 }
     )
   }
-}
+})

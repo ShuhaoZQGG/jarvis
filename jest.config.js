@@ -21,7 +21,7 @@ const customJestConfig = {
     '<rootDir>/**/*.{spec,test}.{js,jsx,ts,tsx}',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(cheerio|htmlparser2|domhandler|dom-serializer|domutils|entities)/)',
+    'node_modules/(?!(uuid)/)',
   ],
 }
 

@@ -1,164 +1,162 @@
-# Project Jarvis - Cycle 3 Development Plan
+# Project Jarvis - Architectural Plan
 
 ## Executive Summary
-Build an AI chatbot SaaS platform that allows website owners to create custom chatbots trained on their website content. Revenue target: $15K MRR within 3 months.
+AI-powered chatbot SaaS that enables instant website integration through URL training, competing with SiteGPT's $15K MRR model with enhanced features and better UX.
 
-## Critical Issue Resolution (Immediate Priority)
-### Cheerio/Webpack Build Failure
-- **Problem**: ESM module incompatibility blocking deployment
-- **Solution**: Replace Cheerio with JSDOM for HTML parsing
-- **Timeline**: Day 1 of Cycle 3
+## Requirements
 
-## Technical Architecture
+### Functional Requirements
+1. **Core Features**
+   - Website content scraping and processing
+   - AI chatbot training on scraped content
+   - Embeddable chat widget (60-second setup)
+   - Real-time conversation handling
+   - Multi-tenant workspace management
 
-### Core Stack
-- **Frontend/Backend**: Next.js 14+ with App Router
-- **Database**: Supabase (PostgreSQL + Auth)
-- **Vector Store**: Pinecone
-- **AI**: OpenAI GPT-4 API
-- **Hosting**: Vercel
-- **Payments**: Stripe
-- **Styling**: Tailwind CSS + Radix UI
+2. **Differentiation Features**
+   - Multiple widget types (bubble, sidebar, modal, inline)
+   - Smart triggers (scroll/time/exit-intent)
+   - Context-aware greetings per page
+   - Quick action buttons
+   - Conversation memory across navigation
+   - Platform integrations (Shopify, WordPress)
 
-### System Components
-1. **Web Scraper Service**
-   - URL content extraction
-   - Sitemap parsing
-   - JavaScript rendering support
-   
-2. **Embedding Pipeline**
-   - Content chunking strategy
-   - OpenAI embeddings generation
-   - Pinecone vector storage
-   
-3. **Chat Engine**
-   - RAG implementation
-   - Context window management
-   - Conversation memory
-   
-4. **Widget System**
-   - Embeddable JavaScript widget
-   - Multiple display modes
-   - Mobile-responsive design
-
-## Development Phases
-
-### Phase 1: Core Fix & Testing (Days 1-2)
-- Fix Cheerio build issue with JSDOM
-- Ensure all tests pass
-- Deploy to Vercel staging
-
-### Phase 2: Authentication & Multi-Tenancy (Days 3-5)
-- Supabase auth integration
-- User workspace creation
-- Bot management dashboard
-- API key generation
-
-### Phase 3: Advanced Features (Days 6-8)
-- Multi-page crawling
-- Sitemap support
-- JavaScript-rendered content
-- Conversation persistence
-
-### Phase 4: Monetization (Days 9-10)
-- Stripe integration
-- Usage tracking
-- Subscription tiers
-- Billing dashboard
-
-### Phase 5: Production Ready (Days 11-14)
-- Redis rate limiting
-- Error tracking (Sentry)
-- Production logging
-- Performance optimization
-- Security audit
-
-## Feature Requirements
-
-### MVP Features (Week 1)
-- Single URL scraping ✅
-- Basic chat interface ✅
-- Embeddable widget ✅
-- Simple dashboard
-- User authentication
-
-### Enhanced Features (Week 2)
-- Multi-page crawling
-- Custom branding
-- Analytics dashboard
-- Multiple widget types
-- Conversation export
-
-### Differentiators
-- **Better UX**: Context-aware greetings, suggested questions
-- **Platform Integrations**: Shopify, WordPress plugins
-- **Advanced Customization**: CSS overrides, custom actions
-- **Performance**: 50ms response time target
-
-## Database Schema
-
-### Tables
-```sql
-users (Supabase Auth)
-workspaces (id, name, owner_id, created_at)
-bots (id, workspace_id, name, config, created_at)
-conversations (id, bot_id, session_id, messages, created_at)
-crawl_jobs (id, bot_id, status, urls, created_at)
-embeddings (id, bot_id, content, vector, metadata)
-api_keys (id, workspace_id, key_hash, created_at)
-subscriptions (id, workspace_id, stripe_id, tier, status)
-```
-
-## API Endpoints
-
-### Public API
-- `POST /api/chat` - Chat with bot
-- `GET /api/widget/:botId` - Get widget configuration
-
-### Authenticated API
-- `POST /api/bots` - Create bot
-- `POST /api/bots/:id/train` - Train bot on URL
-- `GET /api/bots/:id/analytics` - Get bot analytics
-- `GET /api/conversations` - List conversations
-- `POST /api/billing/subscribe` - Create subscription
-
-## Security Requirements
-- JWT authentication
-- API rate limiting
-- Input sanitization
-- XSS protection
-- CORS configuration
-- Environment variable validation
-- SQL injection prevention
-
-## Performance Targets
-- Chat response: <500ms
-- Widget load: <100KB
-- Embedding generation: <2s per page
+### Non-Functional Requirements
+- Widget load time < 200ms
+- Chat response time < 500ms
+- Mobile performance score > 90
+- WCAG 2.1 AA compliance
 - 99.9% uptime SLA
 
-## Cost Analysis
-- OpenAI API: ~$1,000/month at scale
-- Pinecone: $70/month (starter)
-- Vercel: $20/month (pro)
-- Supabase: $25/month
-- Total: ~$1,200/month operating costs
+## Architecture
 
-## Success Metrics
-- Week 1: Working MVP with 10 test users
-- Week 2: 100 signups, 10 paying customers
-- Month 1: $1K MRR
-- Month 3: $15K MRR target
+### Tech Stack
+- **Frontend**: Next.js 14 (App Router)
+- **Backend**: Next.js API Routes
+- **Database**: Supabase (PostgreSQL + Auth)
+- **Vector DB**: Pinecone
+- **AI**: OpenAI GPT-4
+- **Payments**: Stripe
+- **Hosting**: Vercel
+- **CDN**: Cloudflare
+- **Monitoring**: Sentry, Vercel Analytics
+
+### System Components
+```
+┌─────────────┐     ┌──────────────┐     ┌───────────┐
+│   Next.js   │────▶│  Supabase    │────▶│  Pinecone │
+│   Frontend  │     │  PostgreSQL  │     │  Vector   │
+└─────────────┘     └──────────────┘     └───────────┘
+       │                    │                    │
+       ▼                    ▼                    ▼
+┌─────────────┐     ┌──────────────┐     ┌───────────┐
+│  API Routes │────▶│    OpenAI    │────▶│  Stripe   │
+│   Backend   │     │    GPT-4     │     │  Billing  │
+└─────────────┘     └──────────────┘     └───────────┘
+```
+
+## Implementation Phases
+
+### Phase 1: Foundation (Cycle 6) ✅
+- Fix build issues (Cheerio/Webpack)
+- Complete test suite fixes
+- Frontend components for existing backend
+- Redis integration for rate limiting
+
+### Phase 2: Core Product (Cycles 7-8)
+- Website crawler with sitemap support
+- Vector embedding pipeline
+- Chat interface and widget
+- Basic dashboard UI
+- Conversation persistence
+
+### Phase 3: Monetization (Cycles 9-10)
+- Stripe subscription tiers
+- Usage metering and limits
+- Billing portal
+- API key management
+- Analytics dashboard
+
+### Phase 4: Scale & Optimize (Cycles 11-12)
+- Multi-page crawling
+- JavaScript rendering support
+- Advanced widget customization
+- Platform integrations
+- Performance optimization
+
+## Current Status (Post-Cycle 5)
+
+### Completed ✅
+- Authentication middleware (HOF pattern)
+- Workspace management APIs
+- Tiered rate limiting
+- Stripe billing integration
+- Bot CRUD operations
+- 81% test coverage
+
+### Immediate Priorities (Cycle 6)
+1. **Fix Critical Build Issue**
+   - Cheerio ESM incompatibility
+   - Options: Replace with JSDOM or configure webpack
+
+2. **Frontend Integration**
+   - Dashboard components
+   - Bot configuration UI
+   - Chat widget prototype
+   - Billing management UI
+
+3. **Production Readiness**
+   - Redis for rate limiting
+   - API documentation
+   - Error tracking setup
+   - Deployment pipeline
 
 ## Risk Mitigation
-- **Technical**: Build issue resolved Day 1
-- **Competition**: Fast iteration, unique features
-- **Scaling**: Serverless architecture, caching
-- **Security**: Regular audits, penetration testing
 
-## Next Immediate Actions
+### Technical Risks
+- **Build Issues**: Already identified, fix prioritized
+- **Vector Search Scale**: Pinecone handles 10M+ vectors
+- **Response Latency**: Edge functions + caching strategy
+- **Cost Management**: Usage-based pricing model
+
+### Business Risks
+- **Competition**: Ship MVP in 2 weeks with differentiators
+- **OpenAI Dependency**: Abstract LLM interface for flexibility
+- **Data Privacy**: GDPR compliance, data encryption
+
+## Success Metrics
+
+### Technical KPIs
+- Build success rate: 100%
+- Test coverage: >85%
+- API response time: <300ms p95
+- Widget bundle size: <50KB
+
+### Business KPIs
+- Time to first bot: <60 seconds
+- User activation rate: >40%
+- Chat engagement rate: >25%
+- Customer retention: >80% MoM
+
+## Next Steps
+
 1. Fix Cheerio build issue
-2. Deploy staging environment
-3. Implement authentication
-4. Build user dashboard
-5. Add payment processing
+2. Complete frontend components
+3. Integrate Redis
+4. Deploy to staging
+5. Begin crawler implementation
+
+## Cost Estimates
+
+### Development (Monthly)
+- Vercel: $20 (Pro)
+- Supabase: $25 (Pro)
+- Pinecone: $70 (Starter)
+- OpenAI: $500-1000 (usage-based)
+- Stripe: 2.9% + $0.30/transaction
+- **Total**: ~$1,200/month initially
+
+### Scaling Costs
+- 1,000 users: ~$3,000/month
+- 5,000 users: ~$8,000/month
+- 10,000 users: ~$15,000/month

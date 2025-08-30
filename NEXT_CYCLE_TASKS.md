@@ -1,25 +1,23 @@
-# Next Cycle Tasks
+# Next Cycle Tasks - Post Cycle 5 Review
 
-## Immediate Fixes Required (Cycle 3 Revision)
-These must be completed before the current cycle can be approved:
+## Cycle 5 Status: ✅ APPROVED & MERGED
+Cycle 5 successfully implemented backend infrastructure and has been merged to main branch.
 
-### 1. Fix OpenAI Test Failures ⚠️ CRITICAL
-Add the following import at the top of these files:
-```typescript
-import 'openai/shims/node'
-```
-Files to fix:
-- `src/lib/embeddings/embeddings.ts`
-- `src/lib/chat/chat.ts`
-- `src/app/api/chat/route.ts`
+## Priority 1: Fix Test Environment (Technical Debt)
+- [ ] Fix Next.js Request/Response mock setup in jest.setup.js
+- [ ] Resolve failing test suites: middleware.test.ts, ratelimit.test.ts, workspaces route tests
+- [ ] Add `import 'openai/shims/node'` where needed for OpenAI tests
+- [ ] Ensure 100% test pass rate before new features
 
-### 2. Verify All Tests Pass
-Run `npm run test:ci` and ensure all test suites pass successfully.
+## Priority 2: Frontend Integration for Cycle 5 Features
+- [ ] Create React components for workspace management UI
+- [ ] Build billing/subscription management dashboard
+- [ ] Implement API key generation and management UI
+- [ ] Add workspace switcher component in dashboard header
+- [ ] Create onboarding flow for new users with default workspace creation
+- [ ] Integrate authentication middleware in frontend routes
 
-### 3. Configure GitHub Repository
-Set up remote repository to enable PR creation and code pushing.
-
-## Cycle 4: Feature Completion
+## Priority 3: Complete Core Features
 
 ### High Priority Features
 1. **Stripe Payment Integration**
