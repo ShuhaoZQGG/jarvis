@@ -1,162 +1,159 @@
-# Project Jarvis - Architectural Plan
+# Cycle 8: Complete AI Implementation & MVP Delivery
 
 ## Executive Summary
-AI-powered chatbot SaaS that enables instant website integration through URL training, competing with SiteGPT's $15K MRR model with enhanced features and better UX.
+Cycle 8 focuses on completing the missing AI implementation from Cycle 7 and delivering a working MVP with core functionality. Based on the review feedback, Cycle 7 had solid planning but lacked actual implementation in the PR.
+
+## Critical Context
+- **Cycle 7 Status**: NEEDS_REVISION - documentation complete but implementation missing from PR
+- **Priority**: Complete AI features and ensure working end-to-end chatbot functionality
+- **Target**: Functional MVP with website crawling, embeddings, and RAG-based responses
 
 ## Requirements
 
 ### Functional Requirements
-1. **Core Features**
-   - Website content scraping and processing
-   - AI chatbot training on scraped content
-   - Embeddable chat widget (60-second setup)
-   - Real-time conversation handling
-   - Multi-tenant workspace management
+1. **Website Crawling**
+   - Scrape and parse website content
+   - Handle JavaScript-rendered pages
+   - Respect robots.txt
+   - Extract clean text content
 
-2. **Differentiation Features**
-   - Multiple widget types (bubble, sidebar, modal, inline)
-   - Smart triggers (scroll/time/exit-intent)
-   - Context-aware greetings per page
-   - Quick action buttons
-   - Conversation memory across navigation
-   - Platform integrations (Shopify, WordPress)
+2. **Vector Processing**
+   - Generate embeddings using OpenAI
+   - Store vectors in Pinecone
+   - Enable similarity search
+   - Manage bot-specific namespaces
+
+3. **RAG Engine**
+   - Retrieve relevant context
+   - Generate contextual responses
+   - Manage conversation history
+   - Implement response caching
+
+4. **API Integration**
+   - Connect AI components to existing bot endpoints
+   - Add proper error handling
+   - Implement rate limiting
+   - Validate environment variables
 
 ### Non-Functional Requirements
-- Widget load time < 200ms
-- Chat response time < 500ms
-- Mobile performance score > 90
-- WCAG 2.1 AA compliance
-- 99.9% uptime SLA
+- Response time < 2 seconds
+- 99.5% uptime for chat service
+- Support 100 concurrent conversations
+- < 50KB widget bundle size
+- All tests passing (100% green)
 
 ## Architecture
 
 ### Tech Stack
-- **Frontend**: Next.js 14 (App Router)
-- **Backend**: Next.js API Routes
-- **Database**: Supabase (PostgreSQL + Auth)
+- **Backend**: Node.js, TypeScript, Next.js 14
+- **Database**: Supabase (PostgreSQL)
 - **Vector DB**: Pinecone
-- **AI**: OpenAI GPT-4
-- **Payments**: Stripe
-- **Hosting**: Vercel
-- **CDN**: Cloudflare
-- **Monitoring**: Sentry, Vercel Analytics
+- **AI/ML**: OpenAI (GPT-4, Ada-002)
+- **Queue**: BullMQ + Redis
+- **Web Scraping**: Playwright
+- **Testing**: Jest, Playwright (E2E)
 
-### System Components
+### Component Architecture
 ```
-┌─────────────┐     ┌──────────────┐     ┌───────────┐
-│   Next.js   │────▶│  Supabase    │────▶│  Pinecone │
-│   Frontend  │     │  PostgreSQL  │     │  Vector   │
-└─────────────┘     └──────────────┘     └───────────┘
-       │                    │                    │
-       ▼                    ▼                    ▼
-┌─────────────┐     ┌──────────────┐     ┌───────────┐
-│  API Routes │────▶│    OpenAI    │────▶│  Stripe   │
-│   Backend   │     │    GPT-4     │     │  Billing  │
-└─────────────┘     └──────────────┘     └───────────┘
+┌─────────────────────────────────────────┐
+│           API Gateway (Next.js)         │
+├─────────────────────────────────────────┤
+│     Authentication & Rate Limiting      │
+├──────────┬──────────┬──────────────────┤
+│ Crawler  │ Embeddings│    RAG Engine   │
+│ Service  │  Service  │                 │
+├──────────┴──────────┴──────────────────┤
+│  Pinecone  │ OpenAI API │   Supabase   │
+└────────────┴────────────┴──────────────┘
 ```
 
 ## Implementation Phases
 
-### Phase 1: Foundation (Cycle 6) ✅
-- Fix build issues (Cheerio/Webpack)
-- Complete test suite fixes
-- Frontend components for existing backend
-- Redis integration for rate limiting
+### Phase 1: Complete Missing AI Implementation (Priority 1)
+**Files to implement:**
+1. `src/lib/crawler/crawler.ts`
+   - Playwright setup
+   - URL discovery
+   - Content extraction
+   - Text cleaning
 
-### Phase 2: Core Product (Cycles 7-8)
-- Website crawler with sitemap support
-- Vector embedding pipeline
-- Chat interface and widget
-- Basic dashboard UI
-- Conversation persistence
+2. `src/lib/embeddings/embeddings.ts`
+   - OpenAI client setup
+   - Text chunking (512 tokens)
+   - Batch processing
+   - Error retry logic
 
-### Phase 3: Monetization (Cycles 9-10)
-- Stripe subscription tiers
-- Usage metering and limits
-- Billing portal
-- API key management
-- Analytics dashboard
+3. `src/lib/vectors/pinecone.ts`
+   - Index initialization
+   - Namespace management
+   - Upsert operations
+   - Similarity search
 
-### Phase 4: Scale & Optimize (Cycles 11-12)
-- Multi-page crawling
-- JavaScript rendering support
-- Advanced widget customization
-- Platform integrations
-- Performance optimization
+4. `src/lib/rag/rag.ts`
+   - Context retrieval
+   - Prompt construction
+   - Response generation
+   - Cache management
 
-## Current Status (Post-Cycle 5)
+### Phase 2: API Integration (Priority 2)
+1. Update bot endpoints to use AI services
+2. Add training endpoint for website crawling
+3. Implement chat endpoint with RAG
+4. Add status/progress tracking
 
-### Completed ✅
-- Authentication middleware (HOF pattern)
-- Workspace management APIs
-- Tiered rate limiting
-- Stripe billing integration
-- Bot CRUD operations
-- 81% test coverage
-
-### Immediate Priorities (Cycle 6)
-1. **Fix Critical Build Issue**
-   - Cheerio ESM incompatibility
-   - Options: Replace with JSDOM or configure webpack
-
-2. **Frontend Integration**
-   - Dashboard components
-   - Bot configuration UI
-   - Chat widget prototype
-   - Billing management UI
-
-3. **Production Readiness**
-   - Redis for rate limiting
-   - API documentation
-   - Error tracking setup
-   - Deployment pipeline
+### Phase 3: Testing & Quality (Priority 3)
+1. Fix test infrastructure issues
+2. Add unit tests for all components
+3. Integration tests for API flows
+4. E2E test for complete chat flow
 
 ## Risk Mitigation
 
 ### Technical Risks
-- **Build Issues**: Already identified, fix prioritized
-- **Vector Search Scale**: Pinecone handles 10M+ vectors
-- **Response Latency**: Edge functions + caching strategy
-- **Cost Management**: Usage-based pricing model
+1. **Missing Dependencies**
+   - Risk: Package.json not updated
+   - Mitigation: Audit and add all required packages
 
-### Business Risks
-- **Competition**: Ship MVP in 2 weeks with differentiators
-- **OpenAI Dependency**: Abstract LLM interface for flexibility
-- **Data Privacy**: GDPR compliance, data encryption
+2. **Test Failures**
+   - Risk: Tests timing out
+   - Mitigation: Fix mock setup and async handling
 
-## Success Metrics
+3. **API Rate Limits**
+   - Risk: OpenAI/Pinecone throttling
+   - Mitigation: Implement exponential backoff
 
-### Technical KPIs
-- Build success rate: 100%
-- Test coverage: >85%
-- API response time: <300ms p95
-- Widget bundle size: <50KB
+### Operational Risks
+1. **Cost Overruns**
+   - Risk: High API usage costs
+   - Mitigation: Implement caching, batch processing
 
-### Business KPIs
-- Time to first bot: <60 seconds
-- User activation rate: >40%
-- Chat engagement rate: >25%
-- Customer retention: >80% MoM
+2. **Performance Issues**
+   - Risk: Slow response times
+   - Mitigation: Optimize vector search, add caching
 
-## Next Steps
+## Success Criteria
+- [ ] All AI components implemented and in PR
+- [ ] 100% test pass rate
+- [ ] < 2s chat response time
+- [ ] Successful website crawl demo
+- [ ] Working end-to-end chat flow
+- [ ] PR approved and merged
 
-1. Fix Cheerio build issue
-2. Complete frontend components
-3. Integrate Redis
-4. Deploy to staging
-5. Begin crawler implementation
+## Dependencies
+- OpenAI API key (GPT-4, Ada-002)
+- Pinecone API key and environment
+- Playwright for web scraping
+- Redis for queue management
 
-## Cost Estimates
+## Timeline
+- Implementation: 4 hours
+- Testing: 2 hours
+- Integration: 2 hours
+- Total: 8 hours
 
-### Development (Monthly)
-- Vercel: $20 (Pro)
-- Supabase: $25 (Pro)
-- Pinecone: $70 (Starter)
-- OpenAI: $500-1000 (usage-based)
-- Stripe: 2.9% + $0.30/transaction
-- **Total**: ~$1,200/month initially
-
-### Scaling Costs
-- 1,000 users: ~$3,000/month
-- 5,000 users: ~$8,000/month
-- 10,000 users: ~$15,000/month
+## Next Steps After Cycle 8
+1. Frontend UI implementation
+2. Widget development
+3. Production deployment
+4. Performance optimization
+5. Platform integrations

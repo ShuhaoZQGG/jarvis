@@ -1,122 +1,161 @@
-# Next Cycle Tasks - Post Cycle 5 Review
+# Next Cycle Tasks
 
-## Cycle 5 Status: ✅ APPROVED & MERGED
-Cycle 5 successfully implemented backend infrastructure and has been merged to main branch.
+## 🔴 CRITICAL - Cycle 7 Revision Required
+Cycle 7 has been marked as **NEEDS_REVISION**. The following must be completed before proceeding to Cycle 8.
 
-## Priority 1: Fix Test Environment (Technical Debt)
-- [ ] Fix Next.js Request/Response mock setup in jest.setup.js
-- [ ] Resolve failing test suites: middleware.test.ts, ratelimit.test.ts, workspaces route tests
-- [ ] Add `import 'openai/shims/node'` where needed for OpenAI tests
-- [ ] Ensure 100% test pass rate before new features
+### Immediate Actions Required
+1. **Complete Missing Implementation**
+   - [ ] Add WebsiteCrawler implementation to PR (src/lib/crawler/)
+   - [ ] Add PineconeService implementation to PR (src/lib/vectors/)
+   - [ ] Add EmbeddingService implementation to PR (src/lib/embeddings/)
+   - [ ] Add RAGEngine implementation to PR (src/lib/rag/)
+   - [ ] Ensure all code is committed and pushed to branch
 
-## Priority 2: Frontend Integration for Cycle 5 Features
-- [ ] Create React components for workspace management UI
-- [ ] Build billing/subscription management dashboard
-- [ ] Implement API key generation and management UI
-- [ ] Add workspace switcher component in dashboard header
-- [ ] Create onboarding flow for new users with default workspace creation
-- [ ] Integrate authentication middleware in frontend routes
+2. **Fix Critical Issues**
+   - [ ] Resolve test timeout problems
+   - [ ] Fix TypeScript compilation errors
+   - [ ] Update package.json with missing dependencies
+   - [ ] Ensure PR contains actual implementation code
 
-## Priority 3: Complete Core Features
+3. **Integration Requirements**
+   - [ ] Connect AI components to existing bot endpoints
+   - [ ] Add error handling and retry logic
+   - [ ] Implement rate limiting for external APIs
+   - [ ] Add environment variable validation
 
-### High Priority Features
-1. **Stripe Payment Integration**
-   - Subscription tiers (Free, Pro, Enterprise)
-   - Usage-based billing
-   - Payment webhook handling
-   - Billing dashboard UI
+## Priority 1: Complete Cycle 7 AI Features
+### WebsiteCrawler (src/lib/crawler/)
+- [ ] Playwright-based web scraping
+- [ ] Sitemap.xml parsing
+- [ ] JavaScript rendering support
+- [ ] Robots.txt compliance
+- [ ] Clean text extraction
+- [ ] URL normalization
 
-2. **Complete Vector Database Operations**
-   - Full Pinecone integration with real API keys
-   - Embedding generation pipeline
-   - Similarity search optimization
-   - Index management
+### EmbeddingService (src/lib/embeddings/)
+- [ ] OpenAI Ada-002 integration
+- [ ] Text chunking (512 tokens with 50 token overlap)
+- [ ] Batch processing for efficiency
+- [ ] Error recovery with exponential backoff
+- [ ] Token counting and validation
 
-3. **Real-time Chat Streaming**
-   - Implement OpenAI streaming responses
-   - Add typing indicators
-   - Message queue for rate limiting
-   - Error recovery mechanisms
+### PineconeService (src/lib/vectors/)
+- [ ] Index initialization and management
+- [ ] Namespace per bot strategy
+- [ ] Vector upsert operations
+- [ ] Similarity search (top-k retrieval)
+- [ ] Metadata filtering
+- [ ] Index cleanup utilities
 
-### Medium Priority Features
-4. **Advanced Web Scraping**
-   - Sitemap.xml parsing
-   - Multi-page crawling with depth control
-   - JavaScript-rendered content support
-   - Incremental updates
+### RAGEngine (src/lib/rag/)
+- [ ] Context retrieval from vectors
+- [ ] Prompt engineering for GPT-4
+- [ ] Response generation
+- [ ] Conversation history management
+- [ ] Response caching (1 hour TTL)
+- [ ] Source attribution
 
-5. **User & Workspace Management**
-   - Multi-tenant architecture completion
-   - Team collaboration features
-   - Role-based access control
-   - API key management
+## Priority 2: Testing & Quality
+- [ ] Fix test infrastructure (timeout issues)
+- [ ] Add unit tests for all AI components
+- [ ] Integration tests for API endpoints
+- [ ] E2E tests for chat flow
+- [ ] Performance testing for crawling
+- [ ] Load testing for concurrent chats
 
-6. **Bot Configuration UI**
-   - Custom greeting messages
-   - Suggested questions setup
-   - Appearance customization
-   - Behavior tuning
+## Priority 3: Frontend UI (Cycle 8)
+### Bot Training Interface
+- [ ] URL input with validation
+- [ ] Crawl progress indicator
+- [ ] Knowledge base viewer
+- [ ] Test chat interface
+- [ ] Training status dashboard
+- [ ] Error handling UI
 
-### Low Priority (But Important)
-7. **Production Readiness**
-   - Comprehensive error handling
-   - Structured logging (Winston/Pino)
-   - Health check endpoints
-   - Performance monitoring
+### Chat Widget MVP
+- [ ] Preact-based implementation
+- [ ] PostMessage API for communication
+- [ ] Basic customization options
+- [ ] Mobile responsive design
+- [ ] Embed code generator
 
-8. **Analytics Dashboard**
-   - Conversation metrics
-   - User engagement tracking
-   - Response time analytics
-   - Usage statistics
+## Priority 4: Infrastructure (Cycle 9)
+### Queue System
+- [ ] BullMQ with Redis setup
+- [ ] Background job processing
+- [ ] Job status tracking
+- [ ] Retry mechanisms
+- [ ] Dead letter queue
 
-## Technical Debt
-- Improve TypeScript type definitions
-- Add integration tests
-- Implement proper caching strategy
-- Optimize bundle size
-- Add API documentation (OpenAPI/Swagger)
+### Monitoring & Logging
+- [ ] Sentry error tracking
+- [ ] API usage metrics
+- [ ] Performance monitoring
+- [ ] Cost tracking for APIs
+- [ ] Alert system
 
-## Security Enhancements
-- Implement rate limiting properly (Redis)
-- Add CORS configuration for widget
-- Set up CSP headers
-- Implement request signing for widget-API communication
-- Add input sanitization middleware
+## Technical Debt from Previous Cycles
+- [ ] Fix Next.js Request/Response mock setup in tests
+- [ ] Resolve remaining test failures from Cycle 5
+- [ ] Implement Redis for production rate limiting
+- [ ] Generate API documentation
+- [ ] Add missing TypeScript types
 
-## Documentation Needs
-- API documentation
-- Widget integration guide
-- Self-hosting instructions
-- Contributing guidelines
-- Architecture decision records (ADRs)
+## Future Enhancements (Cycles 10-15)
+### Widget Excellence
+- Multiple widget variants (sidebar, modal, inline)
+- Smart triggers (scroll, time, exit-intent)
+- Quick action buttons
+- Conversation memory across navigation
+- A/B testing framework
 
-## DevOps & Deployment
-- Set up CI/CD pipeline (GitHub Actions)
-- Configure Vercel deployment
-- Environment variable management
-- Database migrations setup
-- Monitoring and alerting (Sentry)
+### Platform Integrations
+- Shopify app
+- WordPress plugin
+- Slack integration
+- Microsoft Teams bot
+- Webhook system
 
-## Performance Optimizations
-- Implement caching layer (Redis)
-- Optimize database queries
-- Add CDN for static assets
-- Lazy loading for dashboard
-- WebSocket for real-time updates
+### Enterprise Features
+- White-label support
+- SSO integration
+- Advanced analytics
+- Custom model support
+- Data residency options
 
----
+## Resource Requirements
+### API Keys Needed
+- [ ] OpenAI API key (GPT-4 and Ada-002)
+- [ ] Pinecone API key and environment
+- [ ] Redis connection string
+- [ ] Sentry DSN
 
-## Success Metrics to Track
+### Infrastructure Setup
+- [ ] Vercel deployment configuration
+- [ ] Supabase project (already set up)
+- [ ] CDN configuration
+- [ ] Domain and SSL setup
+
+## Success Metrics for Cycle 7 Revision
+- [ ] PR #4 updated with complete implementation
 - [ ] All tests passing (100% green)
-- [ ] Build time < 60 seconds
-- [ ] Chat response time < 500ms
-- [ ] Widget bundle size < 100KB
-- [ ] Lighthouse score > 90
+- [ ] Successful website crawl demonstration
+- [ ] Working RAG-based chat responses
+- [ ] < 2s response time for chat queries
+- [ ] Proper error handling throughout
 
-## Notes for Next Cycle
-1. The foundation is solid - Cheerio build issue is resolved
-2. Authentication system is working with Supabase
-3. Dashboard UI is implemented but needs more features
-4. Focus should be on completing the chat functionality end-to-end
-5. Consider deploying a staging environment early for testing
+## Notes
+1. **CRITICAL**: Cycle 7 must be completed before moving to Cycle 8
+2. The planning and design work is solid, but implementation is missing
+3. Focus on getting core AI features working end-to-end
+4. Consider cost implications of API usage early
+5. Implement caching to reduce API costs
+6. Ensure proper error handling for external service failures
+
+## Definition of Done for Cycle 7
+- [ ] All AI components implemented and tested
+- [ ] PR contains complete implementation code
+- [ ] Tests passing without timeouts
+- [ ] Documentation updated
+- [ ] Code reviewed and approved
+- [ ] Successfully merged to main branch
