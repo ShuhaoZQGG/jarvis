@@ -1,162 +1,307 @@
-# Project Jarvis - Architectural Plan
+# Project Jarvis - Comprehensive Project Plan
 
 ## Executive Summary
-AI-powered chatbot SaaS that enables instant website integration through URL training, competing with SiteGPT's $15K MRR model with enhanced features and better UX.
+Building an AI-powered chatbot SaaS platform that enables instant website-trained chatbot deployment, replicating SiteGPT's $15K MRR success model with enhanced features and superior UX.
 
 ## Requirements
 
 ### Functional Requirements
 1. **Core Features**
-   - Website content scraping and processing
-   - AI chatbot training on scraped content
+   - URL-based website scraping with content extraction
+   - AI chatbot training via RAG (Retrieval Augmented Generation)
    - Embeddable chat widget (60-second setup)
    - Real-time conversation handling
    - Multi-tenant workspace management
 
-2. **Differentiation Features**
+2. **Differentiators**
    - Multiple widget types (bubble, sidebar, modal, inline)
-   - Smart triggers (scroll/time/exit-intent)
+   - Smart triggers (scroll, time, exit-intent)
    - Context-aware greetings per page
-   - Quick action buttons
+   - Quick action buttons (Book Demo, Pricing, Contact)
    - Conversation memory across navigation
-   - Platform integrations (Shopify, WordPress)
+   - Platform integrations (Shopify, WordPress, SaaS dashboards)
 
 ### Non-Functional Requirements
-- Widget load time < 200ms
-- Chat response time < 500ms
-- Mobile performance score > 90
-- WCAG 2.1 AA compliance
-- 99.9% uptime SLA
+- **Performance**: Widget <200ms load, <2s chat response
+- **Scalability**: Support 10k+ concurrent users
+- **Security**: SOC 2 compliance ready, data encryption
+- **Availability**: 99.9% uptime SLA
+- **Accessibility**: WCAG 2.1 AA compliance
 
 ## Architecture
 
-### Tech Stack
-- **Frontend**: Next.js 14 (App Router)
-- **Backend**: Next.js API Routes
-- **Database**: Supabase (PostgreSQL + Auth)
-- **Vector DB**: Pinecone
-- **AI**: OpenAI GPT-4
-- **Payments**: Stripe
-- **Hosting**: Vercel
-- **CDN**: Cloudflare
-- **Monitoring**: Sentry, Vercel Analytics
+### Tech Stack (Finalized)
+```yaml
+Frontend:
+  - Framework: Next.js 14 (App Router)
+  - UI: Tailwind CSS + Radix UI
+  - State: Zustand
+  - Data: TanStack Query
 
-### System Components
+Backend:
+  - Runtime: Node.js + TypeScript
+  - API: REST → tRPC migration
+  - Database: PostgreSQL (Supabase)
+  - Auth: Supabase Auth
+  - Cache: Redis (Upstash)
+
+AI/ML:
+  - Embeddings: OpenAI Ada-002
+  - Vector DB: Pinecone
+  - LLM: GPT-4 Turbo
+  - Scraping: Playwright + JSDOM
+
+Infrastructure:
+  - Hosting: Vercel
+  - CDN: Cloudflare
+  - Queue: BullMQ (Redis)
+  - Storage: S3 (attachments)
 ```
-┌─────────────┐     ┌──────────────┐     ┌───────────┐
-│   Next.js   │────▶│  Supabase    │────▶│  Pinecone │
-│   Frontend  │     │  PostgreSQL  │     │  Vector   │
-└─────────────┘     └──────────────┘     └───────────┘
-       │                    │                    │
-       ▼                    ▼                    ▼
-┌─────────────┐     ┌──────────────┐     ┌───────────┐
-│  API Routes │────▶│    OpenAI    │────▶│  Stripe   │
-│   Backend   │     │    GPT-4     │     │  Billing  │
-└─────────────┘     └──────────────┘     └───────────┘
+
+### System Architecture
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│   Widget    │────▶│  CDN/Edge    │────▶│   API       │
+└─────────────┘     └──────────────┘     └─────────────┘
+                                                │
+                    ┌───────────────────────────┼───────────────┐
+                    │                           │               │
+              ┌─────▼─────┐           ┌────────▼──────┐  ┌─────▼────┐
+              │  Scraper  │           │   Embeddings  │  │   Chat   │
+              └─────┬─────┘           └────────┬──────┘  └─────┬────┘
+                    │                          │                │
+              ┌─────▼─────┐           ┌────────▼──────┐  ┌─────▼────┐
+              │ Queue/Job │           │   Pinecone    │  │  OpenAI  │
+              └───────────┘           └───────────────┘  └──────────┘
 ```
 
 ## Implementation Phases
 
-### Phase 1: Foundation (Cycle 6) ✅
-- Fix build issues (Cheerio/Webpack)
-- Complete test suite fixes
-- Frontend components for existing backend
-- Redis integration for rate limiting
-
-### Phase 2: Core Product (Cycles 7-8)
-- Website crawler with sitemap support
-- Vector embedding pipeline
-- Chat interface and widget
-- Basic dashboard UI
-- Conversation persistence
-
-### Phase 3: Monetization (Cycles 9-10)
-- Stripe subscription tiers
-- Usage metering and limits
-- Billing portal
-- API key management
-- Analytics dashboard
-
-### Phase 4: Scale & Optimize (Cycles 11-12)
-- Multi-page crawling
-- JavaScript rendering support
-- Advanced widget customization
-- Platform integrations
-- Performance optimization
-
-## Current Status (Post-Cycle 5)
-
-### Completed ✅
+### Phase 1: Foundation (Cycles 1-6) ✅ COMPLETED
+- Next.js setup with TypeScript
 - Authentication middleware (HOF pattern)
-- Workspace management APIs
-- Tiered rate limiting
+- Workspace management
+- Rate limiting (tiered)
 - Stripe billing integration
-- Bot CRUD operations
-- 81% test coverage
+- Frontend components (Dashboard, Bot Config, Widget)
+- 92 tests passing
 
-### Immediate Priorities (Cycle 6)
-1. **Fix Critical Build Issue**
-   - Cheerio ESM incompatibility
-   - Options: Replace with JSDOM or configure webpack
+### Phase 2: Core AI (Cycles 7-9) 🚧 CURRENT
+**Cycle 7 Focus (Current):**
+1. Website crawler implementation
+   - Playwright-based scraping
+   - JavaScript rendering support
+   - Robots.txt compliance
+   - Clean text extraction
 
-2. **Frontend Integration**
-   - Dashboard components
-   - Bot configuration UI
-   - Chat widget prototype
-   - Billing management UI
+2. Vector embedding pipeline
+   - OpenAI Ada-002 integration
+   - Text chunking (512 tokens)
+   - Batch processing
+   - Error recovery
 
-3. **Production Readiness**
-   - Redis for rate limiting
-   - API documentation
-   - Error tracking setup
-   - Deployment pipeline
+3. Pinecone integration
+   - Namespace per bot
+   - Metadata structure
+   - Query optimization
+   - Index management
 
-## Risk Mitigation
+4. Basic RAG implementation
+   - Context retrieval
+   - Prompt engineering
+   - Response generation
+
+**Cycle 8:**
+- OpenAI chat completion
+- Conversation context
+- Response optimization
+- Streaming responses
+
+**Cycle 9:**
+- WebSocket support
+- Conversation persistence
+- Analytics tracking
+- Performance tuning
+
+### Phase 3: Widget Excellence (Cycles 10-11)
+- Multiple widget variants
+- Smart triggers
+- Quick actions
+- Mobile optimization
+- A/B testing
+
+### Phase 4: Enterprise (Cycles 12-13)
+- White-label support
+- SSO integration
+- Advanced analytics
+- Compliance features
+
+### Phase 5: Platform Integrations (Cycles 14-15)
+- Shopify app
+- WordPress plugin
+- Slack integration
+- Webhook system
+
+## Risk Assessment
 
 ### Technical Risks
-- **Build Issues**: Already identified, fix prioritized
-- **Vector Search Scale**: Pinecone handles 10M+ vectors
-- **Response Latency**: Edge functions + caching strategy
-- **Cost Management**: Usage-based pricing model
+| Risk | Impact | Likelihood | Mitigation |
+|------|--------|------------|------------|
+| OpenAI rate limits | High | Medium | Caching, fallback models, queue management |
+| Scraping blocks | Medium | High | Rotating proxies, respectful crawling, caching |
+| Vector search latency | Medium | Low | Query optimization, caching layer |
+| Widget performance | High | Low | Code splitting, lazy loading, CDN |
+| Scaling costs | High | Medium | Usage-based pricing, cost optimization |
 
 ### Business Risks
-- **Competition**: Ship MVP in 2 weeks with differentiators
-- **OpenAI Dependency**: Abstract LLM interface for flexibility
-- **Data Privacy**: GDPR compliance, data encryption
+| Risk | Impact | Likelihood | Mitigation |
+|------|--------|------------|------------|
+| Market competition | High | High | Rapid iteration, unique features |
+| Compliance issues | High | Low | Early legal consultation, data policies |
+| Customer churn | Medium | Medium | Superior UX, quick onboarding |
+
+## Development Priorities (Cycle 7)
+
+### 1. Website Crawler (src/lib/crawler/)
+```typescript
+interface CrawlerConfig {
+  maxPages: number;
+  respectRobotsTxt: boolean;
+  jsRendering: boolean;
+  timeout: number;
+}
+```
+
+### 2. Embedding Service (src/lib/embeddings/)
+```typescript
+interface EmbeddingService {
+  generateEmbeddings(texts: string[]): Promise<number[][]>;
+  chunkText(text: string, maxTokens: number): string[];
+}
+```
+
+### 3. Vector Storage (src/lib/vectors/)
+```typescript
+interface VectorStore {
+  upsert(vectors: Vector[]): Promise<void>;
+  query(vector: number[], k: number): Promise<Match[]>;
+  deleteNamespace(namespace: string): Promise<void>;
+}
+```
+
+### 4. RAG Engine (src/lib/rag/)
+```typescript
+interface RAGEngine {
+  retrieveContext(query: string): Promise<Context[]>;
+  generateResponse(query: string, context: Context[]): Promise<string>;
+}
+```
 
 ## Success Metrics
 
 ### Technical KPIs
-- Build success rate: 100%
+- Build success: 100%
 - Test coverage: >85%
-- API response time: <300ms p95
-- Widget bundle size: <50KB
+- Response time: <2s p95
+- Widget size: <50KB
+- Uptime: >99.9%
 
 ### Business KPIs
-- Time to first bot: <60 seconds
-- User activation rate: >40%
-- Chat engagement rate: >25%
-- Customer retention: >80% MoM
+- Activation rate: >40%
+- Monthly churn: <5%
+- Response accuracy: >85%
+- Support reduction: >30%
+- MRR growth: 20% MoM
 
-## Next Steps
+## Resource Requirements
 
-1. Fix Cheerio build issue
-2. Complete frontend components
-3. Integrate Redis
-4. Deploy to staging
-5. Begin crawler implementation
+### Infrastructure Costs (Monthly)
+- Vercel: $20-100
+- Supabase: $25-100
+- Pinecone: $70-500
+- OpenAI: $100-1000
+- Redis: $10-50
+- **Total**: $225-1750
 
-## Cost Estimates
-
-### Development (Monthly)
-- Vercel: $20 (Pro)
-- Supabase: $25 (Pro)
-- Pinecone: $70 (Starter)
-- OpenAI: $500-1000 (usage-based)
-- Stripe: 2.9% + $0.30/transaction
-- **Total**: ~$1,200/month initially
-
-### Scaling Costs
-- 1,000 users: ~$3,000/month
+### Scaling Projections
+- 100 users: ~$500/month
+- 1,000 users: ~$2,000/month
 - 5,000 users: ~$8,000/month
 - 10,000 users: ~$15,000/month
+
+## Timeline
+
+### Immediate (Cycle 7 - This Week)
+- [ ] Implement website crawler
+- [ ] Setup Pinecone integration
+- [ ] Create embedding pipeline
+- [ ] Basic RAG implementation
+
+### Short-term (2-4 weeks)
+- Complete AI chat functionality
+- Launch beta version
+- Onboard 10 beta users
+- Gather feedback
+
+### Medium-term (1-3 months)
+- Production deployment
+- Marketing website
+- 100 paying customers
+- $5K MRR milestone
+
+### Long-term (3-6 months)
+- Platform integrations
+- Enterprise features
+- $15K MRR target
+- Series A preparation
+
+## Quality Assurance
+
+### Testing Strategy
+- Unit tests: Business logic (Jest)
+- Integration tests: API endpoints
+- E2E tests: Critical flows (Playwright)
+- Load tests: Performance (k6)
+- Security tests: OWASP compliance
+
+### Monitoring Stack
+- Errors: Sentry
+- Performance: Vercel Analytics
+- Uptime: Better Uptime
+- Logs: Axiom
+- User: PostHog
+
+## Go-to-Market Strategy
+
+### Launch Plan
+1. Beta with 10 design partners
+2. Product Hunt launch
+3. SEO content marketing
+4. Developer community engagement
+5. Strategic partnerships
+
+### Pricing Strategy
+- **Free**: 1 bot, 100 chats/month
+- **Pro**: $29/mo, 5 bots, 5k chats
+- **Business**: $99/mo, unlimited bots, 25k chats
+- **Enterprise**: Custom pricing
+
+## Success Criteria
+
+### MVP Launch (2 weeks)
+- Core functionality complete
+- 10 beta users onboarded
+- <2s response time
+- Zero critical bugs
+
+### Growth Phase (3 months)
+- 100 paying customers
+- $5K MRR
+- 85% satisfaction score
+- <5% monthly churn
+
+### Scale Phase (6 months)
+- 500 paying customers
+- $15K MRR
+- Platform integrations live
+- Series A ready
