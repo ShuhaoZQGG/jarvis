@@ -11,6 +11,8 @@ jest.mock('playwright', () => ({
         close: jest.fn(),
         waitForLoadState: jest.fn(),
         $$eval: jest.fn(),
+        setUserAgent: jest.fn(),
+        content: jest.fn().mockResolvedValue('<html></html>'),
       }),
       close: jest.fn(),
     }),
@@ -29,6 +31,8 @@ describe('WebsiteCrawler', () => {
       close: jest.fn(),
       waitForLoadState: jest.fn(),
       $$eval: jest.fn(),
+      setUserAgent: jest.fn(),
+      content: jest.fn().mockResolvedValue('<html></html>'),
     };
   });
 

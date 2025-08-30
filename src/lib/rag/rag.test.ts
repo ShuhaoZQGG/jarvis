@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+import 'openai/shims/node';
 import { RAGEngine } from './rag';
 import { PineconeService } from '../vectors/pinecone';
 import { EmbeddingService } from '../embeddings/embeddings';
