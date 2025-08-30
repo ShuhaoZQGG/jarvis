@@ -1,290 +1,256 @@
-# UI/UX Design Specifications
+# Project Jarvis - UI/UX Design Specifications
 
 ## Design System
 
-### Colors
+### Color Palette
 - **Primary**: #6366F1 (Indigo-500)
-- **Secondary**: #10B981 (Emerald-500)
-- **Background**: #FFFFFF / #0F172A (dark mode)
-- **Surface**: #F8FAFC / #1E293B
-- **Text**: #1E293B / #F1F5F9
-- **Border**: #E2E8F0 / #334155
-- **Error**: #EF4444
-- **Success**: #10B981
-- **Warning**: #F59E0B
+- **Secondary**: #8B5CF6 (Violet-500)
+- **Success**: #10B981 (Emerald-500)
+- **Warning**: #F59E0B (Amber-500)
+- **Error**: #EF4444 (Red-500)
+- **Neutral**: #6B7280 (Gray-500)
+- **Background**: #FFFFFF / #111827 (Dark mode)
+- **Surface**: #F9FAFB / #1F2937 (Dark mode)
 
 ### Typography
-- **Font**: Inter (primary), system-ui (fallback)
-- **Headings**: 600-700 weight
-- **Body**: 400-500 weight
-- **Code**: 'Fira Code', monospace
+- **Font**: Inter (Primary), system-ui (Fallback)
+- **Headings**: 48/36/24/20/16px (Bold)
+- **Body**: 16/14px (Regular)
+- **Caption**: 12px (Medium)
 
 ### Spacing
 - Base unit: 4px
-- Padding: 16px (standard), 24px (large)
-- Margins: 8px (tight), 16px (normal), 32px (loose)
-- Border radius: 6px (small), 12px (medium), 16px (large)
+- Scale: 4, 8, 12, 16, 24, 32, 48, 64px
 
 ## User Journeys
 
-### 1. New User Onboarding
+### 1. First-Time User Flow
 ```
-Landing → Sign Up → Email Verify → Dashboard → Add Website → Configure Bot → Get Code → Install
-```
-
-### 2. Returning User
-```
-Login → Dashboard → Select Bot → View Analytics → Manage Conversations → Update Settings
+Landing → Sign Up → Email Verify → Dashboard → Create Bot → Enter URL → Processing → Widget Code → Install
 ```
 
-### 3. End User (Website Visitor)
+### 2. Returning User Flow
 ```
-Visit Site → See Widget → Click to Open → Type Question → Get Response → Follow Up → Rate
+Login → Dashboard → Select Bot → Analytics/Settings → Customize → Save
 ```
 
-## Page Layouts
+### 3. End-User Chat Flow
+```
+Page Load → Widget Appears → User Clicks → Chat Opens → Type Question → Get Response → Quick Actions
+```
+
+## Page Mockups
 
 ### Landing Page
 ```
-┌──────────────────────────────────┐
-│        Navigation Bar            │
-├──────────────────────────────────┤
-│                                  │
-│     Hero Section                 │
-│   "AI Chatbot in 60 Seconds"    │
-│   [Try Demo] [Get Started]       │
-│                                  │
-├──────────────────────────────────┤
-│   How It Works (3 steps)         │
-│   1. Add URL  2. Train  3. Embed │
-├──────────────────────────────────┤
-│   Features Grid (2x3)            │
-├──────────────────────────────────┤
-│   Pricing Cards                  │
-├──────────────────────────────────┤
-│   Footer                         │
-└──────────────────────────────────┘
+┌─────────────────────────────────────┐
+│ Logo  Features  Pricing  Docs  Login│
+├─────────────────────────────────────┤
+│                                     │
+│  AI Chatbot in 60 Seconds          │
+│  Train on your website instantly   │
+│  [Get Started] [View Demo]         │
+│                                     │
+├─────────────────────────────────────┤
+│  ┌───┐  ┌───┐  ┌───┐              │
+│  │URL│→ │AI │→ │Bot│              │
+│  └───┘  └───┘  └───┘              │
+├─────────────────────────────────────┤
+│  Features Grid (3x2)                │
+│  • Smart Triggers                   │
+│  • Multiple Widgets                 │
+│  • Quick Actions                    │
+│  • Mobile Optimized                 │
+│  • Analytics                        │
+│  • Integrations                     │
+└─────────────────────────────────────┘
 ```
 
 ### Dashboard
 ```
-┌─────────┬────────────────────────┐
-│ Sidebar │    Main Content Area    │
-│         │                         │
-│ Bots    │  Stats Cards (4)        │
-│ Chats   │  ┌────┬────┬────┬────┐ │
-│ Train   │  │    │    │    │    │ │
-│ Embed   │  └────┴────┴────┴────┘ │
-│ Billing │                         │
-│ Settings│  Recent Conversations    │
-│         │  ┌─────────────────────┐│
-│ [User]  │  │ Table with actions  ││
-│ [Logout]│  └─────────────────────┘│
-└─────────┴────────────────────────┘
+┌─────────────────────────────────────┐
+│ [J] Jarvis   Workspace ▼   Profile  │
+├───────┬─────────────────────────────┤
+│ Bots  │  Active Bots (3)            │
+│ Usage │  ┌─────────────────┐        │
+│ Billing│ │ Bot Name        │        │
+│ Settings│ │ 1.2k chats/mo  │        │
+│ API   │  │ [Configure][▶]  │        │
+│       │  └─────────────────┘        │
+│       │  [+ Create New Bot]         │
+└───────┴─────────────────────────────┘
 ```
 
 ### Bot Configuration
 ```
-┌──────────────────────────────────┐
-│     Bot Name & Status Toggle     │
-├──────────────────────────────────┤
-│  Tabs: General | Training | Style│
-├──────────────────────────────────┤
-│                                  │
-│  Tab Content                     │
-│  - URL Input                     │
-│  - Crawl Settings                │
-│  - Training Status               │
-│  - Preview Window                │
-│                                  │
-│  [Save Changes] [Train Now]      │
-└──────────────────────────────────┘
+┌─────────────────────────────────────┐
+│ ← Back   Bot Settings               │
+├─────────────────────────────────────┤
+│ Tabs: General | Training | Widget | │
+├─────────────────────────────────────┤
+│ Website URL                         │
+│ [_____________________] [Retrain]   │
+│                                     │
+│ Pages Indexed: 42                   │
+│ Last Updated: 2 hours ago           │
+│                                     │
+│ Greeting Message                    │
+│ [Hello! How can I help?_____]      │
+│                                     │
+│ Quick Actions                       │
+│ □ Book Demo                        │
+│ □ View Pricing                     │
+│ □ Contact Sales                    │
+│                                     │
+│ [Save Changes]                      │
+└─────────────────────────────────────┘
 ```
 
-## Component Specifications
-
-### Chat Widget (Embedded)
+### Chat Widget (Bubble → Expanded)
 ```
-Minimized State (60x60px):
-┌────┐
-│ 💬 │ <- Floating button
-└────┘
-
-Expanded State (380x600px):
-┌──────────────────────┐
-│ 🤖 Jarvis Bot    ✕  │ <- Header
-├──────────────────────┤
-│                      │
-│  Chat Messages       │ <- Scrollable
-│                      │
-│  [Suggested Q1]      │ <- Quick actions
-│  [Suggested Q2]      │
-│                      │
-├──────────────────────┤
-│ Type message...  [↑] │ <- Input
-└──────────────────────┘
+Collapsed:                Expanded:
+┌──┐                     ┌─────────────┐
+│💬│                     │ Jarvis  ✕   │
+└──┘                     ├─────────────┤
+                         │ Hi! How can │
+                         │ I help?     │
+                         ├─────────────┤
+                         │ [Book Demo] │
+                         │ [Pricing]   │
+                         ├─────────────┤
+                         │ Type here...│
+                         └─────────────┘
 ```
 
-### Mobile Responsive Breakpoints
-- **Mobile**: < 640px (single column, bottom nav)
-- **Tablet**: 640-1024px (collapsible sidebar)
-- **Desktop**: > 1024px (full layout)
+## Responsive Design
 
-### Mobile Dashboard
-```
-┌──────────────────┐
-│   ☰  Dashboard   │ <- Hamburger menu
-├──────────────────┤
-│  Stats Cards     │ <- Stackable
-│  ┌──────────────┐│
-│  └──────────────┘│
-│  ┌──────────────┐│
-│  └──────────────┘│
-├──────────────────┤
-│  Recent Chats    │ <- Simplified list
-│  ┌──────────────┐│
-│  └──────────────┘│
-├──────────────────┤
-│ [+] [📊] [💬] [⚙]│ <- Bottom nav
-└──────────────────┘
-```
+### Mobile Breakpoints
+- **Mobile**: 320-767px
+- **Tablet**: 768-1023px
+- **Desktop**: 1024px+
 
-## Interaction Patterns
+### Mobile Adaptations
+- Dashboard: Single column, collapsible sidebar
+- Chat Widget: Full-width bottom sheet
+- Forms: Stacked labels, larger touch targets (44x44px min)
+- Tables: Horizontal scroll with sticky first column
 
-### Form Validation
-- Real-time validation on blur
-- Clear error messages below fields
-- Success checkmarks for valid inputs
-- Loading states during submission
+## Widget Variants
 
-### Loading States
-- Skeleton screens for content areas
-- Spinner for button actions
-- Progress bars for training/crawling
-- Shimmer effects for cards
+### 1. Chat Bubble (Default)
+- Position: Bottom-right
+- Size: 56x56px collapsed
+- Animation: Scale + fade in
 
-### Animations
-- Page transitions: 200ms fade
-- Modal open/close: 300ms slide
-- Button hover: scale(1.05)
-- Widget expand: 400ms spring
+### 2. Sidebar
+- Position: Right edge
+- Width: 320px
+- Trigger: Tab on screen edge
 
-## Accessibility Requirements
+### 3. Modal
+- Trigger: Exit intent / time-based
+- Size: 500x600px centered
+- Backdrop: Semi-transparent
+
+### 4. Inline
+- Embeds in page content
+- Height: 400px min
+- Responsive width
+
+## Accessibility
 
 ### WCAG 2.1 AA Compliance
-- Color contrast: 4.5:1 minimum
-- Focus indicators: 2px outline
-- Keyboard navigation: Tab order logical
-- Screen reader: ARIA labels on all interactive elements
-- Skip links: "Skip to main content"
+- **Color Contrast**: 4.5:1 text, 3:1 UI elements
+- **Keyboard Navigation**: Full tab support
+- **Screen Readers**: ARIA labels, live regions
+- **Focus Indicators**: 2px outline offset
+- **Error Messages**: Clear, actionable text
+- **Loading States**: Skeleton screens with announcements
 
-### Keyboard Shortcuts
-- `Esc`: Close modals/widget
-- `Ctrl+K`: Quick search
-- `Tab`: Navigate elements
-- `Enter`: Submit forms
-- `Space`: Toggle checkboxes
+### Interaction States
+- **Default**: Base colors
+- **Hover**: -10% brightness
+- **Active**: -20% brightness
+- **Disabled**: 50% opacity
+- **Focus**: 2px ring
 
-## Widget Customization Options
+## Component Library
 
-### Appearance Settings
-```json
-{
-  "position": "bottom-right",
-  "theme": {
-    "primaryColor": "#6366F1",
-    "fontFamily": "Inter",
-    "borderRadius": "12px"
-  },
-  "greeting": "Hi! How can I help?",
-  "placeholder": "Type your question...",
-  "showSuggestions": true,
-  "autoOpen": false,
-  "openDelay": 3000
-}
-```
+### Buttons
+- Primary: Filled background
+- Secondary: Outlined
+- Ghost: Text only
+- Sizes: sm (32px), md (40px), lg (48px)
 
-### Widget Positions
-- bottom-right (default)
-- bottom-left
-- top-right
-- top-left
-- inline (embedded in page)
+### Forms
+- Input height: 40px
+- Label position: Top
+- Error position: Below input
+- Required indicator: Red asterisk
 
-## Error States
+### Cards
+- Border radius: 8px
+- Shadow: 0 1px 3px rgba(0,0,0,0.1)
+- Padding: 16px
 
-### Empty States
-- No bots: "Create your first bot" CTA
-- No conversations: "Waiting for first chat"
-- No training data: "Add URLs to train"
+### Modals
+- Max width: 500px
+- Border radius: 12px
+- Overlay: rgba(0,0,0,0.5)
 
-### Error Messages
-- Network error: "Connection lost. Retrying..."
-- Rate limit: "Too many requests. Please wait."
-- Invalid input: "Please enter a valid URL"
-- Training failed: "Training error. Try again."
+## Animation Guidelines
 
-## Success Metrics
+### Micro-interactions
+- Duration: 150-300ms
+- Easing: ease-out
+- Properties: transform, opacity only
 
-### User Experience KPIs
-- Time to first bot: < 60 seconds
-- Widget load time: < 200ms
-- Chat response time: < 500ms
-- Mobile performance score: > 90
-- Accessibility score: 100%
+### Page Transitions
+- Slide: 300ms
+- Fade: 200ms
+- Skeleton loading: Pulse animation
 
-## Design Implementation Notes
+## Performance Targets
 
-### CSS Framework
-- Tailwind CSS for utility classes
-- CSS modules for component styles
-- PostCSS for optimization
+### Widget
+- Bundle size: <50KB
+- Load time: <200ms
+- First paint: <100ms
+- Interactive: <300ms
 
-### Component Library
-- Radix UI for accessible primitives
-- Framer Motion for animations
-- React Hook Form for forms
-- Recharts for analytics
+### Dashboard
+- LCP: <2.5s
+- FID: <100ms
+- CLS: <0.1
+- Lighthouse: >90
 
-### Icon Set
-- Lucide React for consistent icons
-- Custom bot avatar system
-- Emoji support in chat
+## Dark Mode
 
-## Responsive Grid System
-```css
-/* Mobile First */
-.container {
-  width: 100%;
-  padding: 0 16px;
-}
-
-/* Tablet */
-@media (min-width: 640px) {
-  .container { max-width: 640px; }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-  .container { max-width: 1024px; }
-}
-
-/* Wide */
-@media (min-width: 1280px) {
-  .container { max-width: 1280px; }
-}
-```
-
-## Dark Mode Support
+### Implementation
+- CSS variables for colors
 - System preference detection
 - Manual toggle in settings
 - Persistent user preference
-- Smooth theme transitions
-- Proper contrast ratios
 
-## Performance Optimizations
-- Lazy load chat history
-- Virtual scrolling for long lists
-- Image optimization with next/image
-- Code splitting by route
-- Prefetch on hover
+### Color Adjustments
+- Backgrounds: Inverted
+- Text: High contrast
+- Shadows: Reduced/removed
+- Borders: Subtle gray
+
+## Frontend Recommendations
+
+### Framework: Next.js 14
+- App Router for better performance
+- Server Components by default
+- Tailwind CSS for styling
+- Radix UI for accessible components
+- Framer Motion for animations
+- React Hook Form for forms
+- Tanstack Query for data fetching
+
+### Widget Tech
+- Preact for smaller bundle
+- Shadow DOM for isolation
+- PostMessage for communication
+- Webpack Module Federation for updates
