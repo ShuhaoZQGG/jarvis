@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
 import ResetPasswordPage from './page'
 import { AuthService } from '@/lib/auth/auth'
@@ -51,33 +51,37 @@ describe('ResetPasswordPage', () => {
   })
 
   it('displays validation error for invalid email', async () => {
-    render(<ResetPasswordPage />)
+    const { getByLabelText, getByRole, getByText } = render(<ResetPasswordPage />)
 
-    const emailInput = screen.getByLabelText(/email/i)
+    const emailInput = getByLabelText(/email/i)
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
 
-    const submitButton = screen.getByRole('button', { name: /send reset link/i })
-    fireEvent.click(submitButton)
-
-    await waitFor(() => {
-      expect(screen.getByText(/please enter a valid email/i)).toBeInTheDocument()
+    const submitButton = getByRole('button', { name: /send reset link/i })
+    
+    await act(async () => {
+      fireEvent.click(submitButton)
     })
+
+    expect(getByText(/please enter a valid email/i)).toBeInTheDocument()
   })
 
   it('successfully sends reset email with valid email', async () => {
     mockResetPassword.mockResolvedValue({ success: true })
-    render(<ResetPasswordPage />)
+    const { getByLabelText, getByRole, getByText } = render(<ResetPasswordPage />)
 
-    const emailInput = screen.getByLabelText(/email/i)
+    const emailInput = getByLabelText(/email/i)
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
 
-    const submitButton = screen.getByRole('button', { name: /send reset link/i })
-    fireEvent.click(submitButton)
+    const submitButton = getByRole('button', { name: /send reset link/i })
+    
+    await act(async () => {
+      fireEvent.click(submitButton)
+    })
 
     await waitFor(() => {
       expect(mockResetPassword).toHaveBeenCalledWith('test@example.com')
-      expect(screen.getByText(/check your email/i)).toBeInTheDocument()
-      expect(screen.getByText(/we've sent a password reset link/i)).toBeInTheDocument()
+      expect(getByText(/check your email/i)).toBeInTheDocument()
+      expect(getByText(/we've sent a password reset link/i)).toBeInTheDocument()
     })
   })
 

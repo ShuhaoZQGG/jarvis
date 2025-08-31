@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@/test/utils'
+import { render, screen, fireEvent, waitFor, act } from '@/test/utils'
 import LoginPage from './page'
 import DashboardPage from '../dashboard/page'
 import { routerMocks } from '@/test/utils'
@@ -82,21 +82,22 @@ describe('Authentication Flow Integration', () => {
   })
 
   it('should validate email format before submission', async () => {
-    render(<LoginPage />)
+    const { getByLabelText, getByRole, getByText } = render(<LoginPage />)
     
-    const emailInput = screen.getByLabelText(/email/i)
-    const passwordInput = screen.getByLabelText(/password/i)
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const emailInput = getByLabelText(/email/i)
+    const passwordInput = getByLabelText(/password/i)
+    const submitButton = getByRole('button', { name: /sign in/i })
     
     // Invalid email format
     fireEvent.change(emailInput, { target: { value: 'notanemail' } })
     fireEvent.change(passwordInput, { target: { value: 'password123' } })
-    fireEvent.click(submitButton)
     
-    await waitFor(() => {
-      expect(mockSignIn).not.toHaveBeenCalled()
-      expect(screen.getByText(/please enter a valid email/i)).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.click(submitButton)
     })
+    
+    expect(mockSignIn).not.toHaveBeenCalled()
+    expect(getByText(/please enter a valid email/i)).toBeInTheDocument()
   })
 
   it('should validate password length before submission', async () => {

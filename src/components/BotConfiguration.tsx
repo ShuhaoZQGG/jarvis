@@ -289,7 +289,7 @@ export default function BotConfiguration({ bot, onSave, onDelete }: BotConfigura
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h3 className="text-lg font-semibold mb-4">Embed Code</h3>
             <div className="bg-gray-50 rounded p-3 mb-4 font-mono text-sm break-all">
-              <script>{`<script src="${typeof window !== 'undefined' ? window.location.origin : ''}/widget.js" data-bot-id="${bot.id}"></script>`}</script>
+              {`<script src="${typeof window !== 'undefined' ? window.location.origin : ''}/widget.js" data-bot-id="${bot.id}"></script>`}
             </div>
             <div className="flex gap-3 justify-end">
               <button
