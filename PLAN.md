@@ -1,135 +1,180 @@
-# Cycle 24: GitHub Issue Workflow & Test Stabilization
+# Jarvis MVP - Architectural Plan
 
-## Vision
-Continue building project by working on GitHub issues and stabilizing the test suite while maintaining the secure authentication improvements from Cycle 23.
+## Project Vision
+AI-powered chatbot builder enabling instant website integration through URL scraping, custom prompts, or manual content. Revenue target: $15K+ MRR following SiteGPT's model.
 
-## Requirements Analysis
+## Core Requirements
 
 ### Functional Requirements
-1. **GitHub Integration Enhancements**
-   - Webhook support for real-time issue updates
-   - Issue templates functionality
-   - Bulk operations for multiple issues
-   - GitHub Actions integration
-   - Environment-based configuration for tokens
+1. **Content Ingestion System**
+   - URL scraping with JavaScript rendering support
+   - Manual content upload interface
+   - Prompt-based configuration wizard
+   - Batch processing queue for large sites
 
-2. **Test Suite Stabilization**
-   - Fix 15 failing service layer tests
-   - Resolve duplicate mock declarations
-   - Achieve 100% test pass rate
-   - Reach 80% test coverage
+2. **AI Processing Pipeline**
+   - RAG-based chatbot using OpenAI embeddings
+   - Vector search via Pinecone
+   - Context-aware response generation with GPT-4
+   - Conversation memory and history
 
-3. **Service Layer Updates**
-   - Fix env-validator warnings
-   - Update monitoring service tests
-   - Fix billing service tests
-   - Update auth middleware tests (6 failures)
-   - Fix github & crawler service tests
+3. **Widget Deployment**
+   - One-click JavaScript embed code
+   - Multiple widget styles (bubble, sidebar, modal, inline)
+   - CDN-hosted for performance
+   - Cross-origin communication via PostMessage
+
+4. **User Management**
+   - Supabase Auth integration
+   - Stripe billing and subscriptions
+   - Usage tracking and limits
+   - Team collaboration features
+
+5. **Customization Platform**
+   - Visual widget builder
+   - Brand theming options
+   - Behavioral triggers configuration
+   - Quick actions and suggested questions
 
 ### Non-Functional Requirements
-- Maintain security improvements from Cycle 23
-- No breaking changes to existing APIs
-- Performance: <2.5s page load times
-- Accessibility: WCAG 2.1 AA compliance
+- Response time < 2 seconds
+- 99.9% uptime SLA
+- GDPR/SOC2 compliant
+- Support 10K+ concurrent users
+- Mobile-responsive across all devices
+- WCAG 2.1 AA accessibility
 
-## Architecture Overview
+## Technical Architecture
 
-### Current Stack
-- **Frontend**: Next.js 14 App Router, Tailwind CSS, Radix UI
-- **Backend**: Node.js, Express middleware patterns
-- **Database**: PostgreSQL with Prisma ORM
-- **Auth**: NextAuth.js with JWT tokens
-- **Testing**: Jest, React Testing Library
-- **CI/CD**: GitHub Actions
+### Tech Stack
+- **Frontend**: Next.js 14 (App Router) + TypeScript + Tailwind CSS
+- **Backend**: Next.js API Routes + Supabase Edge Functions
+- **Database**: Supabase (PostgreSQL with RLS)
+- **Vector DB**: Pinecone for embeddings
+- **AI**: OpenAI GPT-4 API
+- **Auth**: Supabase Auth
+- **Payments**: Stripe
+- **CDN**: Cloudflare
+- **Hosting**: Vercel
+- **Monitoring**: Sentry + Supabase Analytics
 
-### Key Architectural Decisions
-1. **Modular Service Architecture**: Separate services for auth, GitHub, billing, monitoring
-2. **API Security**: Bearer token authentication in headers (implemented Cycle 23)
-3. **Test Organization**: Unit tests alongside components, integration tests in __tests__
-4. **State Management**: React Context for auth, SWR for data fetching
+### System Architecture
+```
+┌─────────────────┐     ┌──────────────┐     ┌─────────────────┐
+│  User Website   │────▶│ Chat Widget  │────▶│  Edge Function  │
+└─────────────────┘     └──────────────┘     └─────────────────┘
+                                                       │
+                                                       ▼
+                              ┌────────────────────────┴──────────────┐
+                              │         RAG Pipeline                  │
+                              │  ┌──────────┐  ┌──────────┐         │
+                              │  │Embeddings│──│ Pinecone │         │
+                              │  └──────────┘  └──────────┘         │
+                              │  ┌──────────┐  ┌──────────┐         │
+                              │  │ OpenAI   │──│ Supabase │         │
+                              │  └──────────┘  └──────────┘         │
+                              └────────────────────────────────────────┘
+```
 
-## Development Phases
+### Database Schema (Existing)
+- **workspaces**: Multi-tenant workspace management
+- **bots**: Chatbot configurations and settings
+- **conversations**: Chat sessions and history
+- **messages**: Individual chat messages
+- **content_sources**: Scraped/uploaded content
+- **embeddings**: Vector embeddings for RAG
+- **subscriptions**: Stripe subscription data
+- **analytics_events**: Usage and performance metrics
 
-### Phase 1: Test Suite Stabilization (Priority)
-**Goal**: Achieve 100% test pass rate
-- Fix service layer test failures
-- Resolve duplicate mock declarations
-- Standardize mocking patterns
-- Update outdated test expectations
+## Implementation Phases
 
-### Phase 2: GitHub Webhook Integration
-**Goal**: Real-time issue updates
-- Implement webhook endpoint
-- Add webhook signature verification
-- Create event processing queue
-- Update UI for real-time updates
+### Phase 1: Core Infrastructure ✅ (Completed)
+- Supabase setup with RLS policies
+- Authentication system
+- Basic database schema
+- Edge Functions deployment
+- Widget prototype
 
-### Phase 3: Issue Templates & Bulk Operations
-**Goal**: Enhanced issue management
-- Create issue template system
-- Implement bulk selection UI
-- Add batch API endpoints
-- Support bulk status updates
+### Phase 2: Production Readiness ✅ (Current)
+- Security hardening (SQL injection fixes)
+- Rate limiting implementation
+- Analytics infrastructure
+- Stripe webhook integration
+- Production API endpoints
 
-### Phase 4: GitHub Actions Integration
-**Goal**: CI/CD pipeline improvements
-- Create workflow dispatch API
-- Add workflow status monitoring
-- Implement artifact management
-- Create deployment automation
+### Phase 3: Content Pipeline (Next Priority)
+- Web scraping with Playwright
+- Content cleaning and chunking
+- Embedding generation pipeline
+- Pinecone vector storage
+- Queue system for batch processing
 
-## Tech Stack Decisions
+### Phase 4: Chat Experience
+- Enhanced widget UI/UX
+- Conversation context management
+- Quick actions implementation
+- Suggested questions
+- Multi-language support
 
-### Testing Strategy
-- **Unit Tests**: Jest + React Testing Library
-- **Integration**: API route testing
-- **E2E**: Playwright for critical paths
-- **Mocking**: Standardized mock factory pattern
-
-### GitHub Integration
-- **API**: GitHub REST API v3
-- **Webhooks**: Express middleware for verification
-- **Auth**: Personal Access Tokens via env vars
-- **Rate Limiting**: Built-in retry logic
+### Phase 5: Platform Features
+- Visual widget customization
+- Analytics dashboard
+- Team collaboration
+- API access for developers
+- Webhook integrations
 
 ## Risk Assessment
 
 ### Technical Risks
-1. **Test Flakiness**: Intermittent failures due to async operations
-   - Mitigation: Proper async handling, consistent timeouts
-2. **GitHub API Rate Limits**: May hit limits during bulk operations
-   - Mitigation: Request batching, caching layer
-3. **Webhook Security**: Potential for unauthorized requests
-   - Mitigation: Signature verification, IP allowlisting
+1. **Vector Search Performance**
+   - Mitigation: Implement caching layer, optimize chunk size
+   
+2. **Widget Conflicts**
+   - Mitigation: Shadow DOM isolation, namespace all classes
 
-### Project Risks
-1. **Scope Creep**: Features expanding beyond cycle capacity
-   - Mitigation: Strict prioritization, defer non-critical items
-2. **Breaking Changes**: Updates affecting existing functionality
-   - Mitigation: Comprehensive test coverage, careful refactoring
+3. **Rate Limiting at Scale**
+   - Mitigation: Redis for distributed rate limiting
+
+4. **Build Issues**
+   - Mitigation: Fix TypeScript paths, resolve import errors
+
+### Business Risks
+1. **OpenAI API Costs**
+   - Mitigation: Implement smart caching, usage limits
+
+2. **Data Privacy Compliance**
+   - Mitigation: Clear data policies, GDPR tools
+
+3. **Competition**
+   - Mitigation: Focus on ease-of-use, fast setup
 
 ## Success Metrics
-- Test pass rate: 100%
-- Test coverage: >80%
-- GitHub webhook latency: <500ms
-- Bulk operation performance: <2s for 50 issues
-- Zero security vulnerabilities
+- Time to first chatbot: < 60 seconds
+- Widget load time: < 100ms
+- Chat response time: < 2 seconds
+- User retention: > 40% monthly
+- MRR growth: $15K within 6 months
 
-## Implementation Priority
-1. Fix failing tests (blocks all development)
-2. Implement webhook support (enables real-time)
-3. Add bulk operations (user efficiency)
-4. Create issue templates (user experience)
-5. GitHub Actions integration (automation)
+## Immediate Actions (Cycle 25)
+1. Fix build and deployment issues
+2. Deploy widget to CDN
+3. Configure Stripe production webhooks
+4. Implement web scraping pipeline
+5. Set up production monitoring
 
-## Dependencies
-- GitHub API access with appropriate scopes
-- Environment variables for configuration
-- PostgreSQL database running
-- Redis for webhook queue (optional)
+## Supabase Integration Points
+- **Database**: PostgreSQL with pgvector extension
+- **Auth**: User management and JWT tokens
+- **Edge Functions**: Chat completion API
+- **Storage**: Content and media files
+- **Realtime**: Live chat updates
+- **Analytics**: Usage tracking
 
-## Constraints
-- Must maintain backward compatibility
-- Cannot expose tokens in URLs/logs
-- Must support existing auth system
-- Performance budget: <50KB JS bundle increase
+## Security Considerations
+- RLS policies on all tables ✅
+- Rate limiting on APIs ✅
+- SQL injection prevention ✅
+- XSS protection in widget
+- CORS configuration
+- API key rotation
+- Audit logging
