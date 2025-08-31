@@ -1,164 +1,155 @@
-# Project Jarvis - Cycle 3 Development Plan
+# Cycle 6: Development Pipeline
 
-## Executive Summary
-Build an AI chatbot SaaS platform that allows website owners to create custom chatbots trained on their website content. Revenue target: $15K MRR within 3 months.
+## Project Vision
+Continue building the project while working on GitHub issues, focusing on user dashboard, multi-tenancy, and production deployment.
 
-## Critical Issue Resolution (Immediate Priority)
-### Cheerio/Webpack Build Failure
-- **Problem**: ESM module incompatibility blocking deployment
-- **Solution**: Replace Cheerio with JSDOM for HTML parsing
-- **Timeline**: Day 1 of Cycle 3
+## Requirements Analysis
 
-## Technical Architecture
+### Functional Requirements
+1. **User Dashboard** (High Priority)
+   - Authenticated user workspace with bot management
+   - User profile and settings management
+   - Session persistence and secure logout
+   - Bot creation/deletion/editing interface
 
-### Core Stack
-- **Frontend/Backend**: Next.js 14+ with App Router
-- **Database**: Supabase (PostgreSQL + Auth)
-- **Vector Store**: Pinecone
-- **AI**: OpenAI GPT-4 API
-- **Hosting**: Vercel
-- **Payments**: Stripe
-- **Styling**: Tailwind CSS + Radix UI
+2. **Multi-tenancy Architecture** (High Priority)
+   - Workspace isolation and management
+   - Per-workspace API key generation
+   - Role-based access control (Owner, Admin, Member)
+   - Bot isolation per workspace
 
-### System Components
-1. **Web Scraper Service**
-   - URL content extraction
-   - Sitemap parsing
-   - JavaScript rendering support
-   
-2. **Embedding Pipeline**
-   - Content chunking strategy
-   - OpenAI embeddings generation
-   - Pinecone vector storage
-   
-3. **Chat Engine**
-   - RAG implementation
-   - Context window management
-   - Conversation memory
-   
-4. **Widget System**
-   - Embeddable JavaScript widget
-   - Multiple display modes
-   - Mobile-responsive design
+3. **Production Deployment** (High Priority)
+   - Deploy to Vercel with production configurations
+   - Configure Supabase production instance
+   - Set up environment variables securely
+   - Verify authentication flow in production
 
-## Development Phases
+### Non-Functional Requirements
+- **Performance**: Dashboard load < 2s, API response < 500ms
+- **Security**: Secure session management, API key encryption
+- **Scalability**: Support 1000+ concurrent users
+- **Reliability**: 99.9% uptime target
 
-### Phase 1: Core Fix & Testing (Days 1-2)
-- Fix Cheerio build issue with JSDOM
-- Ensure all tests pass
-- Deploy to Vercel staging
+## System Architecture
 
-### Phase 2: Authentication & Multi-Tenancy (Days 3-5)
-- Supabase auth integration
-- User workspace creation
-- Bot management dashboard
-- API key generation
-
-### Phase 3: Advanced Features (Days 6-8)
-- Multi-page crawling
-- Sitemap support
-- JavaScript-rendered content
-- Conversation persistence
-
-### Phase 4: Monetization (Days 9-10)
-- Stripe integration
-- Usage tracking
-- Subscription tiers
-- Billing dashboard
-
-### Phase 5: Production Ready (Days 11-14)
-- Redis rate limiting
-- Error tracking (Sentry)
-- Production logging
-- Performance optimization
-- Security audit
-
-## Feature Requirements
-
-### MVP Features (Week 1)
-- Single URL scraping ✅
-- Basic chat interface ✅
-- Embeddable widget ✅
-- Simple dashboard
-- User authentication
-
-### Enhanced Features (Week 2)
-- Multi-page crawling
-- Custom branding
-- Analytics dashboard
-- Multiple widget types
-- Conversation export
-
-### Differentiators
-- **Better UX**: Context-aware greetings, suggested questions
-- **Platform Integrations**: Shopify, WordPress plugins
-- **Advanced Customization**: CSS overrides, custom actions
-- **Performance**: 50ms response time target
-
-## Database Schema
-
-### Tables
-```sql
-users (Supabase Auth)
-workspaces (id, name, owner_id, created_at)
-bots (id, workspace_id, name, config, created_at)
-conversations (id, bot_id, session_id, messages, created_at)
-crawl_jobs (id, bot_id, status, urls, created_at)
-embeddings (id, bot_id, content, vector, metadata)
-api_keys (id, workspace_id, key_hash, created_at)
-subscriptions (id, workspace_id, stripe_id, tier, status)
+### Frontend Architecture
+```
+src/
+├── app/
+│   ├── dashboard/
+│   │   ├── page.tsx          # Main dashboard
+│   │   ├── bots/             # Bot management
+│   │   ├── settings/         # User settings
+│   │   └── workspace/        # Workspace management
+│   ├── api/
+│   │   ├── workspaces/       # Workspace API routes
+│   │   └── bots/             # Bot API routes
+├── components/
+│   ├── dashboard/            # Dashboard components
+│   └── workspace/            # Workspace components
+└── lib/
+    ├── workspace/            # Workspace utilities
+    └── rbac/                 # Role-based access control
 ```
 
-## API Endpoints
+### Backend Architecture
+- **Database Schema Updates**:
+  - `workspaces` table: Multi-tenancy support
+  - `workspace_members` table: User-workspace relationships
+  - `api_keys` table: Per-workspace API keys
+  - `user_roles` table: RBAC implementation
 
-### Public API
-- `POST /api/chat` - Chat with bot
-- `GET /api/widget/:botId` - Get widget configuration
+### Data Flow
+1. User Authentication → Session Creation
+2. Workspace Selection → Context Loading
+3. Bot Management → Isolated Operations
+4. API Requests → Workspace-scoped validation
 
-### Authenticated API
-- `POST /api/bots` - Create bot
-- `POST /api/bots/:id/train` - Train bot on URL
-- `GET /api/bots/:id/analytics` - Get bot analytics
-- `GET /api/conversations` - List conversations
-- `POST /api/billing/subscribe` - Create subscription
+## Technology Stack
+- **Frontend**: Next.js 14.2.32, React 18, TypeScript
+- **UI**: Tailwind CSS, Radix UI, Lucide Icons
+- **Backend**: Next.js API Routes, Supabase
+- **Database**: PostgreSQL (via Supabase)
+- **Authentication**: Supabase Auth
+- **Deployment**: Vercel
+- **Monitoring**: Vercel Analytics
 
-## Security Requirements
-- JWT authentication
-- API rate limiting
-- Input sanitization
-- XSS protection
-- CORS configuration
-- Environment variable validation
-- SQL injection prevention
+## Implementation Phases
 
-## Performance Targets
-- Chat response: <500ms
-- Widget load: <100KB
-- Embedding generation: <2s per page
-- 99.9% uptime SLA
+### Phase 1: Dashboard Foundation (2 days)
+- [ ] Create dashboard layout with sidebar navigation
+- [ ] Implement authenticated route protection
+- [ ] Add session management and logout
+- [ ] Create basic dashboard homepage with stats
 
-## Cost Analysis
-- OpenAI API: ~$1,000/month at scale
-- Pinecone: $70/month (starter)
-- Vercel: $20/month (pro)
-- Supabase: $25/month
-- Total: ~$1,200/month operating costs
+### Phase 2: Workspace Management (2 days)
+- [ ] Design workspace database schema
+- [ ] Implement workspace CRUD operations
+- [ ] Add workspace switching UI
+- [ ] Create workspace settings page
+
+### Phase 3: Bot Management UI (2 days)
+- [ ] Create bot listing page with filters
+- [ ] Implement bot creation wizard
+- [ ] Add bot configuration interface
+- [ ] Build bot analytics dashboard
+
+### Phase 4: Multi-tenancy & RBAC (3 days)
+- [ ] Implement workspace isolation
+- [ ] Add role-based permissions
+- [ ] Create API key management
+- [ ] Add member invitation system
+
+### Phase 5: Production Deployment (1 day)
+- [ ] Configure Vercel deployment
+- [ ] Set up production environment variables
+- [ ] Configure Supabase production
+- [ ] Verify authentication and features
+
+## Risk Analysis
+
+### Technical Risks
+1. **Database Migration Complexity**
+   - Risk: Schema changes could break existing functionality
+   - Mitigation: Use Supabase migrations, test thoroughly
+
+2. **Session Management**
+   - Risk: Security vulnerabilities in session handling
+   - Mitigation: Use Supabase's built-in session management
+
+3. **Performance at Scale**
+   - Risk: Dashboard slow with many bots/workspaces
+   - Mitigation: Implement pagination, lazy loading
+
+### Business Risks
+1. **User Adoption**
+   - Risk: Complex UI might deter users
+   - Mitigation: Progressive disclosure, intuitive UX
+
+2. **Production Stability**
+   - Risk: Bugs in production environment
+   - Mitigation: Staged rollout, monitoring
 
 ## Success Metrics
-- Week 1: Working MVP with 10 test users
-- Week 2: 100 signups, 10 paying customers
-- Month 1: $1K MRR
-- Month 3: $15K MRR target
+- Dashboard load time < 2 seconds
+- Zero critical security vulnerabilities
+- All authentication flows working in production
+- 100% test coverage for critical paths
+- Successful deployment to Vercel
 
-## Risk Mitigation
-- **Technical**: Build issue resolved Day 1
-- **Competition**: Fast iteration, unique features
-- **Scaling**: Serverless architecture, caching
-- **Security**: Regular audits, penetration testing
+## Dependencies
+- Supabase production instance setup
+- Vercel account and configuration
+- Environment variables for production
+- GitHub issue #6 closure verification
 
-## Next Immediate Actions
-1. Fix Cheerio build issue
-2. Deploy staging environment
-3. Implement authentication
-4. Build user dashboard
-5. Add payment processing
+## Timeline
+- **Week 1**: Dashboard Foundation + Workspace Management
+- **Week 2**: Bot Management UI + Multi-tenancy
+- **Week 3**: RBAC + Production Deployment
+
+## Next Cycle Considerations
+- OAuth providers integration
+- Advanced analytics features
+- Stripe payment integration
+- E2E testing implementation
