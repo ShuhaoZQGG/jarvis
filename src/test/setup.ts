@@ -1,10 +1,16 @@
 // Setup test environment for Next.js
+import 'openai/shims/node'
 import { TextEncoder, TextDecoder } from 'util'
 import '@testing-library/jest-dom'
 
 // Add TextEncoder/TextDecoder to global
 global.TextEncoder = TextEncoder as any
 global.TextDecoder = TextDecoder as any
+
+// Add global fetch for OpenAI
+if (typeof global.fetch === 'undefined') {
+  global.fetch = jest.fn()
+}
 
 // Mock URL if not available
 if (typeof global.URL === 'undefined') {

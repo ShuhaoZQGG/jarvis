@@ -51,8 +51,9 @@ export class VectorSearchService {
     const index = this.pinecone.index(this.indexName);
     const ns = namespace ? index.namespace(namespace) : index;
     
-    const result = await ns.upsert(vectors);
-    return { upsertedCount: result.upsertedCount || 0 };
+    await ns.upsert(vectors);
+    // Pinecone upsert returns void, so we return the count of vectors upserted
+    return { upsertedCount: vectors.length };
   }
 
   async upsertBatch(
@@ -128,7 +129,7 @@ export class VectorSearchService {
 
     return results.matches.map(match => ({
       id: match.id,
-      score: match.score,
+      score: match.score || 0,
       text: match.metadata?.text as string,
       metadata: match.metadata as Record<string, any>
     }));
@@ -194,17 +195,23 @@ export class VectorSearchService {
         const chunk = chunks[i];
         const embedding = await this.embeddingService.generateEmbedding(chunk.text);
         
+        const metadata: RecordMetadata = {
+          text: chunk.text,
+          documentId: doc.id,
+          chunkIndex: i,
+          ...doc.metadata,
+          ...chunk.metadata
+        };
+        
+        // Only add url if it's defined
+        if (doc.url) {
+          metadata.url = doc.url;
+        }
+        
         vectors.push({
           id: `${doc.id}_chunk_${i}`,
           values: embedding,
-          metadata: {
-            text: chunk.text,
-            documentId: doc.id,
-            chunkIndex: i,
-            url: doc.url,
-            ...doc.metadata,
-            ...chunk.metadata
-          }
+          metadata
         });
       }
     }

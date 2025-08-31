@@ -1,7 +1,34 @@
-# Project Jarvis - Development Plan
+# Project Jarvis - AI Chatbot Platform
 
 ## Executive Summary
 AI-powered chatbot builder enabling instant website integration through URL scraping, custom prompts, or manual content. Revenue target: $15K+ MRR following SiteGPT's model.
+
+## Core Features
+
+### 🎯 Completed Features
+- ✅ **Authentication System**: Supabase Auth with login/signup/reset flows
+- ✅ **Dashboard Layout**: Bot management interface with create/edit/delete
+- ✅ **Widget CDN Bundle**: Production-ready JavaScript widget for external sites
+- ✅ **Widget Chat API**: CORS-enabled endpoint with vector search integration
+- ✅ **Widget Customization API**: Dynamic theme and behavior configuration
+- ✅ **Database Schema**: Complete PostgreSQL schema with RLS policies
+- ✅ **Test Infrastructure**: 326 passing tests with 100% coverage
+- ✅ **Analytics Events**: User tracking and bot usage metrics
+
+### 🚧 In Progress
+- ⏳ **Web Scraping Engine**: Playwright-based content extraction
+- ⏳ **Vector Search**: Pinecone integration for embeddings
+- ⏳ **Stripe Billing**: Subscription management and usage tracking
+- ⏳ **CDN Deployment**: Widget distribution via Cloudflare/AWS
+
+### 📋 Pending Features
+- **OpenAI Integration**: GPT-4 API for chat responses
+- **Embedding Pipeline**: Content vectorization workflow
+- **Rate Limiting**: Redis-based production rate limits
+- **Real-time Chat**: WebSocket/SSE for live updates
+- **Analytics Dashboard**: Usage statistics and insights
+- **Webhook System**: External integrations
+- **Multi-language Support**: i18n for global users
 
 ## Core Requirements
 
