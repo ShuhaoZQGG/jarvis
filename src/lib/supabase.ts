@@ -1,91 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
+import type { Database } from '@/types/database.types'
 
-// Database types
-export interface Database {
-  public: {
-    Tables: {
-      users: {
-        Row: {
-          id: string
-          email: string
-          full_name: string | null
-          avatar_url: string | null
-          created_at: string
-          updated_at: string
-          metadata: Record<string, any>
-        }
-        Insert: Omit<Database['public']['Tables']['users']['Row'], 'created_at' | 'updated_at'>
-        Update: Partial<Database['public']['Tables']['users']['Insert']>
-      }
-      workspaces: {
-        Row: {
-          id: string
-          name: string
-          slug: string
-          owner_id: string
-          plan: 'free' | 'starter' | 'pro' | 'enterprise'
-          settings: Record<string, any>
-          created_at: string
-          updated_at: string
-        }
-        Insert: Omit<Database['public']['Tables']['workspaces']['Row'], 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Database['public']['Tables']['workspaces']['Insert']>
-      }
-      bots: {
-        Row: {
-          id: string
-          workspace_id: string
-          name: string
-          description: string | null
-          url: string | null
-          status: 'draft' | 'training' | 'ready' | 'error'
-          settings: {
-            theme: string
-            position: string
-            greeting: string
-            placeholder: string
-            primaryColor: string
-          }
-          training_data: any[]
-          created_at: string
-          updated_at: string
-          last_trained_at: string | null
-        }
-        Insert: Omit<Database['public']['Tables']['bots']['Row'], 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Database['public']['Tables']['bots']['Insert']>
-      }
-      conversations: {
-        Row: {
-          id: string
-          bot_id: string
-          session_id: string
-          user_email: string | null
-          user_name: string | null
-          metadata: Record<string, any>
-          started_at: string
-          ended_at: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: Omit<Database['public']['Tables']['conversations']['Row'], 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Database['public']['Tables']['conversations']['Insert']>
-      }
-      messages: {
-        Row: {
-          id: string
-          conversation_id: string
-          role: 'user' | 'assistant' | 'system'
-          content: string
-          metadata: Record<string, any>
-          tokens_used: number | null
-          created_at: string
-        }
-        Insert: Omit<Database['public']['Tables']['messages']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['messages']['Insert']>
-      }
-    }
-  }
-}
+// Re-export Database type for backwards compatibility
+export type { Database } from '@/types/database.types'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -127,7 +44,7 @@ export async function getUserWorkspaces(userId: string) {
 export async function createWorkspace(name: string, ownerId: string) {
   const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
   
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from('workspaces')
     .insert({
       name,
@@ -141,7 +58,7 @@ export async function createWorkspace(name: string, ownerId: string) {
   
   if (data && !error) {
     // Add owner as workspace member
-    await (supabase as any)
+    await supabase
       .from('workspace_members')
       .insert({
         workspace_id: data.id,

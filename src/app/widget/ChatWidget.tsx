@@ -35,6 +35,7 @@ export default function ChatWidget({ botId }: ChatWidgetProps) {
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [botConfig, setBotConfig] = useState<BotConfig | null>(null)
+  const [sessionId, setSessionId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
@@ -105,12 +106,18 @@ export default function ChatWidget({ botId }: ChatWidgetProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           botId,
-          message: inputValue
+          message: inputValue,
+          sessionId: sessionId || undefined
         })
       })
       
       if (response.ok) {
         const data = await response.json()
+        
+        // Store sessionId if it's the first message
+        if (!sessionId && data.sessionId) {
+          setSessionId(data.sessionId)
+        }
         
         // Simulate response delay
         setTimeout(() => {
