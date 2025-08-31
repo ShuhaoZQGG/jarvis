@@ -75,7 +75,7 @@ describe('PineconeService', () => {
           },
         },
       });
-    }, 15000);
+    }, 10000);
   });
 
   describe('upsert', () => {

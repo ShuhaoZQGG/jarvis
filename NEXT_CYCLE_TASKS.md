@@ -59,7 +59,7 @@ Cycle 19 successfully implemented OAuth and API key management features. Core fu
 5. **Add E2E tests** - validate full user flows
 
 ## Notes
-- Core authentication features are production-ready
-- Security implementation follows best practices
-- Tests provide good coverage for critical paths
-- UI integration is the main remaining work
+- Cycle 18 had good security practices but poor integration
+- Build must be green before any PR can be merged
+- Consider smaller, incremental changes
+- Focus on integration over new features
