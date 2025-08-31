@@ -17,7 +17,7 @@ export interface RateLimitOptions {
   }
 }
 
-export { RateLimitResult } from './types'
+export type { RateLimitResult } from './types'
 
 interface RateLimitEntry {
   count: number

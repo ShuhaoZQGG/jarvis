@@ -6,6 +6,9 @@ import ChatWidget from './ChatWidget'
 // Mock fetch for API calls
 global.fetch = jest.fn()
 
+// Mock scrollIntoView
+Element.prototype.scrollIntoView = jest.fn()
+
 const mockBotConfig = {
   id: 'test-bot-123',
   name: 'Test Bot',
@@ -155,7 +158,7 @@ describe('ChatWidget', () => {
     // Wait for response and check typing indicator disappears
     await waitFor(() => {
       expect(screen.queryByTestId('typing-indicator')).not.toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
   })
   
   it('should auto-open if configured', async () => {

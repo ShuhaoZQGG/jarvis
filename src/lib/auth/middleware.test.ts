@@ -113,7 +113,8 @@ describe('Authentication Middleware', () => {
       const mockNewWorkspace = { 
         id: 'workspace-456', 
         name: 'Default Workspace',
-        owner_id: 'user-123'
+        owner_id: 'user-123',
+        created_at: '2024-01-01T00:00:00Z'
       }
 
       mockAuthService.getCurrentUser.mockResolvedValue(mockUser as any)
@@ -144,8 +145,8 @@ describe('Authentication Middleware', () => {
         created_at: new Date().toISOString()
       }
       const workspaces = [
-        { id: 'workspace-1', name: 'Workspace 1', owner_id: 'user-123' },
-        { id: 'workspace-2', name: 'Workspace 2', owner_id: 'user-123' }
+        { id: 'workspace-1', name: 'Workspace 1', owner_id: 'user-123', created_at: '2024-01-01T00:00:00Z' },
+        { id: 'workspace-2', name: 'Workspace 2', owner_id: 'user-123', created_at: '2024-01-02T00:00:00Z' }
       ]
 
       mockAuthService.getCurrentUser.mockResolvedValue(mockUser as any)

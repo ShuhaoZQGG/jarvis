@@ -97,6 +97,41 @@ export class DatabaseService {
     return data
   }
 
+  async updateWorkspace(workspaceId: string, updates: Partial<Omit<Workspace, 'id' | 'created_at' | 'owner_id'>>): Promise<Workspace> {
+    const { data, error } = await this.supabase
+      .from('workspaces')
+      .update(updates)
+      .eq('id', workspaceId)
+      .select()
+      .single()
+
+    if (error) throw new Error(error.message)
+    return data
+  }
+
+  async deleteWorkspace(workspaceId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('workspaces')
+      .delete()
+      .eq('id', workspaceId)
+
+    if (error) throw new Error(error.message)
+  }
+
+  async getWorkspaceMembers(workspaceId: string): Promise<any[]> {
+    // For now, return owner as the only member since we don't have a members table yet
+    const workspace = await this.getWorkspace(workspaceId)
+    if (!workspace) return []
+    
+    const { data, error } = await this.supabase.auth.admin.getUserById(workspace.owner_id)
+    if (error) {
+      console.error('Error fetching workspace owner:', error)
+      return []
+    }
+    
+    return data ? [{ ...data.user, role: 'owner' }] : []
+  }
+
   // Bot Management
   async createBot(bot: Omit<Bot, 'id' | 'created_at'>): Promise<Bot> {
     const { data, error } = await this.supabase

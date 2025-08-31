@@ -1,54 +1,82 @@
 # Next Cycle Tasks
 
-## Priority 1: Critical Build Fix
-1. **Fix Cheerio/Webpack Build Issue**
-   - Current error: ESM module loading incompatibility with Next.js webpack
-   - Location: src/lib/scraper/scraper.ts
-   - Options:
-     a. Replace Cheerio with JSDOM or another webpack-compatible parser
-     b. Configure Next.js to handle ESM modules properly
-     c. Use dynamic imports with proper webpack configuration
-   - Must verify build succeeds before any other work
+## Priority 1: Critical Fixes (Must Complete)
+1. **Fix All Remaining Test Failures**
+   - Target: 95%+ test pass rate (currently 86%)
+   - Fix 27 failing tests across:
+     - Widget component tests (React act warnings)
+     - Service tests (crawler, bot, rag, billing, pinecone)
+     - Auth component validation tests
 
-## Priority 2: Testing
-1. Verify all tests pass after build fix
-2. Add integration tests for API endpoints
-3. Add E2E tests for chat widget
+2. **Resolve React Act Warnings**
+   - Update test utilities to properly wrap async operations
+   - Ensure all state updates are properly awaited
+   - Fix timing issues in component tests
 
-## Priority 3: Phase 2 Features
-1. **Authentication & User Management**
-   - Integrate Supabase for auth
-   - Implement user registration/login
-   - Add session management
-   
-2. **Multi-Tenant Architecture**
-   - User workspace isolation
-   - Bot ownership and permissions
-   - API key management
+3. **Add Integration Tests**
+   - User profile update flow
+   - Workspace CRUD operations
+   - Team invitation workflow
+   - Authentication flow end-to-end
 
-3. **Billing Integration**
-   - Stripe payment processing
-   - Usage tracking and limits
-   - Subscription tiers
+## Priority 2: Backend Integration
+1. **Replace Mock Data with Real APIs**
+   - Implement workspace API endpoints
+   - Add database schema for workspaces
+   - Create team member relationship tables
+   - Add proper data persistence
 
-4. **Advanced Crawling**
-   - Multi-page website crawling
-   - Sitemap support
-   - JavaScript-rendered content handling
+2. **Error Handling Improvements**
+   - Add error boundaries to user management components
+   - Implement proper error messages
+   - Add retry logic for failed API calls
 
-5. **Conversation Features**
-   - Conversation persistence in database
-   - Chat history retrieval
-   - Analytics tracking
+3. **Test Coverage Enhancement**
+   - Add unit tests for new components
+   - Improve coverage for auth service methods
+   - Add snapshot tests for UI components
+
+## Priority 3: Feature Enhancements
+1. **UI/UX Improvements**
+   - Add loading states for async operations
+   - Implement optimistic UI updates
+   - Add skeleton loaders
+
+2. **Accessibility**
+   - Add ARIA labels to interactive elements
+   - Ensure keyboard navigation works
+   - Test with screen readers
+
+3. **Performance Optimization**
+   - Implement code splitting for user management routes
+   - Add caching for user data
+   - Optimize re-renders in workspace list
 
 ## Technical Debt
-1. Replace in-memory rate limiting with Redis
-2. Add production logging (e.g., Winston, Pino)
-3. Implement proper error tracking (e.g., Sentry)
-4. Add API documentation (OpenAPI/Swagger)
+1. **Test Infrastructure**
+   - Update Jest configuration for better async handling
+   - Improve mock service alignment with actual implementations
+   - Add better test utilities for auth testing
 
-## Documentation Needs
-1. API usage documentation
-2. Widget integration guide
-3. Deployment instructions
-4. Environment setup guide
+2. **Code Quality**
+   - Refactor large components into smaller pieces
+   - Extract common logic into custom hooks
+   - Add JSDoc comments to utility functions
+
+3. **Documentation**
+   - Document workspace management API
+   - Add user guide for team invitations
+   - Update README with new features
+
+## Deferred from Cycle 14
+- E2E testing suite setup
+- Performance monitoring integration
+- Advanced role permissions system
+- Email notification system for invitations
+
+## Success Criteria for Next Cycle
+- [ ] 95%+ test pass rate
+- [ ] Zero React act warnings
+- [ ] Full backend integration for workspaces
+- [ ] Complete integration test suite
+- [ ] PR ready for production merge

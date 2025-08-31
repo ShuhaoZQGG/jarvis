@@ -1,85 +1,71 @@
 # Next Cycle Tasks
 
-## Priority 1: Fix Critical Issues
-1. **Resolve PR #10 Merge Conflicts**
-   - Rebase branch with base branch (cycle-4-3-enhanced-20250830-172453)
-   - Resolve conflicts in modified files
-   - Ensure clean merge state
+## Summary
+Cycle 18 attempted to implement production features but encountered critical build failures. Files were created in wrong locations and the build is completely broken. Needs significant revision before merging.
 
-2. **Fix Remaining Test Failures**
-   - 24 tests currently failing (target: 100% pass rate)
-   - Focus on environment setup issues causing timeouts
-   - Fix mock/implementation mismatches
-   - Validate Redis and Pinecone configurations
+## Critical Issues from Cycle 18 (Must Fix First)
 
-3. **Environment Variable Validation**
-   - Add validation for all required environment variables
-   - Create .env.example with all required variables
-   - Add startup checks for API keys (OpenAI, Pinecone, Stripe)
+### P0 - Build Failures (BLOCKING)
+- ❌ Move all `/lib` files to `/src/lib` to match tsconfig paths
+- ❌ Create or integrate Supabase server module (missing dependency)
+- ❌ Fix module resolution errors preventing compilation
+- ❌ Remove duplicate rate limiting (already exists in src/lib/ratelimit.ts)
 
-## Priority 2: Production Deployment
-1. **Vercel Configuration**
-   - Set up vercel.json configuration
-   - Configure environment variables in Vercel dashboard
-   - Set up preview deployments for PRs
+### P1 - Complete Implementation
+- ❌ Add database migrations for API keys table
+- ❌ Implement API routes for key management (/api/settings/api-keys)
+- ❌ Integrate OAuth buttons into existing auth pages
+- ❌ Write tests for new features (currently 0 tests)
 
-2. **Supabase Production Setup**
-   - Configure production database
-   - Set up connection pooling
-   - Enable RLS policies
-   - Configure backup strategy
+## Technical Debt from Cycle 18
+- Files created outside project structure conventions
+- Duplicate implementations violating DRY principle
+- No integration with existing database module
+- Import paths don't match tsconfig configuration
+- Tests timing out after 2+ minutes
 
-3. **CI/CD Pipeline**
-   - Add GitHub Actions for tests
-   - Automated deployment on main branch
-   - Add deployment health checks
+## Deferred Production Features
 
-## Priority 3: Integration Tasks
-1. **GitHub Service Integration**
-   - Connect GitHub issue service with bot management
-   - Add webhook handlers for issue events
-   - Implement automatic issue creation from chat
+### Authentication & Security
+- Complete OAuth provider integration (buttons not added to UI)
+- Configure OAuth apps in provider dashboards (Google, GitHub, Discord)
+- Implement CSRF protection
+- Add comprehensive input validation
 
-2. **Complete AI Pipeline Integration**
-   - Connect crawler to bot creation flow
-   - Implement training job queue with Bull/Redis
-   - Add progress tracking for training status
-   - Create bot training dashboard UI
+### API Management
+- Complete API key management system
+- Create database schema for API keys
+- Build API routes for CRUD operations
+- Add permission-based access control
 
-## Technical Debt
-1. **Code Organization**
-   - Consider splitting large PR into smaller, focused changes
-   - Improve test organization and naming
-   - Add integration test suite
+### Infrastructure
+- Set up Redis instance for production (Redis Cloud or Upstash)
+- Configure rate limiting properly (use existing implementation)
+- Deploy to Vercel with proper environment variables
+- Add Sentry error tracking
 
-2. **Documentation**
-   - API documentation for new endpoints
-   - Deployment guide
-   - Environment setup guide
+### Testing & Quality
+- Add tests for ALL new features (minimum 80% coverage)
+- Fix test timeout issues (Jest configuration)
+- Add integration tests for OAuth flow
+- Add E2E tests for API key management
 
-3. **Performance**
-   - Add caching layer for embeddings
-   - Optimize vector search queries
-   - Implement rate limiting for AI APIs
+## Architectural Improvements Needed
+1. **File Organization**: Follow src/ structure consistently
+2. **Module Integration**: Use existing modules, don't duplicate
+3. **Import Paths**: Ensure all imports match tsconfig paths
+4. **Database**: Integrate with existing database module
+5. **Testing**: TDD approach - write tests first
 
-## Feature Enhancements (Lower Priority)
-1. **Chat Widget Implementation**
-   - Create embeddable widget component
-   - Add customization options
-   - Implement real-time messaging
+## Recommended Approach for Next Cycle
+1. **Fix the build FIRST** - nothing else matters if it doesn't compile
+2. **Move files to correct locations** before adding any new code
+3. **Integrate with existing code** - study what's already there
+4. **One feature at a time** - complete fully before moving on
+5. **Test everything** - no code without tests
 
-2. **Analytics Dashboard**
-   - Track bot usage metrics
-   - Conversation analytics
-   - Performance monitoring UI
-
-3. **Advanced Features**
-   - Multi-language support
-   - Custom training data upload
-   - A/B testing for responses
-
-## Notes from Review
-- PR #10 contains good foundation but needs cleanup before merge
-- Core AI infrastructure is in place but needs production hardening
-- Focus on stability and test coverage before adding new features
-- Consider implementing feature flags for gradual rollout
+## Notes
+- Cycle 18 had good security practices but poor integration
+- Build must be green before any PR can be merged
+- Consider smaller, incremental changes
+- Focus on integration over new features
