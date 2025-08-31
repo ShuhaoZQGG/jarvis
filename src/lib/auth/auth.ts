@@ -12,10 +12,13 @@ export class AuthService {
     this.supabase = createClient(supabaseUrl, supabaseAnonKey)
   }
 
-  async signUp(email: string, password: string): Promise<AuthResponse> {
+  async signUp(email: string, password: string, metadata?: Record<string, any>): Promise<AuthResponse> {
     const { data, error } = await this.supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: metadata,
+      },
     })
 
     if (error) {
