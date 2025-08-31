@@ -57,8 +57,17 @@ describe('SignupPage', () => {
   it('displays validation error for invalid email', async () => {
     render(<SignupPage />)
 
+    const nameInput = screen.getByLabelText(/full name/i)
     const emailInput = screen.getByLabelText(/email/i)
+    const passwordInput = screen.getByLabelText(/^password$/i)
+    const confirmPasswordInput = screen.getByLabelText(/confirm password/i)
+    const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the terms and conditions/i })
+    
+    fireEvent.change(nameInput, { target: { value: 'John Doe' } })
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
+    fireEvent.change(passwordInput, { target: { value: 'password123' } })
+    fireEvent.change(confirmPasswordInput, { target: { value: 'password123' } })
+    fireEvent.click(termsCheckbox)
 
     const submitButton = screen.getByRole('button', { name: /create account/i })
     fireEvent.click(submitButton)
@@ -121,11 +130,13 @@ describe('SignupPage', () => {
     const emailInput = screen.getByLabelText(/email/i)
     const passwordInput = screen.getByLabelText(/^password$/i)
     const confirmPasswordInput = screen.getByLabelText(/confirm password/i)
+    const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the terms and conditions/i })
 
     fireEvent.change(nameInput, { target: { value: 'John Doe' } })
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
     fireEvent.change(passwordInput, { target: { value: 'password123' } })
     fireEvent.change(confirmPasswordInput, { target: { value: 'password123' } })
+    fireEvent.click(termsCheckbox)
 
     const submitButton = screen.getByRole('button', { name: /create account/i })
     fireEvent.click(submitButton)
@@ -146,11 +157,13 @@ describe('SignupPage', () => {
     const emailInput = screen.getByLabelText(/email/i)
     const passwordInput = screen.getByLabelText(/^password$/i)
     const confirmPasswordInput = screen.getByLabelText(/confirm password/i)
+    const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the terms and conditions/i })
 
     fireEvent.change(nameInput, { target: { value: 'John Doe' } })
     fireEvent.change(emailInput, { target: { value: 'existing@example.com' } })
     fireEvent.change(passwordInput, { target: { value: 'password123' } })
     fireEvent.change(confirmPasswordInput, { target: { value: 'password123' } })
+    fireEvent.click(termsCheckbox)
 
     const submitButton = screen.getByRole('button', { name: /create account/i })
     fireEvent.click(submitButton)
@@ -168,11 +181,13 @@ describe('SignupPage', () => {
     const emailInput = screen.getByLabelText(/email/i)
     const passwordInput = screen.getByLabelText(/^password$/i)
     const confirmPasswordInput = screen.getByLabelText(/confirm password/i)
+    const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the terms and conditions/i })
 
     fireEvent.change(nameInput, { target: { value: 'John Doe' } })
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
     fireEvent.change(passwordInput, { target: { value: 'password123' } })
     fireEvent.change(confirmPasswordInput, { target: { value: 'password123' } })
+    fireEvent.click(termsCheckbox)
 
     const submitButton = screen.getByRole('button', { name: /create account/i })
     fireEvent.click(submitButton)

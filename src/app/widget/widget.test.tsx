@@ -5,6 +5,9 @@ import ChatWidget from './ChatWidget'
 // Mock fetch for API calls
 global.fetch = jest.fn()
 
+// Mock scrollIntoView
+Element.prototype.scrollIntoView = jest.fn()
+
 const mockBotConfig = {
   id: 'test-bot-123',
   name: 'Test Bot',

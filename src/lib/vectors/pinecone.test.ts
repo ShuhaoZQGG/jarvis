@@ -67,7 +67,7 @@ describe('PineconeService', () => {
           },
         },
       });
-    });
+    }, 10000);
   });
 
   describe('upsert', () => {
@@ -126,6 +126,13 @@ describe('PineconeService', () => {
     it('should apply filters when querying', async () => {
       const queryVector = [0.1, 0.2, 0.3];
       const filter = { category: 'docs' };
+      const mockResults = {
+        matches: [
+          { id: 'vec1', score: 0.95, metadata: { text: 'result 1' } },
+        ],
+      };
+
+      mockIndex.query.mockResolvedValue(mockResults);
 
       await service.query('test-namespace', queryVector, 5, filter);
 

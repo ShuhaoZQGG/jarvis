@@ -56,7 +56,10 @@ describe('LoginPage', () => {
     render(<LoginPage />)
 
     const emailInput = screen.getByLabelText(/email/i)
+    const passwordInput = screen.getByLabelText(/password/i)
+    
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
+    fireEvent.change(passwordInput, { target: { value: 'password123' } })
 
     const submitButton = screen.getByRole('button', { name: /sign in/i })
     fireEvent.click(submitButton)

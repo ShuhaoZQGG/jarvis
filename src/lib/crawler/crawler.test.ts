@@ -1,39 +1,44 @@
 import { WebsiteCrawler } from './crawler';
 import { Page } from 'playwright';
 
+// Create mocks outside jest.mock
+const mockPage = {
+  goto: jest.fn(),
+  evaluate: jest.fn(),
+  close: jest.fn(),
+  waitForLoadState: jest.fn(),
+  $$eval: jest.fn(),
+  content: jest.fn().mockResolvedValue('<html></html>'),
+};
+
+const mockBrowser = {
+  newPage: jest.fn().mockResolvedValue(mockPage),
+  close: jest.fn(),
+};
+
 // Mock playwright
 jest.mock('playwright', () => ({
   chromium: {
-    launch: jest.fn().mockResolvedValue({
-      newPage: jest.fn().mockResolvedValue({
-        goto: jest.fn(),
-        evaluate: jest.fn(),
-        close: jest.fn(),
-        waitForLoadState: jest.fn(),
-        $$eval: jest.fn(),
-        setUserAgent: jest.fn(),
-        content: jest.fn().mockResolvedValue('<html></html>'),
-      }),
-      close: jest.fn(),
-    }),
+    launch: jest.fn(() => Promise.resolve(mockBrowser)),
   },
 }));
 
 describe('WebsiteCrawler', () => {
   let crawler: WebsiteCrawler;
-  let mockPage: any;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     crawler = new WebsiteCrawler();
-    mockPage = {
-      goto: jest.fn(),
-      evaluate: jest.fn(),
-      close: jest.fn(),
-      waitForLoadState: jest.fn(),
-      $$eval: jest.fn(),
-      setUserAgent: jest.fn(),
-      content: jest.fn().mockResolvedValue('<html></html>'),
-    };
+    
+    // Reset mock implementations
+    mockPage.goto.mockResolvedValue(undefined);
+    mockPage.waitForLoadState.mockResolvedValue(undefined);
+    mockPage.evaluate.mockResolvedValue({
+      title: '',
+      description: '',
+      content: '',
+    });
+    mockPage.$$eval.mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -47,11 +52,11 @@ describe('WebsiteCrawler', () => {
         title: 'Example Page',
         description: 'Test description',
         content: 'Page content here',
-        links: ['https://example.com/page1', 'https://example.com/page2'],
       };
+      const mockLinks = ['https://example.com/page1', 'https://example.com/page2'];
 
       mockPage.evaluate.mockResolvedValue(mockContent);
-      mockPage.$$eval.mockResolvedValue(mockContent.links);
+      mockPage.$$eval.mockResolvedValue(mockLinks);
 
       const result = await crawler.crawlPage(url);
 
@@ -60,7 +65,7 @@ describe('WebsiteCrawler', () => {
         title: mockContent.title,
         description: mockContent.description,
         content: mockContent.content,
-        links: mockContent.links,
+        links: mockLinks,
         timestamp: expect.any(Date),
       });
     });
@@ -115,29 +120,25 @@ describe('WebsiteCrawler', () => {
   describe('crawlWebsite', () => {
     it('should crawl multiple pages from a website', async () => {
       const startUrl = 'https://example.com';
-      const mockPages = [
-        {
-          url: startUrl,
-          title: 'Home',
-          description: 'Home page',
-          content: 'Home content',
-          links: ['https://example.com/about'],
-        },
-        {
-          url: 'https://example.com/about',
-          title: 'About',
-          description: 'About page',
-          content: 'About content',
-          links: [],
-        },
-      ];
+      const mockPageData1 = {
+        title: 'Home',
+        description: 'Home page',
+        content: 'Home content',
+      };
+      const mockPageData2 = {
+        title: 'About',
+        description: 'About page',
+        content: 'About content',
+      };
+      const mockLinks1 = ['https://example.com/about'];
+      const mockLinks2: string[] = [];
 
       mockPage.evaluate
-        .mockResolvedValueOnce(mockPages[0])
-        .mockResolvedValueOnce(mockPages[1]);
+        .mockResolvedValueOnce(mockPageData1)
+        .mockResolvedValueOnce(mockPageData2);
       mockPage.$$eval
-        .mockResolvedValueOnce(mockPages[0].links)
-        .mockResolvedValueOnce(mockPages[1].links);
+        .mockResolvedValueOnce(mockLinks1)
+        .mockResolvedValueOnce(mockLinks2);
 
       const results = await crawler.crawlWebsite(startUrl);
 
@@ -153,15 +154,15 @@ describe('WebsiteCrawler', () => {
         title: 'Page',
         description: 'Description',
         content: 'Content',
-        links: [
-          'https://example.com/internal',
-          'https://external.com/page',
-          'https://another-site.com',
-        ],
       };
+      const mockLinks = [
+        'https://example.com/internal',
+        'https://external.com/page',
+        'https://another-site.com',
+      ];
 
       mockPage.evaluate.mockResolvedValue(mockContent);
-      mockPage.$$eval.mockResolvedValue(mockContent.links);
+      mockPage.$$eval.mockResolvedValue(mockLinks);
 
       const results = await crawler.crawlWebsite(url);
 
