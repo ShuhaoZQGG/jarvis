@@ -1,45 +1,57 @@
-# Cycle 24 Handoff Document
+# Cycle 25 Handoff Document
 
-Generated: Sun 31 Aug 2025 15:21:38 EDT
+Generated: Sun 31 Aug 2025 16:02:02 EDT
 
 ## Current State
-- Cycle Number: 24
-- Branch: cycle-24-featuresstatus-partialcomplete-20250831-152138
-- Phase: development (attempt 3)
+- Cycle Number: 25
+- Branch: cycle-25-successfully-completed-20250831-160202
+- Phase: review
 
 ## Completed Work
-1. **Fixed Test Suite** - Resolved env-validator test failure, achieving 100% test pass rate (321 tests passing)
-2. **Created Embeddable Widget with Shadow DOM** - Built production-ready widget script (widget-v2.js) with:
-   - Full Shadow DOM isolation to prevent style/JS conflicts
-   - Configurable positioning, colors, and behavior
-   - Responsive design with mobile support
-   - Demo page for testing and documentation
-3. **Enhanced Widget Testing** - Created comprehensive test suite for Shadow DOM widget
-4. **Maintained Existing Features**:
-   - Playwright-based web crawler for JavaScript-heavy sites
-   - Stripe billing integration with subscription management
-   - Supabase database with 15 tables and RLS policies
+<!-- Updated by each agent as they complete their phase -->
+- **Planning Phase**: Created comprehensive architectural plan for Jarvis MVP
+- **Requirements Analysis**: Defined functional and non-functional requirements for chatbot builder
+- **Tech Stack Decision**: Confirmed Next.js 14, Supabase, Pinecone, OpenAI GPT-4, Stripe
+- **Architecture Design**: RAG-based system with vector search and Edge Functions
+- **Risk Assessment**: Identified technical and business risks with mitigations
+- **Design Phase**: Comprehensive UI/UX specifications completed
+- **User Journeys**: Mapped 4 key user flows including onboarding and chat experience
+- **Interface Design**: Created mockups for all core pages and components
+- **Widget Specifications**: Designed 4 widget variants with customization options
+- **Design System**: Established tokens, components, and accessibility requirements
 
 ## Pending Items
-1. **Widget API Integration** - Connect widget to live chat API endpoints
-2. **Production Deployment** - Deploy widget script to CDN
-3. **Analytics Integration** - Add tracking for widget usage metrics
-4. **Performance Optimization** - Reduce widget bundle size further
+<!-- Items that need attention in the next phase or cycle -->
+- Build issues need investigation (component import errors)
+- CDN deployment for widget (Cloudflare/Vercel)
+- Stripe webhook configuration in production
+- Web scraping pipeline implementation with Playwright
+- Production monitoring setup
 
 ## Technical Decisions
-1. **Shadow DOM for Widget** - Chose Shadow DOM over iframe for better performance and easier communication
-2. **Script-based Embedding** - Simple script tag approach for easy integration
-3. **Maintained Playwright Crawler** - Existing implementation sufficient for MVP
-4. **Database Schema** - Kept existing Supabase schema from previous cycles
+<!-- Important technical decisions made during this cycle -->
+- **Database**: Supabase PostgreSQL with pgvector extension for embeddings
+- **Vector Store**: Pinecone for RAG implementation
+- **AI Model**: OpenAI GPT-4 for response generation
+- **Widget Tech**: Shadow DOM for isolation, PostMessage for communication
+- **Rate Limiting**: LRU cache-based implementation (already in place)
+- **Security**: RLS policies, SQL injection fixes completed
+- **Frontend Framework**: Next.js 14 with Tailwind CSS and Radix UI
+- **Widget Bundle**: Preact for smaller size, Shadow DOM for isolation
+- **State Management**: Zustand for app, TanStack Query for data fetching
+- **Component Library**: Radix UI primitives for accessibility compliance
 
 ## Known Issues
-1. PR #35 still pending merge (not mergeable state)
-2. Widget demo uses local API endpoint (needs production URL)
-3. Some Stripe webhook handlers still need implementation
+<!-- Issues discovered but not yet resolved -->
+- TypeScript path mapping issues affecting build
+- Test suite has 27 failing tests (needs 95% pass rate)
+- Vector extension in public schema (low priority warning)
 
 ## Next Steps
-1. Deploy widget script to production CDN
-2. Complete remaining Stripe webhook implementations
-3. Add real-time features using Supabase realtime
-4. Implement rate limiting for API endpoints
+<!-- Clear action items for the next agent/cycle -->
+1. Design phase should focus on widget customization UI
+2. Implementation should prioritize web scraping pipeline
+3. Fix build issues before any new feature development
+4. Deploy widget to CDN for production use
+5. Configure Stripe webhooks in production dashboard
 

@@ -1,29 +1,29 @@
 # Next Cycle Tasks
 
 ## Critical MVP Features (Priority 1)
-1. **Web Scraping Implementation**
+1. **Production Deployment** ✅ URGENT
+   - Deploy widget to CDN (Cloudflare or Vercel)
+   - Configure production environment variables
+   - Set up Stripe webhook endpoint in dashboard
+   - Deploy Edge Functions to production
+
+2. **Build Issues Resolution**
+   - Fix component import issues preventing successful build
+   - Investigate test suite timeout issues
+   - Achieve 95%+ test pass rate
+
+3. **Web Scraping Implementation**
    - Use Playwright for dynamic content scraping
    - Handle JavaScript-rendered pages
    - Extract and clean content for embeddings
    - Queue system for batch processing
 
-2. **Chat Widget Development**
-   - Shadow DOM-based widget for isolation
-   - Customizable appearance (colors, position)
-   - Mobile-responsive design
-   - One-line JavaScript embed code
-   - Widget CDN distribution
-
-3. **Stripe Payment Integration**
-   - Subscription management
-   - Webhook handlers for billing events
-   - Usage-based pricing tiers
-   - Payment method management
-
 ## Technical Debt (Priority 2)
-1. **Security Fixes**
-   - Fix `search_embeddings` function mutable search path
-   - Consolidate billing_events RLS policies
+1. **Monitoring & Performance**
+   - Set up alerting for rate limit violations
+   - Monitor API errors and response times
+   - Conduct load testing with realistic traffic
+   - Optimize vector search performance
 
 2. **Test Suite**
    - Fix 27 failing tests
