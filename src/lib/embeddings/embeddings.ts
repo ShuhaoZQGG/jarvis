@@ -1,4 +1,5 @@
 import 'openai/shims/node'
+import 'openai/shims/node'
 import OpenAI from 'openai'
 
 export interface EmbeddingConfig {
