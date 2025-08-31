@@ -3,13 +3,25 @@ import LoginPage from './page'
 import DashboardPage from '../dashboard/page'
 import { routerMocks } from '@/test/utils'
 
-// Mock AuthService
+// Mock auth context
 const mockSignIn = jest.fn()
+const mockSignUp = jest.fn()
+const mockSignOut = jest.fn()
+const mockRefreshUser = jest.fn()
+
+jest.mock('@/contexts/auth-context', () => ({
+  useAuth: jest.fn(),
+  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}))
+
+// Import the mocked function
+import { useAuth } from '@/contexts/auth-context'
+
+// Mock AuthService for dashboard
 const mockGetCurrentUser = jest.fn()
 
 jest.mock('@/lib/auth/auth', () => ({
   AuthService: jest.fn().mockImplementation(() => ({
-    signIn: mockSignIn,
     getCurrentUser: mockGetCurrentUser,
   }))
 }))
@@ -17,6 +29,15 @@ jest.mock('@/lib/auth/auth', () => ({
 describe('Authentication Flow Integration', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    ;(useAuth as jest.Mock).mockReturnValue({
+      user: null,
+      loading: false,
+      signIn: mockSignIn,
+      signUp: mockSignUp,
+      signOut: mockSignOut,
+      refreshUser: mockRefreshUser,
+      authService: {},
+    })
   })
 
   it('should redirect to dashboard after successful login', async () => {
