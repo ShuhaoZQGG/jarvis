@@ -104,7 +104,7 @@ export default function LoginPage() {
                 <input
                   id="email"
                   name="email"
-                  type="text"
+                  type="email"
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -112,6 +112,9 @@ export default function LoginPage() {
                   placeholder="you@example.com"
                 />
               </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
             </div>
             
             <div className="mt-4">

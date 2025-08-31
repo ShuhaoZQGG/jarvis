@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
 import SignupPage from './page'
 import { AuthService } from '@/lib/auth/auth'
@@ -55,13 +55,13 @@ describe('SignupPage', () => {
   })
 
   it('displays validation error for invalid email', async () => {
-    const { getByLabelText, getByRole, getByText } = render(<SignupPage />)
+    render(<SignupPage />)
 
-    const nameInput = getByLabelText(/full name/i)
-    const emailInput = getByLabelText(/email/i)
-    const passwordInput = getByLabelText(/^password$/i)
-    const confirmPasswordInput = getByLabelText(/confirm password/i)
-    const termsCheckbox = getByRole('checkbox', { name: /i agree to the terms and conditions/i })
+    const nameInput = screen.getByLabelText(/full name/i)
+    const emailInput = screen.getByLabelText(/email/i)
+    const passwordInput = screen.getByLabelText(/^password$/i)
+    const confirmPasswordInput = screen.getByLabelText(/confirm password/i)
+    const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the terms and conditions/i })
     
     fireEvent.change(nameInput, { target: { value: 'John Doe' } })
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
@@ -69,13 +69,12 @@ describe('SignupPage', () => {
     fireEvent.change(confirmPasswordInput, { target: { value: 'password123' } })
     fireEvent.click(termsCheckbox)
 
-    const submitButton = getByRole('button', { name: /create account/i })
-    
-    await act(async () => {
-      fireEvent.click(submitButton)
-    })
+    const submitButton = screen.getByRole('button', { name: /create account/i })
+    fireEvent.click(submitButton)
 
-    expect(getByText(/please enter a valid email/i)).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText(/please enter a valid email/i)).toBeInTheDocument()
+    })
   })
 
   it('displays validation error for weak password', async () => {
