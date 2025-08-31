@@ -1,139 +1,168 @@
-# Cycle 10: GitHub Issues & Authentication Implementation
+# Jarvis MVP Development Plan - Cycle 24
 
-## Vision
-Work on GitHub issues and continue building the project with focus on authentication, improved testing, and production readiness.
+## Executive Summary
+AI-powered chatbot builder for instant website integration via URL scraping with $15K+ MRR target following SiteGPT model. Building on existing foundation with GitHub issue management, now focusing on core chatbot functionality.
 
-## Requirements
+## Core Requirements
 
-### Priority 1: Critical Authentication Issue (#6)
-- **Login Page Implementation**: Create missing /login page to fix 404 error
-- **Authentication Flow**: Implement complete auth flow with Supabase
-- **Session Management**: Handle user sessions and redirects
-- **Registration**: Add signup capability
+### Functional Requirements (from README.md)
+1. **Content Ingestion**: URL scraping, manual input, prompt configuration
+2. **AI Processing**: RAG-based chatbot with embeddings/vector search
+3. **Widget Deployment**: One-click JavaScript embed
+4. **User Management**: Authentication, billing, usage tracking
+5. **Customization**: Widget appearance, behavior, triggers
+6. **GitHub Integration**: Issue management (COMPLETED in Cycle 23)
 
-### Priority 2: Build & Test Stability
-- **Fix Remaining Test Failures**: Resolve 34 UI/mock test failures
-- **Build Verification**: Ensure clean builds without warnings
-- **Test Coverage**: Improve coverage to >80%
+### Non-Functional Requirements
+- Response time < 2 seconds
+- 99.9% uptime
+- GDPR/SOC2 compliant
+- 10K+ concurrent users
+- Mobile-responsive
 
-### Priority 3: Production Features
-- **Multi-Tenant Architecture**: Workspace isolation and permissions
-- **API Key Management**: Secure API key generation and validation
-- **Rate Limiting**: Redis-based production rate limiting
-- **Error Tracking**: Sentry integration for production monitoring
+## Technical Architecture
 
-## Architecture Decisions
-
-### AI Pipeline Architecture
-```
-Website → Crawler → HTML → Embeddings → Pinecone
-                           ↓
-User Query → RAG Engine → Context Retrieval → LLM Response
-```
-### Tech Stack
-- **Frontend**: Next.js 14, React 18, Tailwind CSS, Radix UI
-- **Backend**: Next.js API Routes, TypeScript
-- **Auth**: Supabase Auth
-- **Database**: Supabase (PostgreSQL)
+### Tech Stack (Confirmed)
+- **Frontend**: Next.js 14 + TypeScript + Tailwind CSS ✅
+- **Backend**: Supabase (PostgreSQL + Auth + Edge Functions)
 - **Vector DB**: Pinecone
-- **AI**: OpenAI API
+- **AI**: OpenAI GPT-4 API
+- **Hosting**: Vercel
 - **Payments**: Stripe
-- **Caching**: Redis (ioredis)
-- **Testing**: Jest, React Testing Library
+- **CDN**: Cloudflare
+- **Testing**: Jest + React Testing Library ✅
 
-### System Components
-1. **Authentication Module**
-   - Login/Signup pages
-   - OAuth providers
-   - Session management
-   - Protected routes
+### Database Schema (Supabase)
+```sql
+-- Core tables needed
+users (id, email, created_at, metadata)
+workspaces (id, name, owner_id, plan, created_at)
+bots (id, workspace_id, name, url, settings, status)
+conversations (id, bot_id, session_id, created_at)
+messages (id, conversation_id, role, content, timestamp)
+embeddings (id, bot_id, content, vector, metadata)
+subscriptions (id, workspace_id, stripe_id, status, plan)
+api_keys (id, workspace_id, key_hash, permissions)
+```
 
-2. **User Management**
-   - Profile settings
-   - Workspace management
-   - Team invitations
-
-3. **API Security**
-   - API key generation
-   - Rate limiting per tier
-   - Request validation
-
-4. **Production Infrastructure**
-   - Error tracking
-   - Performance monitoring
-   - Logging system
-
-### Technology Stack
-- **Crawler**: Playwright (browser automation)
-- **Embeddings**: OpenAI text-embedding-3-small
-- **Vector DB**: Pinecone (serverless)
-- **RAG**: Custom implementation with hybrid search
-- **Queue**: Bull/Redis for async processing
-
-### Integration Points
-1. Bot creation triggers crawl job
-2. Crawl completion triggers embedding
-3. Chat API queries vector DB
-4. Results enhance LLM context
+### Core Workflow
+1. **Ingestion**: Scrape website → Process HTML → Generate embeddings → Store in Pinecone
+2. **Query**: User message → Vector search → Context retrieval → GPT-4 → Response
+3. **Widget**: Load script → Establish session → WebSocket/REST → Real-time chat
 
 ## Implementation Phases
 
-### Phase 1: Authentication (Days 1-2)
-- [ ] Create /login page component
-- [ ] Create /signup page component
-- [ ] Implement Supabase auth integration
-- [ ] Add protected route middleware
-- [ ] Handle auth redirects
-- [ ] Add password reset flow
-
-### Phase 2: User Management (Day 3)
-- [ ] User profile page
+### Phase 1: Foundation & Auth (Week 1) - PRIORITY
+- [ ] Fix authentication (Issue #6 - Login page 404)
+- [ ] Supabase setup with complete auth tables
+- [ ] User registration/login flows
+- [ ] Session management
+- [ ] Protected routes
 - [ ] Workspace CRUD operations
-- [ ] Team member invitations
-- [ ] Permission system
 
-### Phase 3: Testing & Stability (Day 4)
-- [ ] Fix 34 failing UI tests
-- [ ] Add auth integration tests
-- [ ] Improve test mocking
-- [ ] Achieve 80% coverage
+### Phase 2: Web Scraping & Processing (Week 1-2)
+- [ ] Playwright-based web scraper
+- [ ] HTML content extraction
+- [ ] Content chunking strategy
+- [ ] Queue system for async processing
+- [ ] Error handling and retries
 
-### Phase 4: Production Features (Day 5)
-- [ ] Redis rate limiting
-- [ ] Sentry error tracking
-- [ ] API documentation
+### Phase 3: AI Pipeline (Week 2)
+- [ ] OpenAI integration service
+- [ ] Embedding generation pipeline
+- [ ] Pinecone vector storage setup
+- [ ] RAG query system
+- [ ] Context window optimization
+
+### Phase 4: Chat Interface (Week 2-3)
+- [ ] Chat UI components (leverage existing design)
+- [ ] Real-time messaging with Supabase Realtime
+- [ ] Session/conversation management
+- [ ] Message history storage
+- [ ] Typing indicators
+
+### Phase 5: Widget System (Week 3)
+- [ ] Standalone widget build
+- [ ] Shadow DOM implementation
+- [ ] PostMessage communication
+- [ ] CDN deployment setup
+- [ ] Embed code generator
+
+### Phase 6: Testing & Quality (Week 3-4)
+- [ ] Fix remaining test failures (target 95%+ pass rate)
+- [ ] Integration tests for critical flows
+- [ ] E2E tests for widget
 - [ ] Performance optimization
+- [ ] Security audit
 
-## Risks & Mitigations
+### Phase 7: Monetization (Week 4)
+- [ ] Stripe integration
+- [ ] Subscription tiers
+- [ ] Usage tracking/limits
+- [ ] Billing dashboard
+- [ ] Payment webhooks
 
-### Technical Risks
-1. **Auth Complexity**: Supabase integration may have edge cases
-   - Mitigation: Thorough testing, follow Supabase best practices
+## Database Migrations Required
+```sql
+-- 001_auth_and_users.sql
+-- 002_workspaces_and_bots.sql
+-- 003_conversations_and_messages.sql
+-- 004_embeddings_and_vectors.sql
+-- 005_subscriptions_and_billing.sql
+-- 006_api_keys_and_permissions.sql
+```
 
-2. **Test Environment**: Mocking complexity for UI tests
-   - Mitigation: Proper test utilities, consistent mock patterns
+## Supabase Edge Functions Needed
+1. `chat-completion` - Main chat API endpoint
+2. `webhook-stripe` - Payment webhook handler
+3. `scrape-website` - Async scraping trigger
+4. `generate-embeddings` - Embedding pipeline
+5. `analytics-collector` - Usage tracking
 
-3. **Performance**: Redis/caching layer overhead
-   - Mitigation: Connection pooling, lazy loading
+## Critical Path Items
+1. **Fix Auth (Issue #6)** - Blocking user access
+2. **Fix Test Failures** - Currently 86% pass rate
+3. **Supabase Integration** - Core infrastructure
+4. **Vector Search Setup** - Core functionality
+5. **Widget Development** - Customer integration
 
-### Business Risks
-1. **User Experience**: Auth flow disruption
-   - Mitigation: Clear UX, helpful error messages
+## Risk Mitigation
+1. **Test Failures**: Fix React act warnings, improve test utilities
+2. **Scalability**: Implement connection pooling, caching
+3. **Costs**: Token limits per plan, usage monitoring
+4. **Security**: RLS policies, API key validation
+5. **Performance**: Edge caching, CDN, code splitting
 
-2. **Security**: Authentication vulnerabilities
-   - Mitigation: Security audit, OWASP compliance
+## Success Metrics
+- 95%+ test pass rate
+- <2s average response time
+- 100+ beta users first month
+- $1K MRR within 60 days
+- Zero critical security issues
 
-## Success Criteria
-- ✅ Login/signup pages working without 404
-- ✅ All tests passing (100% success rate)
-- ✅ Clean build with no warnings
-- ✅ Auth flow complete with session management
-- ✅ Redis rate limiting in production
-- ✅ 80%+ test coverage
-- ✅ API documentation complete
+## Immediate Next Steps (This Cycle)
+1. Create/fix login and signup pages
+2. Complete Supabase auth integration
+3. Design and create initial database schema
+4. Fix failing tests (especially React act warnings)
+5. Create basic workspace management
 
-## Next Steps
-1. Immediate: Implement login page to fix GitHub issue #6
-2. Next: Complete authentication flow
-3. Then: Fix remaining test failures
-4. Finally: Production infrastructure improvements
+## Integration with Existing Work
+- **GitHub Integration**: Already completed (Cycle 23)
+- **UI Components**: Reuse existing design system
+- **Test Infrastructure**: Fix and enhance existing setup
+- **Type System**: Leverage existing TypeScript setup
+
+## Technical Debt to Address
+- Fix 27 failing tests across components
+- Resolve React act warnings
+- Replace mock data with real APIs
+- Improve error handling
+- Add proper loading states
+
+## Architecture Decisions Made
+- Supabase for backend (auth, database, realtime, storage)
+- Pinecone for vector search (serverless option)
+- Vercel for hosting (optimized for Next.js)
+- Shadow DOM for widget isolation
+- PostgreSQL with RLS for multi-tenancy
