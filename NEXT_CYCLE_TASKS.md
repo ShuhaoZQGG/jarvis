@@ -1,46 +1,58 @@
 # Next Cycle Tasks
 
-## Priority 1: GitHub Integration Enhancements
-- Integrate GitHub issue management with proper authentication system
-- Implement webhook support for real-time issue updates
-- Add issue templates functionality
-- Support bulk operations for managing multiple issues
-- Move token handling from URL params to secure headers
-- Add GitHub Actions integration
-- Implement environment-based configuration for GitHub tokens
+## Critical MVP Features (Priority 1)
+1. **Web Scraping Implementation**
+   - Use Playwright for dynamic content scraping
+   - Handle JavaScript-rendered pages
+   - Extract and clean content for embeddings
+   - Queue system for batch processing
 
-## Priority 2: Complete Test Suite Stabilization
-- Fix remaining 15 failing tests in service layers
-- Update service mocks to match new architecture  
-- Resolve compilation errors from duplicate declarations
-- Target: 100% test pass rate
+2. **Chat Widget Development**
+   - Shadow DOM-based widget for isolation
+   - Customizable appearance (colors, position)
+   - Mobile-responsive design
+   - One-line JavaScript embed code
+   - Widget CDN distribution
 
-## Priority 3: Service Layer Updates
-- Fix env-validator test warnings
-- Update monitoring service tests
-- Fix billing service tests  
-- Update auth middleware tests (6 failures)
-- Fix github service tests
-- Fix crawler service tests
+3. **Stripe Payment Integration**
+   - Subscription management
+   - Webhook handlers for billing events
+   - Usage-based pricing tiers
+   - Payment method management
 
-## Priority 4: Test Coverage Improvements  
-- Achieve 80% test coverage target
-- Add missing integration tests
-- Improve E2E test scenarios
+## Technical Debt (Priority 2)
+1. **Security Fixes**
+   - Fix `search_embeddings` function mutable search path
+   - Consolidate billing_events RLS policies
 
-## Technical Debt
-- Refactor duplicate mock declarations in test files
-- Standardize test mocking patterns across all modules
-- Consider reverting email inputs to type="email" with proper HTML5 handling
+2. **Test Suite**
+   - Fix 27 failing tests
+   - Achieve 95% pass rate
+   - Add integration tests for new features
 
-## Feature Enhancements
-- Implement remaining auth features (OAuth, MFA)
-- Complete user management dashboard
-- Add admin panel functionality
+## Performance Optimizations (Priority 3)
+1. **Database**
+   - Review and optimize unused indexes
+   - Monitor query performance with new RLS policies
+   
+2. **Edge Functions**
+   - Add caching layer for frequent queries
+   - Optimize embedding search performance
 
-## Documentation Needs
-- Update testing documentation with new patterns
-- Document auth context usage in tests
-- Create testing best practices guide
-- Document GitHub integration setup and configuration
-- Add API documentation for GitHub issue endpoints
+## Documentation (Priority 4)
+1. **User Documentation**
+   - Widget installation guide
+   - API documentation
+   - Troubleshooting guide
+
+2. **Developer Documentation**
+   - Architecture overview
+   - Deployment guide
+   - Contributing guidelines
+
+## Future Enhancements
+- Webhook support for real-time updates
+- Advanced analytics dashboard
+- Multi-language support
+- Custom AI model fine-tuning
+- A/B testing for bot responses
