@@ -21,7 +21,7 @@ const customJestConfig = {
     '<rootDir>/**/*.{spec,test}.{js,jsx,ts,tsx}',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(uuid)/)',
+    'node_modules/(?!(uuid|@octokit)/)',
   ],
 }
 

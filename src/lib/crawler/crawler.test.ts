@@ -17,9 +17,24 @@ const mockBrowser = {
 };
 
 // Mock playwright
+const mockPage = {
+  goto: jest.fn(),
+  evaluate: jest.fn(),
+  close: jest.fn(),
+  waitForLoadState: jest.fn(),
+  $$eval: jest.fn(),
+  setUserAgent: jest.fn(),
+  content: jest.fn().mockResolvedValue('<html></html>'),
+};
+
+const mockBrowser = {
+  newPage: jest.fn().mockResolvedValue(mockPage),
+  close: jest.fn(),
+};
+
 jest.mock('playwright', () => ({
   chromium: {
-    launch: jest.fn(() => Promise.resolve(mockBrowser)),
+    launch: jest.fn().mockResolvedValue(mockBrowser),
   },
 }));
 
@@ -29,16 +44,10 @@ describe('WebsiteCrawler', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     crawler = new WebsiteCrawler();
-    
     // Reset mock implementations
     mockPage.goto.mockResolvedValue(undefined);
     mockPage.waitForLoadState.mockResolvedValue(undefined);
-    mockPage.evaluate.mockResolvedValue({
-      title: '',
-      description: '',
-      content: '',
-    });
-    mockPage.$$eval.mockResolvedValue([]);
+    mockPage.setUserAgent.mockResolvedValue(undefined);
   });
 
   afterEach(() => {
@@ -83,11 +92,10 @@ describe('WebsiteCrawler', () => {
         title: 'Root Page',
         description: 'Root description',
         content: 'Root content',
-        links: ['https://example.com/page1'],
       };
 
       mockPage.evaluate.mockResolvedValue(mockContent);
-      mockPage.$$eval.mockResolvedValue(mockContent.links);
+      mockPage.$$eval.mockResolvedValue(['https://example.com/page1']);
 
       const results = await crawler.crawlWebsite(url, { maxDepth: 1 });
 
@@ -120,25 +128,25 @@ describe('WebsiteCrawler', () => {
   describe('crawlWebsite', () => {
     it('should crawl multiple pages from a website', async () => {
       const startUrl = 'https://example.com';
-      const mockPageData1 = {
-        title: 'Home',
-        description: 'Home page',
-        content: 'Home content',
-      };
-      const mockPageData2 = {
-        title: 'About',
-        description: 'About page',
-        content: 'About content',
-      };
-      const mockLinks1 = ['https://example.com/about'];
-      const mockLinks2: string[] = [];
+      const mockPages = [
+        {
+          title: 'Home',
+          description: 'Home page',
+          content: 'Home content',
+        },
+        {
+          title: 'About',
+          description: 'About page',
+          content: 'About content',
+        },
+      ];
 
       mockPage.evaluate
         .mockResolvedValueOnce(mockPageData1)
         .mockResolvedValueOnce(mockPageData2);
       mockPage.$$eval
-        .mockResolvedValueOnce(mockLinks1)
-        .mockResolvedValueOnce(mockLinks2);
+        .mockResolvedValueOnce(['https://example.com/about'])
+        .mockResolvedValueOnce([]);
 
       const results = await crawler.crawlWebsite(startUrl);
 

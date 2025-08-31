@@ -22,8 +22,14 @@ Work on GitHub issues and continue building the project with focus on authentica
 - **Rate Limiting**: Redis-based production rate limiting
 - **Error Tracking**: Sentry integration for production monitoring
 
-## Architecture
+## Architecture Decisions
 
+### AI Pipeline Architecture
+```
+Website → Crawler → HTML → Embeddings → Pinecone
+                           ↓
+User Query → RAG Engine → Context Retrieval → LLM Response
+```
 ### Tech Stack
 - **Frontend**: Next.js 14, React 18, Tailwind CSS, Radix UI
 - **Backend**: Next.js API Routes, TypeScript
@@ -56,6 +62,19 @@ Work on GitHub issues and continue building the project with focus on authentica
    - Error tracking
    - Performance monitoring
    - Logging system
+
+### Technology Stack
+- **Crawler**: Playwright (browser automation)
+- **Embeddings**: OpenAI text-embedding-3-small
+- **Vector DB**: Pinecone (serverless)
+- **RAG**: Custom implementation with hybrid search
+- **Queue**: Bull/Redis for async processing
+
+### Integration Points
+1. Bot creation triggers crawl job
+2. Crawl completion triggers embedding
+3. Chat API queries vector DB
+4. Results enhance LLM context
 
 ## Implementation Phases
 
