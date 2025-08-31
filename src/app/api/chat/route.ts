@@ -18,7 +18,7 @@ const chatRequestSchema = z.object({
 
 export async function POST(request: NextRequest) {
   // Apply rate limiting
-  const rateLimitResult = rateLimitMiddleware(request, chatRateLimiter)
+  const rateLimitResult = await rateLimitMiddleware(request, chatRateLimiter)
   if (rateLimitResult) {
     return rateLimitResult
   }

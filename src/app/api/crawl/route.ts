@@ -14,7 +14,7 @@ const crawlRequestSchema = z.object({
 
 export async function POST(request: NextRequest) {
   // Apply rate limiting
-  const rateLimitResult = rateLimitMiddleware(request, crawlRateLimiter)
+  const rateLimitResult = await rateLimitMiddleware(request, crawlRateLimiter)
   if (rateLimitResult) {
     return rateLimitResult
   }

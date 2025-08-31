@@ -52,7 +52,7 @@ describe('LoginPage', () => {
     })
   })
 
-  it('displays validation error for invalid email', async () => {
+  it('displays validation error for invalid email', () => {
     render(<LoginPage />)
 
     const emailInput = screen.getByLabelText(/email/i)
@@ -61,9 +61,7 @@ describe('LoginPage', () => {
     const submitButton = screen.getByRole('button', { name: /sign in/i })
     fireEvent.click(submitButton)
 
-    await waitFor(() => {
-      expect(screen.getByText(/please enter a valid email/i)).toBeInTheDocument()
-    })
+    expect(screen.getByText(/please enter a valid email/i)).toBeInTheDocument()
   })
 
   it('displays validation error for short password', async () => {

@@ -1,64 +1,56 @@
 # Next Cycle Tasks
 
-## Critical Priority - Test Infrastructure
-1. **Debug Test Timeouts**
-   - Run individual test files to isolate problematic tests
-   - Check for unclosed async operations
-   - Review Jest timer configurations
-   - Fix promise handling in test setup/teardown
-
-2. **Validate Core Features**
-   - Manual testing of authentication flow
-   - Verify login page resolves GitHub issue #6
-   - Test workspace management functions
-   - Validate API key generation
-
-## High Priority - Feature Completion
-1. **Authentication System**
-   - Complete auth flow testing
-   - Verify session management
-   - Test password reset functionality
-   - Validate OAuth if implemented
-
-2. **GitHub Issue Resolution**
-   - Confirm /login page works without 404
-   - Test signup flow
-   - Verify redirects after auth
-
-## Medium Priority - Code Quality
-1. **Test Coverage**
-   - Achieve 80%+ coverage once tests run
-   - Add integration tests
-   - Create E2E test scenarios
-
-2. **Breaking Change Migration**
-   - Document withAuth middleware changes
-   - Update all affected routes
-   - Create migration guide
+## Immediate Priority
+1. **Resolve PR #12 Merge Conflicts**
+   - PR is approved but has conflicts with base branch
+   - Manually resolve conflicts and merge to main
+   - Create new branch for cycle 13
 
 ## Technical Debt
-1. **Environment Configuration**
-   - Fix Pinecone API key issues in tests
-   - Set up proper test environment vars
-   - Create .env.test template
+1. **Test Infrastructure (43 tests failing)**
+   - Fix remaining UI component test mocks
+   - Investigate integration test timeout issue
+   - Achieve 80%+ test coverage target
 
-2. **Performance**
-   - Investigate test performance bottlenecks
-   - Optimize async operations
-   - Review database connection pooling
+## Feature Implementation
+1. **User Management (Phase 2)**
+   - User profile page
+   - Workspace CRUD operations
+   - Team member invitations
+   - Permission system
 
-## Future Enhancements
-1. **Production Readiness**
+2. **Production Infrastructure (Phase 4)**
    - Redis rate limiting implementation
    - Sentry error tracking setup
-   - Performance monitoring
-
-2. **Documentation**
    - API documentation
-   - Setup instructions
-   - Deployment guide
+   - Performance optimization
 
-## Notes
-- Test infrastructure is the absolute blocker - nothing can proceed without it
-- Consider rolling back breaking changes if they prove problematic
-- May need to create fresh test setup if current one is corrupted
+## Environment Setup
+1. **Production Credentials**
+   - Configure production OpenAI API key
+   - Setup production Pinecone index
+   - Verify Supabase production settings
+
+## Documentation Needs
+1. **Authentication Flow**
+   - Document login/signup process
+   - API authentication guide
+   - Session management details
+
+## Testing Requirements
+1. **Manual Testing**
+   - Verify authentication flow in browser
+   - Test workspace creation and management
+   - Validate API key generation
+
+## Performance Optimization
+1. **Build Optimization**
+   - Reduce bundle size
+   - Implement code splitting
+   - Optimize image loading
+
+## Security Enhancements
+1. **Authentication Security**
+   - Add rate limiting to auth endpoints
+   - Implement CSRF protection
+   - Add security headers

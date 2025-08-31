@@ -1,7 +1,7 @@
 export interface RateLimitResult {
   allowed: boolean
   remaining: number
-  resetAt?: Date
+  resetAt: Date
   limit: number
 }
 

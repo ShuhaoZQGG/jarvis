@@ -54,7 +54,7 @@ describe('SignupPage', () => {
     })
   })
 
-  it('displays validation error for invalid email', async () => {
+  it('displays validation error for invalid email', () => {
     render(<SignupPage />)
 
     const emailInput = screen.getByLabelText(/email/i)
@@ -63,9 +63,7 @@ describe('SignupPage', () => {
     const submitButton = screen.getByRole('button', { name: /create account/i })
     fireEvent.click(submitButton)
 
-    await waitFor(() => {
-      expect(screen.getByText(/please enter a valid email/i)).toBeInTheDocument()
-    })
+    expect(screen.getByText(/please enter a valid email/i)).toBeInTheDocument()
   })
 
   it('displays validation error for weak password', async () => {
