@@ -31,9 +31,34 @@ AI-powered chatbot builder enabling instant website integration through URL scra
 - **Payments**: Stripe
 - **CDN**: Cloudflare
 
+### Core Workflow:
+
+- Scrape website content
+- Generate embeddings via OpenAI API
+- Store embeddings in Pinecone
+- User query → similarity search → prompt GPT-4 → response
+- Store conversations in database
+
 ### System Architecture
 ```
 User Website → Embed Widget → API Gateway → RAG Pipeline → Response
                                     ↓
                             [Supabase | Pinecone | OpenAI]
 ```
+
+### MVP Requirements:
+
+- Web scraper - Extract content from URLs
+- Embedding pipeline - OpenAI embeddings API
+- Vector search - Pinecone or Qdrant
+- Chat interface - Basic React frontend
+- User management - Auth + billing (Stripe)
+- Embed widget - JavaScript snippet for websites
+
+### Modern Stack Alternative:
+
+- Next.js + Vercel (faster than Remix setup)
+- Supabase (database + auth)
+- Pinecone/Qdrant (vectors)
+- OpenAI API
+- Stripe (payments)
