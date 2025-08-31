@@ -6,10 +6,13 @@ import { EmbeddingsGenerator } from '@/lib/embeddings/embeddings'
 import { env } from '@/lib/env'
 import { z } from 'zod'
 import { rateLimitMiddleware, chatRateLimiter } from '@/lib/ratelimit'
+import { supabase } from '@/lib/supabase'
+import { v4 as uuidv4 } from 'uuid'
 
 const chatRequestSchema = z.object({
   message: z.string().min(1),
   botId: z.string().min(1),
+  sessionId: z.string().optional(),
   history: z.array(z.object({
     role: z.enum(['user', 'assistant']),
     content: z.string(),
@@ -34,7 +37,59 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { message, botId, history } = validationResult.data
+    const { message, botId, history, sessionId = uuidv4() } = validationResult.data
+
+    // Verify bot exists
+    const { data: bot, error: botError } = await supabase
+      .from('bots')
+      .select('id, name, workspace_id')
+      .eq('id', botId)
+      .single()
+
+    if (botError || !bot) {
+      return NextResponse.json(
+        { error: 'Bot not found' },
+        { status: 404 }
+      )
+    }
+
+    // Get or create conversation
+    let { data: conversation, error: convError } = await supabase
+      .from('conversations')
+      .select('id')
+      .eq('bot_id', botId)
+      .eq('session_id', sessionId)
+      .single()
+
+    if (!conversation) {
+      // Create new conversation
+      const { data: newConv, error: createError } = await supabase
+        .from('conversations')
+        .insert({
+          bot_id: botId,
+          session_id: sessionId,
+          started_at: new Date().toISOString()
+        })
+        .select('id')
+        .single()
+
+      if (createError || !newConv) {
+        console.error('Failed to create conversation:', createError)
+      } else {
+        conversation = newConv
+      }
+    }
+
+    // Save user message
+    if (conversation) {
+      await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversation.id,
+          role: 'user',
+          content: message
+        })
+    }
 
     const vectorStore = new VectorStore({
       apiKey: env.PINECONE_API_KEY,
@@ -51,7 +106,22 @@ export async function POST(request: NextRequest) {
 
     const response = await chatService.chat(message, botId, { history })
 
-    return NextResponse.json(response)
+    // Save bot response
+    if (conversation) {
+      await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversation.id,
+          role: 'assistant',
+          content: response.answer
+        })
+    }
+
+    return NextResponse.json({
+      message: response.answer,
+      sources: response.sources,
+      sessionId
+    })
   } catch (error) {
     console.error('Chat API error:', error)
     

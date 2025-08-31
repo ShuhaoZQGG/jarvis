@@ -35,11 +35,13 @@ export default function ChatWidget({ botId }: ChatWidgetProps) {
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [botConfig, setBotConfig] = useState<BotConfig | null>(null)
+  const [sessionId, setSessionId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
     // Load bot configuration
     loadBotConfig()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [botId])
   
   useEffect(() => {
@@ -52,6 +54,7 @@ export default function ChatWidget({ botId }: ChatWidgetProps) {
   useEffect(() => {
     // Scroll to bottom when messages change
     scrollToBottom()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages])
   
   useEffect(() => {
@@ -64,6 +67,7 @@ export default function ChatWidget({ botId }: ChatWidgetProps) {
         timestamp: new Date()
       }])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, botConfig])
   
   const loadBotConfig = async () => {
@@ -102,12 +106,18 @@ export default function ChatWidget({ botId }: ChatWidgetProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           botId,
-          message: inputValue
+          message: inputValue,
+          sessionId: sessionId || undefined
         })
       })
       
       if (response.ok) {
         const data = await response.json()
+        
+        // Store sessionId if it's the first message
+        if (!sessionId && data.sessionId) {
+          setSessionId(data.sessionId)
+        }
         
         // Simulate response delay
         setTimeout(() => {

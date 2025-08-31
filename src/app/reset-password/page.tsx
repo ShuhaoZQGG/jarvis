@@ -20,6 +20,7 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     checkAuth()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const checkAuth = async () => {
@@ -112,7 +113,7 @@ export default function ResetPasswordPage() {
               Check your email
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              We've sent a password reset link to {email}
+              We&apos;ve sent a password reset link to {email}
             </p>
           </div>
 
@@ -123,7 +124,7 @@ export default function ResetPasswordPage() {
 
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-2">
-                Didn't receive the email?
+                Didn&apos;t receive the email?
               </p>
               <button
                 onClick={handleResend}
@@ -164,7 +165,7 @@ export default function ResetPasswordPage() {
             Reset your password
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Enter your email address and we'll send you a link to reset your password
+            Enter your email address and we&apos;ll send you a link to reset your password
           </p>
         </div>
         

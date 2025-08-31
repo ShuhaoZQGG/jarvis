@@ -152,18 +152,19 @@ export class MonitoringService extends EventEmitter {
     this.emit('log', logData);
 
     // Console output based on level
+    const timestamp = logData.timestamp?.toISOString() || new Date().toISOString();
     switch (level) {
       case 'debug':
-        console.debug(`[${logData.timestamp.toISOString()}] DEBUG: ${message}`, context || '');
+        console.debug(`[${timestamp}] DEBUG: ${message}`, context || '');
         break;
       case 'info':
-        console.info(`[${logData.timestamp.toISOString()}] INFO: ${message}`, context || '');
+        console.info(`[${timestamp}] INFO: ${message}`, context || '');
         break;
       case 'warn':
-        console.warn(`[${logData.timestamp.toISOString()}] WARN: ${message}`, context || '');
+        console.warn(`[${timestamp}] WARN: ${message}`, context || '');
         break;
       case 'error':
-        console.error(`[${logData.timestamp.toISOString()}] ERROR: ${message}`, context || '');
+        console.error(`[${timestamp}] ERROR: ${message}`, context || '');
         break;
     }
   }

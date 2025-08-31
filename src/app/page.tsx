@@ -45,7 +45,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">1. Enter Your URL</h3>
               <p className="text-gray-600">
-                Provide your website URL and we'll automatically scan and index your content.
+                Provide your website URL and we&apos;ll automatically scan and index your content.
               </p>
             </div>
             <div className="text-center">

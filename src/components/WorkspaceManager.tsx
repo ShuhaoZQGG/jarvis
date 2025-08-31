@@ -29,6 +29,7 @@ export default function WorkspaceManager({ userId, onWorkspaceSelect }: Workspac
 
   useEffect(() => {
     loadWorkspaces()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
   const loadWorkspaces = async () => {

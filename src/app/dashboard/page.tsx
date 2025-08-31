@@ -28,6 +28,7 @@ export default function Dashboard() {
   useEffect(() => {
     checkAuth()
     loadBots()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const checkAuth = async () => {
@@ -323,7 +324,7 @@ export default function Dashboard() {
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h2 className="text-xl font-semibold mb-4">Embed Code</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Copy this code and paste it into your website's HTML:
+              Copy this code and paste it into your website&apos;s HTML:
             </p>
             <div className="bg-gray-50 rounded p-3 mb-4">
               <code className="text-sm break-all">

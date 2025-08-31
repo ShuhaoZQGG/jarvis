@@ -37,9 +37,11 @@ jest.mock('next/navigation', () => ({
 
 // Mock next/link
 jest.mock('next/link', () => {
-  return ({ children, href }: any) => {
+  const MockedLink = ({ children, href }: any) => {
     return <a href={href}>{children}</a>
   }
+  MockedLink.displayName = 'MockedLink'
+  return MockedLink
 })
 
 // Mock auth context
