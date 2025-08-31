@@ -1,168 +1,186 @@
-# Jarvis MVP Development Plan - Cycle 24
+# Cycle 26: Critical MVP Integration Plan
 
 ## Executive Summary
-AI-powered chatbot builder for instant website integration via URL scraping with $15K+ MRR target following SiteGPT model. Building on existing foundation with GitHub issue management, now focusing on core chatbot functionality.
+Focus on integrating core AI capabilities and production deployment to complete the MVP chatbot platform. Priority on web scraping, vector search, and widget CDN deployment.
 
-## Core Requirements
+## Current State Analysis
 
-### Functional Requirements (from README.md)
-1. **Content Ingestion**: URL scraping, manual input, prompt configuration
-2. **AI Processing**: RAG-based chatbot with embeddings/vector search
-3. **Widget Deployment**: One-click JavaScript embed
-4. **User Management**: Authentication, billing, usage tracking
-5. **Customization**: Widget appearance, behavior, triggers
-6. **GitHub Integration**: Issue management (COMPLETED in Cycle 23)
+### ✅ Completed Infrastructure
+- Supabase authentication system with full user management
+- Complete database schema with 16 tables and RLS policies
+- Widget CDN bundle ready for deployment
+- CORS-enabled chat and customization APIs
+- 326 passing tests with comprehensive coverage
+- Dashboard UI with bot management interface
 
-### Non-Functional Requirements
-- Response time < 2 seconds
-- 99.9% uptime
-- GDPR/SOC2 compliant
-- 10K+ concurrent users
-- Mobile-responsive
+### 🔴 Critical Gaps
+1. **No Web Scraping**: Cannot ingest website content
+2. **No Vector Search**: Missing Pinecone/embeddings integration
+3. **No AI Responses**: OpenAI API not connected
+4. **No CDN Deployment**: Widget not distributed
+5. **Incomplete Billing**: Stripe webhooks partially implemented
+
+## Phase 1: Core AI Pipeline (Days 1-3)
+
+### 1.1 Web Scraping Engine
+**Tech**: Playwright + Cheerio
+- Dynamic JavaScript rendering support
+- Content extraction and cleaning
+- Batch processing with queue system
+- Rate limiting and retry logic
+- Store in `scraped_content` table
+
+### 1.2 Embedding Generation
+**Tech**: OpenAI Embeddings API
+- Text chunking strategy (500 tokens)
+- Batch processing for efficiency
+- Content deduplication via hash
+- Store in `embeddings` table (vector type)
+
+### 1.3 Vector Search Integration
+**Tech**: Pinecone Cloud
+- Index creation and management
+- Similarity search implementation
+- Hybrid search with metadata filters
+- Response ranking algorithm
+
+## Phase 2: AI Chat Integration (Days 4-5)
+
+### 2.1 OpenAI Integration
+- GPT-4 API setup with streaming
+- Context window management
+- Prompt engineering for chatbot
+- Token usage tracking
+- Error handling and fallbacks
+
+### 2.2 RAG Pipeline
+- Query → Embedding → Vector Search
+- Context retrieval and ranking
+- Prompt construction with context
+- Response generation and formatting
+- Conversation memory management
+
+## Phase 3: Production Deployment (Days 6-7)
+
+### 3.1 Widget CDN Setup
+**Platform**: Cloudflare/Vercel Edge
+- Bundle optimization and minification
+- Global edge distribution
+- Cache headers configuration
+- Version management system
+- Analytics tracking
+
+### 3.2 Infrastructure Hardening
+- Redis for rate limiting
+- Environment variable management
+- Error monitoring (Sentry)
+- Performance monitoring
+- Security headers
 
 ## Technical Architecture
 
-### Tech Stack (Confirmed)
-- **Frontend**: Next.js 14 + TypeScript + Tailwind CSS ✅
-- **Backend**: Supabase (PostgreSQL + Auth + Edge Functions)
-- **Vector DB**: Pinecone
-- **AI**: OpenAI GPT-4 API
-- **Hosting**: Vercel
-- **Payments**: Stripe
-- **CDN**: Cloudflare
-- **Testing**: Jest + React Testing Library ✅
-
-### Database Schema (Supabase)
-```sql
--- Core tables needed
-users (id, email, created_at, metadata)
-workspaces (id, name, owner_id, plan, created_at)
-bots (id, workspace_id, name, url, settings, status)
-conversations (id, bot_id, session_id, created_at)
-messages (id, conversation_id, role, content, timestamp)
-embeddings (id, bot_id, content, vector, metadata)
-subscriptions (id, workspace_id, stripe_id, status, plan)
-api_keys (id, workspace_id, key_hash, permissions)
+### System Components
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   Web Scraper   │────▶│ Embedding Gen   │────▶│  Vector Store   │
+│   (Playwright)  │     │  (OpenAI API)   │     │   (Pinecone)    │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+                                                          │
+┌─────────────────┐     ┌─────────────────┐              ▼
+│  Chat Widget    │────▶│   Chat API      │◀────────────────────────
+│  (CDN Bundle)   │     │  (Next.js API)  │
+└─────────────────┘     └─────────────────┘
+                                │
+                                ▼
+                        ┌─────────────────┐
+                        │   GPT-4 API     │
+                        │  (OpenAI)       │
+                        └─────────────────┘
 ```
 
-### Core Workflow
-1. **Ingestion**: Scrape website → Process HTML → Generate embeddings → Store in Pinecone
-2. **Query**: User message → Vector search → Context retrieval → GPT-4 → Response
-3. **Widget**: Load script → Establish session → WebSocket/REST → Real-time chat
+### Data Flow
+1. **Training**: URL → Scrape → Chunk → Embed → Store
+2. **Query**: User Input → Embed → Search → Context → GPT-4 → Response
+3. **Analytics**: Events → Supabase → Dashboard
 
-## Implementation Phases
+## Implementation Tasks
 
-### Phase 1: Foundation & Auth (Week 1) - PRIORITY
-- [ ] Fix authentication (Issue #6 - Login page 404)
-- [ ] Supabase setup with complete auth tables
-- [ ] User registration/login flows
-- [ ] Session management
-- [ ] Protected routes
-- [ ] Workspace CRUD operations
+### Priority 1: Core Functionality
+- [ ] Implement Playwright scraper with queue
+- [ ] Setup OpenAI API integration
+- [ ] Configure Pinecone vector database
+- [ ] Build RAG chat pipeline
+- [ ] Deploy widget to CDN
 
-### Phase 2: Web Scraping & Processing (Week 1-2)
-- [ ] Playwright-based web scraper
-- [ ] HTML content extraction
-- [ ] Content chunking strategy
-- [ ] Queue system for async processing
-- [ ] Error handling and retries
+### Priority 2: Production Ready
+- [ ] Add Redis rate limiting
+- [ ] Implement Stripe webhook handlers
+- [ ] Setup error monitoring
+- [ ] Configure production environment
+- [ ] Create deployment documentation
 
-### Phase 3: AI Pipeline (Week 2)
-- [ ] OpenAI integration service
-- [ ] Embedding generation pipeline
-- [ ] Pinecone vector storage setup
-- [ ] RAG query system
-- [ ] Context window optimization
-
-### Phase 4: Chat Interface (Week 2-3)
-- [ ] Chat UI components (leverage existing design)
-- [ ] Real-time messaging with Supabase Realtime
-- [ ] Session/conversation management
-- [ ] Message history storage
-- [ ] Typing indicators
-
-### Phase 5: Widget System (Week 3)
-- [ ] Standalone widget build
-- [ ] Shadow DOM implementation
-- [ ] PostMessage communication
-- [ ] CDN deployment setup
-- [ ] Embed code generator
-
-### Phase 6: Testing & Quality (Week 3-4)
-- [ ] Fix remaining test failures (target 95%+ pass rate)
-- [ ] Integration tests for critical flows
-- [ ] E2E tests for widget
-- [ ] Performance optimization
-- [ ] Security audit
-
-### Phase 7: Monetization (Week 4)
-- [ ] Stripe integration
-- [ ] Subscription tiers
-- [ ] Usage tracking/limits
-- [ ] Billing dashboard
-- [ ] Payment webhooks
-
-## Database Migrations Required
-```sql
--- 001_auth_and_users.sql
--- 002_workspaces_and_bots.sql
--- 003_conversations_and_messages.sql
--- 004_embeddings_and_vectors.sql
--- 005_subscriptions_and_billing.sql
--- 006_api_keys_and_permissions.sql
-```
-
-## Supabase Edge Functions Needed
-1. `chat-completion` - Main chat API endpoint
-2. `webhook-stripe` - Payment webhook handler
-3. `scrape-website` - Async scraping trigger
-4. `generate-embeddings` - Embedding pipeline
-5. `analytics-collector` - Usage tracking
-
-## Critical Path Items
-1. **Fix Auth (Issue #6)** - Blocking user access
-2. **Fix Test Failures** - Currently 86% pass rate
-3. **Supabase Integration** - Core infrastructure
-4. **Vector Search Setup** - Core functionality
-5. **Widget Development** - Customer integration
+### Priority 3: Optimizations
+- [ ] Implement response caching
+- [ ] Add WebSocket support
+- [ ] Optimize embedding generation
+- [ ] Improve search relevance
+- [ ] Bundle size optimization
 
 ## Risk Mitigation
-1. **Test Failures**: Fix React act warnings, improve test utilities
-2. **Scalability**: Implement connection pooling, caching
-3. **Costs**: Token limits per plan, usage monitoring
-4. **Security**: RLS policies, API key validation
-5. **Performance**: Edge caching, CDN, code splitting
+
+### Technical Risks
+1. **Vector Search Performance**
+   - Mitigation: Implement caching layer
+   - Fallback: Use PostgreSQL pgvector
+
+2. **Scraping Reliability**
+   - Mitigation: Retry logic and queue system
+   - Fallback: Manual content upload
+
+3. **API Rate Limits**
+   - Mitigation: Request batching and caching
+   - Fallback: Queue overflow handling
+
+### Security Considerations
+- API key rotation system
+- Rate limiting per domain
+- Input sanitization
+- CORS policy enforcement
+- Content security policy
 
 ## Success Metrics
-- 95%+ test pass rate
-- <2s average response time
-- 100+ beta users first month
-- $1K MRR within 60 days
-- Zero critical security issues
+- Widget loads < 100ms
+- Chat response < 2 seconds
+- 99.9% uptime target
+- Support 10K concurrent users
+- < 0.1% error rate
 
-## Immediate Next Steps (This Cycle)
-1. Create/fix login and signup pages
-2. Complete Supabase auth integration
-3. Design and create initial database schema
-4. Fix failing tests (especially React act warnings)
-5. Create basic workspace management
+## Next Cycle Priorities
+1. Analytics dashboard development
+2. Advanced customization UI
+3. Webhook system implementation
+4. Multi-language support
+5. Performance optimizations
 
-## Integration with Existing Work
-- **GitHub Integration**: Already completed (Cycle 23)
-- **UI Components**: Reuse existing design system
-- **Test Infrastructure**: Fix and enhance existing setup
-- **Type System**: Leverage existing TypeScript setup
+## Dependencies
+- OpenAI API key
+- Pinecone API key
+- Redis Cloud instance
+- Cloudflare account
+- Stripe webhook endpoint
 
-## Technical Debt to Address
-- Fix 27 failing tests across components
-- Resolve React act warnings
-- Replace mock data with real APIs
-- Improve error handling
-- Add proper loading states
+## Timeline
+- Days 1-3: Core AI pipeline
+- Days 4-5: Chat integration
+- Days 6-7: Production deployment
+- Day 8: Testing and documentation
 
-## Architecture Decisions Made
-- Supabase for backend (auth, database, realtime, storage)
-- Pinecone for vector search (serverless option)
-- Vercel for hosting (optimized for Next.js)
-- Shadow DOM for widget isolation
-- PostgreSQL with RLS for multi-tenancy
+## Validation Checklist
+- [ ] Scraper processes test URLs
+- [ ] Embeddings generated successfully
+- [ ] Vector search returns relevant results
+- [ ] Chat responses are contextual
+- [ ] Widget loads on external sites
+- [ ] Rate limiting works correctly
+- [ ] Billing webhooks process events
+- [ ] All tests pass (maintain 100%)
