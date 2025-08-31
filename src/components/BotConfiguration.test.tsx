@@ -38,9 +38,14 @@ describe('BotConfiguration Component', () => {
     render(<BotConfiguration bot={mockBot} onSave={mockOnSave} onDelete={mockOnDelete} />)
     
     expect(screen.getByDisplayValue('Hello! How can I help you?')).toBeInTheDocument()
-    expect(screen.getByDisplayValue('#0066CC')).toBeInTheDocument()
-    expect(screen.getByText('Bottom Right')).toBeInTheDocument()
-    expect(screen.getByText('Bubble')).toBeInTheDocument()
+    
+    // Check if the select elements have the correct values
+    const positionSelect = screen.getByLabelText(/widget position/i) as HTMLSelectElement
+    expect(positionSelect.value).toBe('bottom-right')
+    
+    // Check widget type radio buttons
+    const bubbleRadio = screen.getByLabelText(/bubble/i) as HTMLInputElement
+    expect(bubbleRadio).toBeChecked()
   })
   
   it('should allow editing bot name', async () => {

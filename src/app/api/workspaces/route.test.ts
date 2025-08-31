@@ -45,8 +45,8 @@ describe('/api/workspaces', () => {
         created_at: new Date().toISOString()
       }
       const mockWorkspaces = [
-        { id: 'ws-1', name: 'Workspace 1', owner_id: 'user-123' },
-        { id: 'ws-2', name: 'Workspace 2', owner_id: 'user-123' }
+        { id: 'ws-1', name: 'Workspace 1', owner_id: 'user-123', created_at: '2024-01-01T00:00:00Z' },
+        { id: 'ws-2', name: 'Workspace 2', owner_id: 'user-123', created_at: '2024-01-02T00:00:00Z' }
       ]
 
       mockAuthService.getCurrentUser.mockResolvedValue(mockUser as any)
@@ -82,7 +82,8 @@ describe('/api/workspaces', () => {
       const newWorkspace = { 
         id: 'ws-new', 
         name: 'New Workspace', 
-        owner_id: 'user-123' 
+        owner_id: 'user-123',
+        created_at: '2024-01-03T00:00:00Z'
       }
 
       mockAuthService.getCurrentUser.mockResolvedValue(mockUser as any)

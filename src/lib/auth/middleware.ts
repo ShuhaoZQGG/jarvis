@@ -17,9 +17,9 @@ export interface AuthOptions {
 }
 
 export type AuthenticatedRequest = NextRequest
-export type AuthenticatedHandler = (
+export type AuthenticatedHandler<T = any> = (
   request: AuthenticatedRequest,
-  context: AuthContext
+  context: AuthContext & { params?: T }
 ) => Promise<NextResponse>
 
 /**
@@ -28,13 +28,13 @@ export type AuthenticatedHandler = (
  * @param options Configuration options for authentication
  * @returns Wrapped handler with authentication
  */
-export function withAuth(
-  handler: AuthenticatedHandler,
+export function withAuth<T = any>(
+  handler: AuthenticatedHandler<T>,
   options: AuthOptions = {}
-): (request: NextRequest) => Promise<NextResponse> {
+) {
   const { requireWorkspace = true, allowApiKey = false } = options
 
-  return async (request: NextRequest): Promise<NextResponse> => {
+  return async (request: NextRequest, routeContext?: { params?: T }): Promise<NextResponse> => {
     try {
       // Initialize services
       const authService = new AuthService(
@@ -68,7 +68,8 @@ export function withAuth(
               workspace,
               apiKey,
               dbService,
-              authService
+              authService,
+              params: routeContext?.params
             })
           } else if (!authHeader.includes('supabase')) {
             // Invalid API key (not a Supabase token)
@@ -122,7 +123,8 @@ export function withAuth(
         workspace,
         apiKey,
         dbService,
-        authService
+        authService,
+        params: routeContext?.params
       })
       
     } catch (error) {

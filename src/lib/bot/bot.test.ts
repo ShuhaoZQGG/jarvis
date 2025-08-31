@@ -17,9 +17,11 @@ describe('BotService', () => {
   let mockScraper: jest.Mocked<WebScraper>
 
   beforeEach(() => {
+    jest.clearAllMocks()
+    
     mockDb = new DatabaseService('', '') as jest.Mocked<DatabaseService>
     mockEmbeddings = new EmbeddingsGenerator('') as jest.Mocked<EmbeddingsGenerator>
-    mockVectorStore = new VectorStore('', '') as jest.Mocked<VectorStore>
+    mockVectorStore = new VectorStore({ apiKey: '', indexName: '' }) as jest.Mocked<VectorStore>
     mockScraper = new WebScraper() as jest.Mocked<WebScraper>
 
     botService = new BotService(mockDb, mockEmbeddings, mockVectorStore, mockScraper)
@@ -69,7 +71,8 @@ describe('BotService', () => {
         url,
         title: 'Example',
         content: 'This is example content',
-        metadata: {}
+        metadata: {},
+        timestamp: new Date()
       }
       const mockEmbedding = [0.1, 0.2, 0.3]
       const mockJob = {
@@ -142,8 +145,8 @@ describe('BotService', () => {
 
       mockDb.createCrawlJob.mockResolvedValue(mockJob)
       mockScraper.scrapeMultipleUrls.mockResolvedValue([
-        { url: urls[0], title: 'Page 1', content: 'Content 1', metadata: {} },
-        { url: urls[1], title: 'Page 2', content: 'Content 2', metadata: {} }
+        { url: urls[0], title: 'Page 1', content: 'Content 1', metadata: {}, timestamp: new Date() },
+        { url: urls[1], title: 'Page 2', content: 'Content 2', metadata: {}, timestamp: new Date() }
       ])
       mockEmbeddings.generateEmbedding.mockResolvedValue([0.1, 0.2, 0.3])
       mockVectorStore.upsertDocument.mockResolvedValue(undefined)

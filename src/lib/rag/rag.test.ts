@@ -170,7 +170,7 @@ describe('RAGEngine', () => {
       const response = await ragEngine.query('bot-123', query);
 
       expect(mockEmbeddings.generateEmbedding).toHaveBeenCalledWith(query);
-      expect(mockPinecone.query).toHaveBeenCalledWith('bot-123', queryEmbedding, 5);
+      expect(mockPinecone.query).toHaveBeenCalledWith('bot-123', queryEmbedding, 5, undefined);
       expect(mockOpenAI.chat.completions.create).toHaveBeenCalledWith(
         expect.objectContaining({
           model: 'gpt-4-turbo-preview',

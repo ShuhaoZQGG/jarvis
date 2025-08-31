@@ -1,161 +1,66 @@
 # Next Cycle Tasks
 
-## 🔴 CRITICAL - Cycle 7 Revision Required
-Cycle 7 has been marked as **NEEDS_REVISION**. The following must be completed before proceeding to Cycle 8.
+## Priority 1: Critical Auth Test Fixes (Must Complete for Cycle 17)
+- [ ] Fix login page email validation test
+- [ ] Fix signup page validation tests (2 failures)
+- [ ] Fix reset password validation tests (2 failures)
+- [ ] These 5 tests are blocking authentication feature completion
+- [ ] MUST achieve 100% test pass rate before merging
 
-### Immediate Actions Required
-1. **Complete Missing Implementation**
-   - [ ] Add WebsiteCrawler implementation to PR (src/lib/crawler/)
-   - [ ] Add PineconeService implementation to PR (src/lib/vectors/)
-   - [ ] Add EmbeddingService implementation to PR (src/lib/embeddings/)
-   - [ ] Add RAGEngine implementation to PR (src/lib/rag/)
-   - [ ] Ensure all code is committed and pushed to branch
+## Priority 2: Code Quality
+- [ ] Resolve all React act() warnings in component tests
+- [ ] Update test utilities to handle async state updates properly
+- [ ] Improve form validation test patterns
 
-2. **Fix Critical Issues**
-   - [ ] Resolve test timeout problems
-   - [ ] Fix TypeScript compilation errors
-   - [ ] Update package.json with missing dependencies
-   - [ ] Ensure PR contains actual implementation code
+## Priority 3: Backend Integration
+- [ ] Replace mock data with actual backend for workspace features
+- [ ] Implement proper workspace CRUD operations
+- [ ] Add API endpoints for workspace management
+- [ ] Connect frontend to real workspace API
 
-3. **Integration Requirements**
-   - [ ] Connect AI components to existing bot endpoints
-   - [ ] Add error handling and retry logic
-   - [ ] Implement rate limiting for external APIs
-   - [ ] Add environment variable validation
+## Priority 4: Complete Authentication Implementation
+- [ ] Ensure login/signup pages work without errors
+- [ ] Fix session management tests
+- [ ] Complete auth flow integration
+- [ ] Validate redirects and protected routes
 
-## Priority 1: Complete Cycle 7 AI Features
-### WebsiteCrawler (src/lib/crawler/)
-- [ ] Playwright-based web scraping
-- [ ] Sitemap.xml parsing
-- [ ] JavaScript rendering support
-- [ ] Robots.txt compliance
-- [ ] Clean text extraction
-- [ ] URL normalization
+## Technical Debt
+- [ ] Refactor test mocking patterns for consistency
+- [ ] Update Stripe mock to latest API version
+- [ ] Improve crawler test mock handling for multiple URLs
+- [ ] Add comprehensive integration tests for auth flow
+- [ ] Fix async/await issues in remaining tests
 
-### EmbeddingService (src/lib/embeddings/)
-- [ ] OpenAI Ada-002 integration
-- [ ] Text chunking (512 tokens with 50 token overlap)
-- [ ] Batch processing for efficiency
-- [ ] Error recovery with exponential backoff
-- [ ] Token counting and validation
+## Feature Implementation (After Tests Pass)
+1. **User Management (Phase 2)**
+   - User profile page
+   - Workspace CRUD operations
+   - Team member invitations
+   - Permission system
 
-### PineconeService (src/lib/vectors/)
-- [ ] Index initialization and management
-- [ ] Namespace per bot strategy
-- [ ] Vector upsert operations
-- [ ] Similarity search (top-k retrieval)
-- [ ] Metadata filtering
-- [ ] Index cleanup utilities
+2. **Production Infrastructure**
+   - Complete Redis rate limiting setup
+   - Verify Sentry error tracking
+   - API documentation
+   - Performance optimization
 
-### RAGEngine (src/lib/rag/)
-- [ ] Context retrieval from vectors
-- [ ] Prompt engineering for GPT-4
-- [ ] Response generation
-- [ ] Conversation history management
-- [ ] Response caching (1 hour TTL)
-- [ ] Source attribution
+## Environment Setup
+- [ ] Configure production OpenAI API key
+- [ ] Setup production Pinecone index
+- [ ] Verify Supabase production settings
 
-## Priority 2: Testing & Quality
-- [ ] Fix test infrastructure (timeout issues)
-- [ ] Add unit tests for all AI components
-- [ ] Integration tests for API endpoints
-- [ ] E2E tests for chat flow
-- [ ] Performance testing for crawling
-- [ ] Load testing for concurrent chats
+## Success Criteria for Next Cycle
+- Achieve 100% test pass rate (191/191 tests passing)
+- Fix all 5 auth component test failures
+- No React act() warnings
+- Clean build with no TypeScript errors
+- All critical authentication features working
+- Ready to merge to main branch
 
-## Priority 3: Frontend UI (Cycle 8)
-### Bot Training Interface
-- [ ] URL input with validation
-- [ ] Crawl progress indicator
-- [ ] Knowledge base viewer
-- [ ] Test chat interface
-- [ ] Training status dashboard
-- [ ] Error handling UI
-
-### Chat Widget MVP
-- [ ] Preact-based implementation
-- [ ] PostMessage API for communication
-- [ ] Basic customization options
-- [ ] Mobile responsive design
-- [ ] Embed code generator
-
-## Priority 4: Infrastructure (Cycle 9)
-### Queue System
-- [ ] BullMQ with Redis setup
-- [ ] Background job processing
-- [ ] Job status tracking
-- [ ] Retry mechanisms
-- [ ] Dead letter queue
-
-### Monitoring & Logging
-- [ ] Sentry error tracking
-- [ ] API usage metrics
-- [ ] Performance monitoring
-- [ ] Cost tracking for APIs
-- [ ] Alert system
-
-## Technical Debt from Previous Cycles
-- [ ] Fix Next.js Request/Response mock setup in tests
-- [ ] Resolve remaining test failures from Cycle 5
-- [ ] Implement Redis for production rate limiting
-- [ ] Generate API documentation
-- [ ] Add missing TypeScript types
-
-## Future Enhancements (Cycles 10-15)
-### Widget Excellence
-- Multiple widget variants (sidebar, modal, inline)
-- Smart triggers (scroll, time, exit-intent)
-- Quick action buttons
-- Conversation memory across navigation
-- A/B testing framework
-
-### Platform Integrations
-- Shopify app
-- WordPress plugin
-- Slack integration
-- Microsoft Teams bot
-- Webhook system
-
-### Enterprise Features
-- White-label support
-- SSO integration
-- Advanced analytics
-- Custom model support
-- Data residency options
-
-## Resource Requirements
-### API Keys Needed
-- [ ] OpenAI API key (GPT-4 and Ada-002)
-- [ ] Pinecone API key and environment
-- [ ] Redis connection string
-- [ ] Sentry DSN
-
-### Infrastructure Setup
-- [ ] Vercel deployment configuration
-- [ ] Supabase project (already set up)
-- [ ] CDN configuration
-- [ ] Domain and SSL setup
-
-## Success Metrics for Cycle 7 Revision
-- [ ] PR #4 updated with complete implementation
-- [ ] All tests passing (100% green)
-- [ ] Successful website crawl demonstration
-- [ ] Working RAG-based chat responses
-- [ ] < 2s response time for chat queries
-- [ ] Proper error handling throughout
-
-## Notes
-1. **CRITICAL**: Cycle 7 must be completed before moving to Cycle 8
-2. The planning and design work is solid, but implementation is missing
-3. Focus on getting core AI features working end-to-end
-4. Consider cost implications of API usage early
-5. Implement caching to reduce API costs
-6. Ensure proper error handling for external service failures
-
-## Definition of Done for Cycle 7
-- [ ] All AI components implemented and tested
-- [ ] PR contains complete implementation code
-- [ ] Tests passing without timeouts
-- [ ] Documentation updated
-- [ ] Code reviewed and approved
-- [ ] Successfully merged to main branch
+## Notes from Cycle 16 Review
+- Current test pass rate: 97% (186/191)
+- Only 5 tests failing (all in auth components)
+- Good progress but must reach 100% before approval
+- This is attempt 8 - need focused effort on just these 5 tests
+- Decision: NEEDS_REVISION to fix critical auth tests
+- Once fixed, can merge to main branch

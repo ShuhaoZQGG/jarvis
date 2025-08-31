@@ -38,6 +38,9 @@ describe('AuthService', () => {
       expect(mockSupabaseClient.auth.signUp).toHaveBeenCalledWith({
         email: 'test@example.com',
         password: 'password123',
+        options: {
+          data: undefined,
+        },
       })
       expect(result).toEqual({ user: mockUser, session: {} })
     })

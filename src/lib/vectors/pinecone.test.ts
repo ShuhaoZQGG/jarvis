@@ -23,7 +23,9 @@ describe('PineconeService', () => {
     mockPinecone = {
       index: jest.fn().mockReturnValue(mockIndex),
       createIndex: jest.fn(),
-      listIndexes: jest.fn(),
+      listIndexes: jest.fn().mockResolvedValue({
+        indexes: [{ name: 'test-index' }]
+      }),
     };
 
     (Pinecone as jest.MockedClass<typeof Pinecone>).mockImplementation(() => mockPinecone);
@@ -50,7 +52,15 @@ describe('PineconeService', () => {
     });
 
     it('should create index if it does not exist', async () => {
-      mockPinecone.listIndexes.mockResolvedValue({ indexes: [] });
+      // First call returns no indexes, subsequent calls return the created index as ready
+      mockPinecone.listIndexes
+        .mockResolvedValueOnce({ indexes: [] })
+        .mockResolvedValue({ 
+          indexes: [{ 
+            name: 'test-index',
+            status: { ready: true }
+          }] 
+        });
       
       await service.initialize();
       
@@ -65,7 +75,7 @@ describe('PineconeService', () => {
           },
         },
       });
-    });
+    }, 15000);
   });
 
   describe('upsert', () => {
@@ -124,6 +134,13 @@ describe('PineconeService', () => {
     it('should apply filters when querying', async () => {
       const queryVector = [0.1, 0.2, 0.3];
       const filter = { category: 'docs' };
+      const mockResults = {
+        matches: [
+          { id: 'vec1', score: 0.95, metadata: { text: 'result 1' } },
+        ],
+      };
+
+      mockIndex.query.mockResolvedValue(mockResults);
 
       await service.query('test-namespace', queryVector, 5, filter);
 

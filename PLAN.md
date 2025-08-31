@@ -1,159 +1,120 @@
-# Cycle 8: Complete AI Implementation & MVP Delivery
+# Cycle 10: GitHub Issues & Authentication Implementation
 
-## Executive Summary
-Cycle 8 focuses on completing the missing AI implementation from Cycle 7 and delivering a working MVP with core functionality. Based on the review feedback, Cycle 7 had solid planning but lacked actual implementation in the PR.
-
-## Critical Context
-- **Cycle 7 Status**: NEEDS_REVISION - documentation complete but implementation missing from PR
-- **Priority**: Complete AI features and ensure working end-to-end chatbot functionality
-- **Target**: Functional MVP with website crawling, embeddings, and RAG-based responses
+## Vision
+Work on GitHub issues and continue building the project with focus on authentication, improved testing, and production readiness.
 
 ## Requirements
 
-### Functional Requirements
-1. **Website Crawling**
-   - Scrape and parse website content
-   - Handle JavaScript-rendered pages
-   - Respect robots.txt
-   - Extract clean text content
+### Priority 1: Critical Authentication Issue (#6)
+- **Login Page Implementation**: Create missing /login page to fix 404 error
+- **Authentication Flow**: Implement complete auth flow with Supabase
+- **Session Management**: Handle user sessions and redirects
+- **Registration**: Add signup capability
 
-2. **Vector Processing**
-   - Generate embeddings using OpenAI
-   - Store vectors in Pinecone
-   - Enable similarity search
-   - Manage bot-specific namespaces
+### Priority 2: Build & Test Stability
+- **Fix Remaining Test Failures**: Resolve 34 UI/mock test failures
+- **Build Verification**: Ensure clean builds without warnings
+- **Test Coverage**: Improve coverage to >80%
 
-3. **RAG Engine**
-   - Retrieve relevant context
-   - Generate contextual responses
-   - Manage conversation history
-   - Implement response caching
-
-4. **API Integration**
-   - Connect AI components to existing bot endpoints
-   - Add proper error handling
-   - Implement rate limiting
-   - Validate environment variables
-
-### Non-Functional Requirements
-- Response time < 2 seconds
-- 99.5% uptime for chat service
-- Support 100 concurrent conversations
-- < 50KB widget bundle size
-- All tests passing (100% green)
+### Priority 3: Production Features
+- **Multi-Tenant Architecture**: Workspace isolation and permissions
+- **API Key Management**: Secure API key generation and validation
+- **Rate Limiting**: Redis-based production rate limiting
+- **Error Tracking**: Sentry integration for production monitoring
 
 ## Architecture
 
 ### Tech Stack
-- **Backend**: Node.js, TypeScript, Next.js 14
+- **Frontend**: Next.js 14, React 18, Tailwind CSS, Radix UI
+- **Backend**: Next.js API Routes, TypeScript
+- **Auth**: Supabase Auth
 - **Database**: Supabase (PostgreSQL)
 - **Vector DB**: Pinecone
-- **AI/ML**: OpenAI (GPT-4, Ada-002)
-- **Queue**: BullMQ + Redis
-- **Web Scraping**: Playwright
-- **Testing**: Jest, Playwright (E2E)
+- **AI**: OpenAI API
+- **Payments**: Stripe
+- **Caching**: Redis (ioredis)
+- **Testing**: Jest, React Testing Library
 
-### Component Architecture
-```
-┌─────────────────────────────────────────┐
-│           API Gateway (Next.js)         │
-├─────────────────────────────────────────┤
-│     Authentication & Rate Limiting      │
-├──────────┬──────────┬──────────────────┤
-│ Crawler  │ Embeddings│    RAG Engine   │
-│ Service  │  Service  │                 │
-├──────────┴──────────┴──────────────────┤
-│  Pinecone  │ OpenAI API │   Supabase   │
-└────────────┴────────────┴──────────────┘
-```
+### System Components
+1. **Authentication Module**
+   - Login/Signup pages
+   - OAuth providers
+   - Session management
+   - Protected routes
+
+2. **User Management**
+   - Profile settings
+   - Workspace management
+   - Team invitations
+
+3. **API Security**
+   - API key generation
+   - Rate limiting per tier
+   - Request validation
+
+4. **Production Infrastructure**
+   - Error tracking
+   - Performance monitoring
+   - Logging system
 
 ## Implementation Phases
 
-### Phase 1: Complete Missing AI Implementation (Priority 1)
-**Files to implement:**
-1. `src/lib/crawler/crawler.ts`
-   - Playwright setup
-   - URL discovery
-   - Content extraction
-   - Text cleaning
+### Phase 1: Authentication (Days 1-2)
+- [ ] Create /login page component
+- [ ] Create /signup page component
+- [ ] Implement Supabase auth integration
+- [ ] Add protected route middleware
+- [ ] Handle auth redirects
+- [ ] Add password reset flow
 
-2. `src/lib/embeddings/embeddings.ts`
-   - OpenAI client setup
-   - Text chunking (512 tokens)
-   - Batch processing
-   - Error retry logic
+### Phase 2: User Management (Day 3)
+- [ ] User profile page
+- [ ] Workspace CRUD operations
+- [ ] Team member invitations
+- [ ] Permission system
 
-3. `src/lib/vectors/pinecone.ts`
-   - Index initialization
-   - Namespace management
-   - Upsert operations
-   - Similarity search
+### Phase 3: Testing & Stability (Day 4)
+- [ ] Fix 34 failing UI tests
+- [ ] Add auth integration tests
+- [ ] Improve test mocking
+- [ ] Achieve 80% coverage
 
-4. `src/lib/rag/rag.ts`
-   - Context retrieval
-   - Prompt construction
-   - Response generation
-   - Cache management
+### Phase 4: Production Features (Day 5)
+- [ ] Redis rate limiting
+- [ ] Sentry error tracking
+- [ ] API documentation
+- [ ] Performance optimization
 
-### Phase 2: API Integration (Priority 2)
-1. Update bot endpoints to use AI services
-2. Add training endpoint for website crawling
-3. Implement chat endpoint with RAG
-4. Add status/progress tracking
-
-### Phase 3: Testing & Quality (Priority 3)
-1. Fix test infrastructure issues
-2. Add unit tests for all components
-3. Integration tests for API flows
-4. E2E test for complete chat flow
-
-## Risk Mitigation
+## Risks & Mitigations
 
 ### Technical Risks
-1. **Missing Dependencies**
-   - Risk: Package.json not updated
-   - Mitigation: Audit and add all required packages
+1. **Auth Complexity**: Supabase integration may have edge cases
+   - Mitigation: Thorough testing, follow Supabase best practices
 
-2. **Test Failures**
-   - Risk: Tests timing out
-   - Mitigation: Fix mock setup and async handling
+2. **Test Environment**: Mocking complexity for UI tests
+   - Mitigation: Proper test utilities, consistent mock patterns
 
-3. **API Rate Limits**
-   - Risk: OpenAI/Pinecone throttling
-   - Mitigation: Implement exponential backoff
+3. **Performance**: Redis/caching layer overhead
+   - Mitigation: Connection pooling, lazy loading
 
-### Operational Risks
-1. **Cost Overruns**
-   - Risk: High API usage costs
-   - Mitigation: Implement caching, batch processing
+### Business Risks
+1. **User Experience**: Auth flow disruption
+   - Mitigation: Clear UX, helpful error messages
 
-2. **Performance Issues**
-   - Risk: Slow response times
-   - Mitigation: Optimize vector search, add caching
+2. **Security**: Authentication vulnerabilities
+   - Mitigation: Security audit, OWASP compliance
 
 ## Success Criteria
-- [ ] All AI components implemented and in PR
-- [ ] 100% test pass rate
-- [ ] < 2s chat response time
-- [ ] Successful website crawl demo
-- [ ] Working end-to-end chat flow
-- [ ] PR approved and merged
+- ✅ Login/signup pages working without 404
+- ✅ All tests passing (100% success rate)
+- ✅ Clean build with no warnings
+- ✅ Auth flow complete with session management
+- ✅ Redis rate limiting in production
+- ✅ 80%+ test coverage
+- ✅ API documentation complete
 
-## Dependencies
-- OpenAI API key (GPT-4, Ada-002)
-- Pinecone API key and environment
-- Playwright for web scraping
-- Redis for queue management
-
-## Timeline
-- Implementation: 4 hours
-- Testing: 2 hours
-- Integration: 2 hours
-- Total: 8 hours
-
-## Next Steps After Cycle 8
-1. Frontend UI implementation
-2. Widget development
-3. Production deployment
-4. Performance optimization
-5. Platform integrations
+## Next Steps
+1. Immediate: Implement login page to fix GitHub issue #6
+2. Next: Complete authentication flow
+3. Then: Fix remaining test failures
+4. Finally: Production infrastructure improvements
