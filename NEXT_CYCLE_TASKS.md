@@ -1,66 +1,71 @@
 # Next Cycle Tasks
 
-## Priority 1: Critical Auth Test Fixes (Must Complete for Cycle 17)
-- [ ] Fix login page email validation test
-- [ ] Fix signup page validation tests (2 failures)
-- [ ] Fix reset password validation tests (2 failures)
-- [ ] These 5 tests are blocking authentication feature completion
-- [ ] MUST achieve 100% test pass rate before merging
+## Summary
+Cycle 18 attempted to implement production features but encountered critical build failures. Files were created in wrong locations and the build is completely broken. Needs significant revision before merging.
 
-## Priority 2: Code Quality
-- [ ] Resolve all React act() warnings in component tests
-- [ ] Update test utilities to handle async state updates properly
-- [ ] Improve form validation test patterns
+## Critical Issues from Cycle 18 (Must Fix First)
 
-## Priority 3: Backend Integration
-- [ ] Replace mock data with actual backend for workspace features
-- [ ] Implement proper workspace CRUD operations
-- [ ] Add API endpoints for workspace management
-- [ ] Connect frontend to real workspace API
+### P0 - Build Failures (BLOCKING)
+- ❌ Move all `/lib` files to `/src/lib` to match tsconfig paths
+- ❌ Create or integrate Supabase server module (missing dependency)
+- ❌ Fix module resolution errors preventing compilation
+- ❌ Remove duplicate rate limiting (already exists in src/lib/ratelimit.ts)
 
-## Priority 4: Complete Authentication Implementation
-- [ ] Ensure login/signup pages work without errors
-- [ ] Fix session management tests
-- [ ] Complete auth flow integration
-- [ ] Validate redirects and protected routes
+### P1 - Complete Implementation
+- ❌ Add database migrations for API keys table
+- ❌ Implement API routes for key management (/api/settings/api-keys)
+- ❌ Integrate OAuth buttons into existing auth pages
+- ❌ Write tests for new features (currently 0 tests)
 
-## Technical Debt
-- [ ] Refactor test mocking patterns for consistency
-- [ ] Update Stripe mock to latest API version
-- [ ] Improve crawler test mock handling for multiple URLs
-- [ ] Add comprehensive integration tests for auth flow
-- [ ] Fix async/await issues in remaining tests
+## Technical Debt from Cycle 18
+- Files created outside project structure conventions
+- Duplicate implementations violating DRY principle
+- No integration with existing database module
+- Import paths don't match tsconfig configuration
+- Tests timing out after 2+ minutes
 
-## Feature Implementation (After Tests Pass)
-1. **User Management (Phase 2)**
-   - User profile page
-   - Workspace CRUD operations
-   - Team member invitations
-   - Permission system
+## Deferred Production Features
 
-2. **Production Infrastructure**
-   - Complete Redis rate limiting setup
-   - Verify Sentry error tracking
-   - API documentation
-   - Performance optimization
+### Authentication & Security
+- Complete OAuth provider integration (buttons not added to UI)
+- Configure OAuth apps in provider dashboards (Google, GitHub, Discord)
+- Implement CSRF protection
+- Add comprehensive input validation
 
-## Environment Setup
-- [ ] Configure production OpenAI API key
-- [ ] Setup production Pinecone index
-- [ ] Verify Supabase production settings
+### API Management
+- Complete API key management system
+- Create database schema for API keys
+- Build API routes for CRUD operations
+- Add permission-based access control
 
-## Success Criteria for Next Cycle
-- Achieve 100% test pass rate (191/191 tests passing)
-- Fix all 5 auth component test failures
-- No React act() warnings
-- Clean build with no TypeScript errors
-- All critical authentication features working
-- Ready to merge to main branch
+### Infrastructure
+- Set up Redis instance for production (Redis Cloud or Upstash)
+- Configure rate limiting properly (use existing implementation)
+- Deploy to Vercel with proper environment variables
+- Add Sentry error tracking
 
-## Notes from Cycle 16 Review
-- Current test pass rate: 97% (186/191)
-- Only 5 tests failing (all in auth components)
-- Good progress but must reach 100% before approval
-- This is attempt 8 - need focused effort on just these 5 tests
-- Decision: NEEDS_REVISION to fix critical auth tests
-- Once fixed, can merge to main branch
+### Testing & Quality
+- Add tests for ALL new features (minimum 80% coverage)
+- Fix test timeout issues (Jest configuration)
+- Add integration tests for OAuth flow
+- Add E2E tests for API key management
+
+## Architectural Improvements Needed
+1. **File Organization**: Follow src/ structure consistently
+2. **Module Integration**: Use existing modules, don't duplicate
+3. **Import Paths**: Ensure all imports match tsconfig paths
+4. **Database**: Integrate with existing database module
+5. **Testing**: TDD approach - write tests first
+
+## Recommended Approach for Next Cycle
+1. **Fix the build FIRST** - nothing else matters if it doesn't compile
+2. **Move files to correct locations** before adding any new code
+3. **Integrate with existing code** - study what's already there
+4. **One feature at a time** - complete fully before moving on
+5. **Test everything** - no code without tests
+
+## Notes
+- Cycle 18 had good security practices but poor integration
+- Build must be green before any PR can be merged
+- Consider smaller, incremental changes
+- Focus on integration over new features
