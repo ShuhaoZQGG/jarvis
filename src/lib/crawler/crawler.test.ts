@@ -1,22 +1,7 @@
 import { WebsiteCrawler } from './crawler';
 import { Page } from 'playwright';
 
-// Create mocks outside jest.mock
-const mockPage = {
-  goto: jest.fn(),
-  evaluate: jest.fn(),
-  close: jest.fn(),
-  waitForLoadState: jest.fn(),
-  $$eval: jest.fn(),
-  content: jest.fn().mockResolvedValue('<html></html>'),
-};
-
-const mockBrowser = {
-  newPage: jest.fn().mockResolvedValue(mockPage),
-  close: jest.fn(),
-};
-
-// Mock playwright
+// Create mocks
 const mockPage = {
   goto: jest.fn(),
   evaluate: jest.fn(),
@@ -32,9 +17,10 @@ const mockBrowser = {
   close: jest.fn(),
 };
 
+// Mock playwright before importing anything that uses it
 jest.mock('playwright', () => ({
   chromium: {
-    launch: jest.fn().mockResolvedValue(mockBrowser),
+    launch: jest.fn(() => Promise.resolve(mockBrowser)),
   },
 }));
 
@@ -142,8 +128,8 @@ describe('WebsiteCrawler', () => {
       ];
 
       mockPage.evaluate
-        .mockResolvedValueOnce(mockPageData1)
-        .mockResolvedValueOnce(mockPageData2);
+        .mockResolvedValueOnce(mockPages[0])
+        .mockResolvedValueOnce(mockPages[1]);
       mockPage.$$eval
         .mockResolvedValueOnce(['https://example.com/about'])
         .mockResolvedValueOnce([]);
