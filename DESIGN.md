@@ -48,7 +48,9 @@ Notice Widget → Click to Open → Type Question → Receive Answer → Quick A
 └─────────────────────────────────────┘
 ```
 
-### Dashboard
+## Interface Mockups
+
+### Dashboard Layout
 ```
 ┌─────────────────────────────────────┐
 │ Jarvis Dashboard    [Settings][Out] │
