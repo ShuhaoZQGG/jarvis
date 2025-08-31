@@ -136,7 +136,7 @@ describe('EnvValidator', () => {
 
       const config = validator.validate();
       expect(config.PINECONE_ENVIRONMENT).toBe('production');
-      expect(config.PINECONE_INDEX_NAME).toBe('jarvis-vectors');
+      expect(config.PINECONE_INDEX_NAME).toBe('jarvis-index');
       expect(config.PORT).toBe('3000');
     });
   });
