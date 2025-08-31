@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js'
+import { createBrowserClient } from '@supabase/ssr'
 
 export interface AuthResponse {
   user: User | null
@@ -9,7 +10,8 @@ export class AuthService {
   private supabase: SupabaseClient
 
   constructor(supabaseUrl: string, supabaseAnonKey: string) {
-    this.supabase = createClient(supabaseUrl, supabaseAnonKey)
+    // Use SSR-compatible browser client for better session management
+    this.supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)
   }
 
   async signUp(email: string, password: string, metadata?: Record<string, any>): Promise<AuthResponse> {
@@ -50,6 +52,15 @@ export class AuthService {
   }
 
   async getCurrentUser(): Promise<User | null> {
+    // First try to get the session
+    const { data: { session }, error: sessionError } = await this.supabase.auth.getSession()
+    
+    if (sessionError || !session) {
+      // No valid session, return null
+      return null
+    }
+
+    // If we have a session, get the user
     const { data: { user }, error } = await this.supabase.auth.getUser()
 
     if (error) {
@@ -58,6 +69,17 @@ export class AuthService {
     }
 
     return user
+  }
+
+  async getSession() {
+    const { data: { session }, error } = await this.supabase.auth.getSession()
+    
+    if (error) {
+      console.error('Error getting session:', error)
+      return null
+    }
+
+    return session
   }
 
   async resetPassword(email: string): Promise<void> {
@@ -94,5 +116,9 @@ export class AuthService {
 
   getSupabaseClient(): SupabaseClient {
     return this.supabase
+  }
+
+  onAuthStateChange(callback: (event: string, session: any) => void) {
+    return this.supabase.auth.onAuthStateChange(callback)
   }
 }
