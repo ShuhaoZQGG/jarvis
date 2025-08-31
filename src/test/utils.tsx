@@ -42,6 +42,27 @@ jest.mock('next/link', () => {
   }
 })
 
+// Mock auth context
+const mockSignIn = jest.fn()
+const mockSignUp = jest.fn()
+const mockSignOut = jest.fn()
+const mockRefreshUser = jest.fn()
+const mockResetPassword = jest.fn()
+const mockUpdatePassword = jest.fn()
+
+jest.mock('@/contexts/auth-context', () => ({
+  useAuth: jest.fn(() => ({
+    user: null,
+    loading: false,
+    signIn: mockSignIn,
+    signUp: mockSignUp,
+    signOut: mockSignOut,
+    refreshUser: mockRefreshUser,
+    authService: {},
+  })),
+  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}))
+
 // Create a custom render function that includes providers
 export function renderWithProviders(
   ui: React.ReactElement,
@@ -64,6 +85,16 @@ export function renderWithProviders(
   }
 
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
+}
+
+// Export auth mocks for test assertions
+export const authMocks = {
+  signIn: mockSignIn,
+  signUp: mockSignUp,
+  signOut: mockSignOut,
+  refreshUser: mockRefreshUser,
+  resetPassword: mockResetPassword,
+  updatePassword: mockUpdatePassword,
 }
 
 // Re-export everything

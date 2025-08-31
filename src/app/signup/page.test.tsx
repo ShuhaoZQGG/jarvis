@@ -1,32 +1,41 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
 import SignupPage from './page'
-import { AuthService } from '@/lib/auth/auth'
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }))
 
-// Mock auth service
-jest.mock('@/lib/auth/auth', () => ({
-  AuthService: jest.fn().mockImplementation(() => ({
-    signUp: jest.fn(),
-    getCurrentUser: jest.fn(),
-  })),
+// Mock the auth context
+const mockSignIn = jest.fn()
+const mockSignUp = jest.fn()
+const mockSignOut = jest.fn()
+const mockRefreshUser = jest.fn()
+
+jest.mock('@/contexts/auth-context', () => ({
+  useAuth: jest.fn(),
+  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))
+
+// Import the mocked function
+import { useAuth } from '@/contexts/auth-context'
 
 describe('SignupPage', () => {
   const mockPush = jest.fn()
-  const mockSignUp = jest.fn()
 
   beforeEach(() => {
     jest.clearAllMocks()
     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
-    ;(AuthService as jest.Mock).mockImplementation(() => ({
+    ;(useAuth as jest.Mock).mockReturnValue({
+      user: null,
+      loading: false,
+      signIn: mockSignIn,
       signUp: mockSignUp,
-      getCurrentUser: jest.fn().mockResolvedValue(null),
-    }))
+      signOut: mockSignOut,
+      refreshUser: mockRefreshUser,
+      authService: {},
+    })
   })
 
   it('renders signup form with all required elements', () => {
@@ -205,10 +214,15 @@ describe('SignupPage', () => {
   })
 
   it('redirects to dashboard if already authenticated', async () => {
-    ;(AuthService as jest.Mock).mockImplementation(() => ({
+    ;(useAuth as jest.Mock).mockReturnValue({
+      user: { id: '123', email: 'test@example.com' },
+      loading: false,
+      signIn: mockSignIn,
       signUp: mockSignUp,
-      getCurrentUser: jest.fn().mockResolvedValue({ id: '123', email: 'test@example.com' }),
-    }))
+      signOut: mockSignOut,
+      refreshUser: mockRefreshUser,
+      authService: {},
+    })
 
     render(<SignupPage />)
 
