@@ -1,9 +1,9 @@
 import { AuthService } from './auth'
-import { createClient } from '@supabase/supabase-js'
+import { createBrowserClient } from '@supabase/ssr'
 
-// Mock Supabase client
-jest.mock('@supabase/supabase-js', () => ({
-  createClient: jest.fn(),
+// Mock Supabase SSR client
+jest.mock('@supabase/ssr', () => ({
+  createBrowserClient: jest.fn(),
 }))
 
 describe('AuthService', () => {
@@ -17,10 +17,15 @@ describe('AuthService', () => {
         signInWithPassword: jest.fn(),
         signOut: jest.fn(),
         getUser: jest.fn(),
+        getSession: jest.fn(),
         resetPasswordForEmail: jest.fn(),
+        updateUser: jest.fn(),
+        onAuthStateChange: jest.fn(() => ({
+          data: { subscription: { unsubscribe: jest.fn() } }
+        })),
       },
     }
-    ;(createClient as jest.Mock).mockReturnValue(mockSupabaseClient)
+    ;(createBrowserClient as jest.Mock).mockReturnValue(mockSupabaseClient)
     
     authService = new AuthService('https://test.supabase.co', 'test-anon-key')
   })
@@ -108,6 +113,12 @@ describe('AuthService', () => {
   describe('getCurrentUser', () => {
     it('should return current user when authenticated', async () => {
       const mockUser = { id: '123', email: 'test@example.com' }
+      const mockSession = { access_token: 'token123' }
+      
+      mockSupabaseClient.auth.getSession.mockResolvedValue({
+        data: { session: mockSession },
+        error: null,
+      })
       mockSupabaseClient.auth.getUser.mockResolvedValue({
         data: { user: mockUser },
         error: null,
@@ -115,18 +126,21 @@ describe('AuthService', () => {
 
       const result = await authService.getCurrentUser()
 
+      expect(mockSupabaseClient.auth.getSession).toHaveBeenCalled()
       expect(mockSupabaseClient.auth.getUser).toHaveBeenCalled()
       expect(result).toEqual(mockUser)
     })
 
-    it('should return null when no user is authenticated', async () => {
-      mockSupabaseClient.auth.getUser.mockResolvedValue({
-        data: { user: null },
+    it('should return null when no session exists', async () => {
+      mockSupabaseClient.auth.getSession.mockResolvedValue({
+        data: { session: null },
         error: null,
       })
 
       const result = await authService.getCurrentUser()
 
+      expect(mockSupabaseClient.auth.getSession).toHaveBeenCalled()
+      expect(mockSupabaseClient.auth.getUser).not.toHaveBeenCalled()
       expect(result).toBeNull()
     })
   })
