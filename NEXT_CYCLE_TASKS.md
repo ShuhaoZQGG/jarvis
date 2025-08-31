@@ -1,12 +1,11 @@
 # Next Cycle Tasks
 
-## Priority 1: Test Stability (Critical for Cycle 16)
-- [ ] Fix email validation tests (3 failures)
-- [ ] Fix RAG engine vector store mock (1 failure)
-- [ ] Fix billing service Stripe mocks (5 failures)
-- [ ] Fix bot configuration React act() warnings (2 failures)
-- [ ] Fix reset password duplicate element issues (2 failures)
-- [ ] Fix remaining miscellaneous test failures (4 failures)
+## Priority 1: Critical Auth Test Fixes (Must Complete for Cycle 17)
+- [ ] Fix login page email validation test
+- [ ] Fix signup page validation tests (2 failures)
+- [ ] Fix reset password validation tests (2 failures)
+- [ ] These 5 tests are blocking authentication feature completion
+- [ ] MUST achieve 100% test pass rate before merging
 
 ## Priority 2: Code Quality
 - [ ] Resolve all React act() warnings in component tests
@@ -51,15 +50,17 @@
 - [ ] Verify Supabase production settings
 
 ## Success Criteria for Next Cycle
-- Achieve 95%+ test pass rate (minimum 181/191 tests passing)
+- Achieve 100% test pass rate (191/191 tests passing)
+- Fix all 5 auth component test failures
 - No React act() warnings
 - Clean build with no TypeScript errors
 - All critical authentication features working
-- Ready for production deployment
+- Ready to merge to main branch
 
-## Notes from Cycle 15 Review
-- Current test pass rate: 91% (174/191)
-- Need to fix 7 more tests minimum to reach 95% threshold
-- Focus on test stability before adding new features
-- Consider manual testing of auth flow after fixes
-- PR #15 marked as NEEDS_REVISION due to test failures
+## Notes from Cycle 16 Review
+- Current test pass rate: 97% (186/191)
+- Only 5 tests failing (all in auth components)
+- Good progress but must reach 100% before approval
+- This is attempt 8 - need focused effort on just these 5 tests
+- Decision: NEEDS_REVISION to fix critical auth tests
+- Once fixed, can merge to main branch

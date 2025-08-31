@@ -66,8 +66,8 @@ describe('ResetPasswordPage', () => {
   })
 
   it('successfully sends reset email with valid email', async () => {
-    mockResetPassword.mockResolvedValue({ success: true })
-    const { getByLabelText, getByRole, getByText } = render(<ResetPasswordPage />)
+    mockResetPassword.mockResolvedValue(undefined)
+    const { getByLabelText, getByRole } = render(<ResetPasswordPage />)
 
     const emailInput = getByLabelText(/email/i)
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
@@ -80,9 +80,10 @@ describe('ResetPasswordPage', () => {
 
     await waitFor(() => {
       expect(mockResetPassword).toHaveBeenCalledWith('test@example.com')
-      expect(getByText(/check your email/i)).toBeInTheDocument()
-      expect(getByText(/we've sent a password reset link/i)).toBeInTheDocument()
     })
+    
+    expect(screen.getByRole('heading', { name: /check your email/i })).toBeInTheDocument()
+    expect(screen.getByText(/we've sent a password reset link to test@example\.com/i)).toBeInTheDocument()
   })
 
   it('displays error message when email not found', async () => {
@@ -123,7 +124,7 @@ describe('ResetPasswordPage', () => {
   })
 
   it('shows resend option after successful submission', async () => {
-    mockResetPassword.mockResolvedValue({ success: true })
+    mockResetPassword.mockResolvedValue(undefined)
     render(<ResetPasswordPage />)
 
     const emailInput = screen.getByLabelText(/email/i)
@@ -139,7 +140,7 @@ describe('ResetPasswordPage', () => {
   })
 
   it('can resend reset email', async () => {
-    mockResetPassword.mockResolvedValue({ success: true })
+    mockResetPassword.mockResolvedValue(undefined)
     render(<ResetPasswordPage />)
 
     // First submission
