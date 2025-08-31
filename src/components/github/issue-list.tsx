@@ -23,6 +23,7 @@ export function IssueList({ owner, repo, token }: IssueListProps) {
 
   useEffect(() => {
     fetchIssues();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const fetchIssues = async () => {

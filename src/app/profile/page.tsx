@@ -26,6 +26,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     loadProfile()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadProfile = async () => {
@@ -132,6 +133,7 @@ export default function ProfilePage() {
             <div className="flex items-center space-x-4">
               <div className="h-20 w-20 rounded-full bg-blue-100 flex items-center justify-center">
                 {profile.avatar ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
                   <img 
                     src={profile.avatar} 
                     alt="Profile" 

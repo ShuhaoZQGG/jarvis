@@ -189,7 +189,7 @@ export function ApiKeysManager() {
                 New API Key Created: {newKey.name}
               </p>
               <p className="text-xs text-amber-700 mt-1">
-                Make sure to copy your API key now. You won't be able to see it again!
+                Make sure to copy your API key now. You won&apos;t be able to see it again!
               </p>
               <div className="mt-3 flex items-center space-x-2">
                 <code className="flex-1 px-3 py-2 bg-white rounded border text-xs font-mono">

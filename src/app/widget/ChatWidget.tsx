@@ -40,6 +40,7 @@ export default function ChatWidget({ botId }: ChatWidgetProps) {
   useEffect(() => {
     // Load bot configuration
     loadBotConfig()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [botId])
   
   useEffect(() => {
@@ -52,6 +53,7 @@ export default function ChatWidget({ botId }: ChatWidgetProps) {
   useEffect(() => {
     // Scroll to bottom when messages change
     scrollToBottom()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages])
   
   useEffect(() => {
@@ -64,6 +66,7 @@ export default function ChatWidget({ botId }: ChatWidgetProps) {
         timestamp: new Date()
       }])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, botConfig])
   
   const loadBotConfig = async () => {

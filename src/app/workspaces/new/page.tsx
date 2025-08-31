@@ -37,8 +37,8 @@ export default function NewWorkspacePage() {
         throw new Error(createError.message)
       }
 
-      if (data) {
-        router.push(`/workspaces/${data.id}`)
+      if (data && 'id' in data) {
+        router.push(`/workspaces/${(data as any).id}`)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create workspace')
