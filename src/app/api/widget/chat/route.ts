@@ -193,80 +193,56 @@ export async function POST(request: NextRequest) {
       bot_id: botId,
       role: 'user',
       content: message,
-      metadata: { sessionId: chatSessionId }
+      metadata: {
+        ip: clientIp,
+        userAgent: request.headers.get('user-agent'),
+        origin: request.headers.get('origin'),
+      },
     });
 
-    // Store assistant response
+    // Store bot response
     await supabase.from('messages').insert({
       conversation_id: conversationId,
       bot_id: botId,
       role: 'assistant',
-      content: response.message,
-      metadata: { 
-        sessionId: chatSessionId,
-        sources: response.sources.length,
-        messageId: response.messageId
-      }
-    });
-
-    // Track analytics
-    await supabase.from('analytics_events').insert({
-      bot_id: botId,
-      workspace_id: bot.workspace_id,
-      event_type: 'chat_message',
+      content: response.response,
       metadata: {
-        sessionId: chatSessionId,
-        messageLength: message.length,
-        responseLength: response.message.length,
-        sourcesFound: response.sources.length,
-        clientIp
-      }
+        sources: response.sources,
+        model: bot.settings?.model || 'gpt-3.5-turbo',
+      },
     });
 
-    // Update bot usage stats
-    await supabase.rpc('increment_bot_messages', { 
-      bot_id: botId,
-      count: 1 
+    // Track analytics event
+    await supabase.from('analytics_events').insert({
+      workspace_id: bot.workspace_id,
+      event_type: 'widget_chat',
+      event_data: {
+        bot_id: botId,
+        session_id: chatSessionId,
+        conversation_id: conversationId,
+        ip: clientIp,
+      },
     });
 
+    // Return response
     return NextResponse.json(
       {
-        message: response.message,
+        response: response.response,
+        sources: response.sources,
         sessionId: chatSessionId,
-        sources: response.sources.map(source => ({
-          text: source.text.substring(0, 200) + '...',
-          url: source.url,
-          score: source.score
-        }))
+        conversationId,
       },
       { headers: corsHeaders }
     );
-  } catch (error) {
-    console.error('Chat API error:', error);
-    
-    // Log error to database
-    try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_KEY!
-      );
-      
-      await supabase.from('error_logs').insert({
-        service: 'widget_chat_api',
-        error: error instanceof Error ? error.message : 'Unknown error',
-        metadata: {
-          botId: request.headers.get('X-Bot-Id'),
-          timestamp: new Date().toISOString()
-        }
-      });
-    } catch (logError) {
-      console.error('Failed to log error:', logError);
-    }
 
+  } catch (error) {
+    console.error('Widget chat error:', error);
+    
+    // Return user-friendly error
     return NextResponse.json(
-      { 
-        error: 'Failed to process message',
-        details: error instanceof Error ? error.message : 'Unknown error'
+      {
+        error: 'Failed to process chat message',
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500, headers: corsHeaders }
     );
