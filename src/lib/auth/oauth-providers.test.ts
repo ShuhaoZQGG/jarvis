@@ -139,7 +139,8 @@ describe('OAuth Providers', () => {
       const result = await unlinkOAuthAccount('github')
 
       expect(mockSupabase.auth.unlinkIdentity).toHaveBeenCalledWith({
-        identity_id: 'identity2'
+        id: 'identity2',
+        provider: 'github'
       })
       expect(result).toBe(true)
     })

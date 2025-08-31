@@ -25,6 +25,55 @@ jest.mock('@/lib/env', () => ({
   }
 }))
 
+// Mock Supabase
+jest.mock('@/lib/supabase', () => ({
+  supabase: {
+    from: jest.fn((table: string) => {
+      if (table === 'bots') {
+        return {
+          select: jest.fn(() => ({
+            eq: jest.fn(() => ({
+              single: jest.fn(() => Promise.resolve({
+                data: { id: 'test-bot-123', name: 'Test Bot', workspace_id: 'workspace-1' },
+                error: null
+              }))
+            }))
+          }))
+        }
+      } else if (table === 'conversations') {
+        return {
+          select: jest.fn(() => ({
+            eq: jest.fn(() => ({
+              eq: jest.fn(() => ({
+                single: jest.fn(() => Promise.resolve({
+                  data: null,
+                  error: { code: 'PGRST116' }
+                }))
+              }))
+            }))
+          })),
+          insert: jest.fn(() => ({
+            select: jest.fn(() => ({
+              single: jest.fn(() => Promise.resolve({
+                data: { id: 'conv-123' },
+                error: null
+              }))
+            }))
+          }))
+        }
+      } else if (table === 'messages') {
+        return {
+          insert: jest.fn(() => Promise.resolve({
+            data: { id: 'msg-123' },
+            error: null
+          }))
+        }
+      }
+      return {}
+    })
+  }
+}))
+
 describe('Chat API Route', () => {
   let mockVectorStore: jest.Mocked<VectorStore>
   let mockChatService: jest.Mocked<ChatService>
@@ -73,8 +122,9 @@ describe('Chat API Route', () => {
     const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(data.answer).toBe('Our product costs $99 and includes 24/7 support.')
+    expect(data.message).toBe('Our product costs $99 and includes 24/7 support.')
     expect(data.sources).toEqual(mockResponse.sources)
+    expect(data.sessionId).toBeDefined()
     expect(mockChatService.chat).toHaveBeenCalledWith(
       'What is the price?',
       'test-bot-123',
@@ -153,7 +203,7 @@ describe('Chat API Route', () => {
     const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(data.answer).toBe('Based on our previous discussion...')
+    expect(data.message).toBe('Based on our previous discussion...')
     expect(mockChatService.chat).toHaveBeenCalledWith(
       'Tell me more',
       'test-bot-123',
