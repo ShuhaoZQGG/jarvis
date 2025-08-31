@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Pinecone } from '@pinecone-database/pinecone'
+import 'openai/shims/node'
 import OpenAI from 'openai'
 import { env } from '@/lib/env'
 
