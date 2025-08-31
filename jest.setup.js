@@ -27,3 +27,37 @@ ActualNextResponse.json = function(data, init) {
   
   return response
 }
+
+// Mock Next.js navigation globally
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    refresh: jest.fn(),
+    pathname: '/',
+    query: {},
+    asPath: '/',
+    route: '/',
+    events: {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+    },
+  }),
+  usePathname: () => '/',
+  useSearchParams: () => new URLSearchParams(),
+  useParams: () => ({}),
+  notFound: jest.fn(),
+  redirect: jest.fn(),
+}))
+
+// Mock next/link
+jest.mock('next/link', () => {
+  const React = require('react')
+  return ({ children, href }) => {
+    return React.createElement('a', { href }, children)
+  }
+})
