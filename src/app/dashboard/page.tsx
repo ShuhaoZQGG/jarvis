@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Globe, Loader2, Copy, Check, Plus, Settings, Trash2, MessageSquare, Activity } from 'lucide-react'
 import { AuthService } from '@/lib/auth/auth'
-import { env } from '@/lib/env'
+import { publicEnv } from '@/lib/public-env'
 
 interface Bot {
   id: string
@@ -33,8 +33,8 @@ export default function Dashboard() {
   const checkAuth = async () => {
     try {
       const authService = new AuthService(
-        env.NEXT_PUBLIC_SUPABASE_URL,
-        env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        publicEnv.NEXT_PUBLIC_SUPABASE_URL,
+        publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
       )
       const user = await authService.getCurrentUser()
       if (!user) {
