@@ -226,31 +226,29 @@ export class BillingService {
           )
           
           // Store subscription in database
-          // TODO: Implement createSubscription in DatabaseService
-          // await this.dbService.createSubscription({
-          //   workspace_id: session.metadata.workspace_id,
-          //   stripe_subscription_id: subscription.id,
-          //   stripe_customer_id: session.customer as string,
-          //   stripe_price_id: subscription.items.data[0].price.id,
-          //   status: subscription.status
-          // })
+          await this.dbService.createSubscription({
+            workspace_id: session.metadata.workspace_id,
+            stripe_subscription_id: subscription.id,
+            stripe_customer_id: session.customer as string,
+            stripe_price_id: subscription.items.data[0].price.id,
+            status: subscription.status
+          })
         }
         break
       }
 
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription
-        // TODO: Implement updateSubscription in DatabaseService
-        // await this.dbService.updateSubscription(subscription.id, {
-        //   status: subscription.status
-        // })
+        await this.dbService.updateSubscription(subscription.id, {
+          status: subscription.status,
+          current_period_end: new Date(subscription.current_period_end * 1000).toISOString()
+        })
         break
       }
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription
-        // TODO: Implement cancelSubscription in DatabaseService
-        // await this.dbService.cancelSubscription(subscription.id)
+        await this.dbService.cancelSubscription(subscription.id)
         break
       }
 
