@@ -1,22 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withRateLimit, RATE_LIMIT_TIERS } from '@/lib/rate-limit';
+import { rateLimitMiddleware, chatRateLimiter } from '@/lib/ratelimit';
 import { createClient } from '@/lib/supabase/server';
-import { cookies } from 'next/headers';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   // Apply rate limiting
-  const rateLimitResponse = await withRateLimit(request, RATE_LIMIT_TIERS.free);
+  const rateLimitResponse = await rateLimitMiddleware(request, chatRateLimiter);
   if (rateLimitResponse) {
     return rateLimitResponse;
   }
 
   try {
     // Get user session
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
@@ -76,15 +74,14 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   // Apply rate limiting
-  const rateLimitResponse = await withRateLimit(request, RATE_LIMIT_TIERS.free);
+  const rateLimitResponse = await rateLimitMiddleware(request, chatRateLimiter);
   if (rateLimitResponse) {
     return rateLimitResponse;
   }
 
   try {
     // Get user session
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     

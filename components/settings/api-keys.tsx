@@ -146,11 +146,9 @@ export function ApiKeysManager() {
         </div>
         
         <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <Key className="mr-2 h-4 w-4" />
-              Create API Key
-            </Button>
+          <DialogTrigger className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2">
+            <Key className="mr-2 h-4 w-4" />
+            Create API Key
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
