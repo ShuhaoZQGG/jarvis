@@ -44,7 +44,7 @@ export async function getUserWorkspaces(userId: string) {
 export async function createWorkspace(name: string, ownerId: string) {
   const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
   
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('workspaces')
     .insert({
       name,
@@ -58,7 +58,7 @@ export async function createWorkspace(name: string, ownerId: string) {
   
   if (data && !error) {
     // Add owner as workspace member
-    await supabase
+    await (supabase as any)
       .from('workspace_members')
       .insert({
         workspace_id: data.id,
