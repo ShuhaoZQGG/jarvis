@@ -1,3 +1,4 @@
+import 'openai/shims/node'
 import { NextRequest, NextResponse } from 'next/server'
 import { Pinecone } from '@pinecone-database/pinecone'
 import 'openai/shims/node'

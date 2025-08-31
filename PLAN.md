@@ -1,153 +1,120 @@
-# Cycle 6 Project Plan
+# Cycle 10: GitHub Issues & Authentication Implementation
 
 ## Vision
-Work on GitHub issues and continue building the Jarvis AI chatbot SaaS platform.
-
-## Current State Analysis
-- **Core Features**: Implemented and working (chat API, web scraper, auth, dashboard, widget)
-- **Build Status**: Successful with all tests passing
-- **Technical Debt**: Duplicate imports need fixing, in-memory rate limiting needs Redis
-- **PR Status**: #18 needs base branch update and duplicate import fixes
+Work on GitHub issues and continue building the project with focus on authentication, improved testing, and production readiness.
 
 ## Requirements
 
-### Immediate (Cycle 6)
-1. **Code Fixes**
-   - Remove duplicate OpenAI imports in chat.ts and embeddings.ts
-   - Update PR #18 base branch to main
-   - Verify all tests pass after fixes
+### Priority 1: Critical Authentication Issue (#6)
+- **Login Page Implementation**: Create missing /login page to fix 404 error
+- **Authentication Flow**: Implement complete auth flow with Supabase
+- **Session Management**: Handle user sessions and redirects
+- **Registration**: Add signup capability
 
-2. **Production Configuration**
-   - Set up Redis for rate limiting
-   - Configure production API keys (OpenAI, Pinecone, Supabase)
-   - Set up error tracking with Sentry
+### Priority 2: Build & Test Stability
+- **Fix Remaining Test Failures**: Resolve 34 UI/mock test failures
+- **Build Verification**: Ensure clean builds without warnings
+- **Test Coverage**: Improve coverage to >80%
 
-3. **Deployment Preparation**
-   - Configure Vercel staging environment
-   - Set up environment variables
-   - Configure custom domain and SSL
-
-### Short-term (Cycles 7-8)
-1. **Payment System**
-   - Stripe integration with subscription tiers
-   - Billing dashboard and webhook handling
-   - Usage limits based on subscription
-
-2. **Advanced Features**
-   - Multi-page crawling with sitemap support
-   - JavaScript-rendered content scraping
-   - Conversation persistence and export
-   - Custom widget branding
-
-3. **Analytics**
-   - Usage metrics dashboard
-   - Bot performance monitoring
-   - Real-time system health monitoring
+### Priority 3: Production Features
+- **Multi-Tenant Architecture**: Workspace isolation and permissions
+- **API Key Management**: Secure API key generation and validation
+- **Rate Limiting**: Redis-based production rate limiting
+- **Error Tracking**: Sentry integration for production monitoring
 
 ## Architecture
 
-### System Components
-```
-┌─────────────────────────────────────────────────┐
-│                   Frontend                       │
-│  Next.js App Router + TypeScript + Tailwind     │
-├─────────────────────────────────────────────────┤
-│                    API Layer                     │
-│        REST APIs + Rate Limiting + Auth         │
-├─────────────────────────────────────────────────┤
-│                   Services                       │
-│  ┌─────────────┬──────────────┬──────────────┐ │
-│  │   Scraper   │   Embeddings │     Chat     │ │
-│  │   (JSDOM)   │   (OpenAI)   │  (GPT + RAG) │ │
-│  └─────────────┴──────────────┴──────────────┘ │
-├─────────────────────────────────────────────────┤
-│                  Data Layer                      │
-│  ┌─────────────┬──────────────┬──────────────┐ │
-│  │  Supabase   │   Pinecone   │    Redis     │ │
-│  │   (Auth)    │   (Vectors)  │   (Cache)    │ │
-│  └─────────────┴──────────────┴──────────────┘ │
-└─────────────────────────────────────────────────┘
-```
-
-### Technology Stack
-- **Frontend**: Next.js 14, TypeScript, Tailwind CSS, Radix UI
-- **Backend**: Node.js, Next.js API Routes
-- **Database**: Supabase (PostgreSQL)
-- **Vector Store**: Pinecone
-- **Cache**: Redis (to be added)
-- **AI/ML**: OpenAI GPT-4, Embeddings API
+### Tech Stack
+- **Frontend**: Next.js 14, React 18, Tailwind CSS, Radix UI
+- **Backend**: Next.js API Routes, TypeScript
 - **Auth**: Supabase Auth
-- **Payments**: Stripe (to be integrated)
-- **Monitoring**: Sentry, Vercel Analytics
+- **Database**: Supabase (PostgreSQL)
+- **Vector DB**: Pinecone
+- **AI**: OpenAI API
+- **Payments**: Stripe
+- **Caching**: Redis (ioredis)
 - **Testing**: Jest, React Testing Library
+
+### System Components
+1. **Authentication Module**
+   - Login/Signup pages
+   - OAuth providers
+   - Session management
+   - Protected routes
+
+2. **User Management**
+   - Profile settings
+   - Workspace management
+   - Team invitations
+
+3. **API Security**
+   - API key generation
+   - Rate limiting per tier
+   - Request validation
+
+4. **Production Infrastructure**
+   - Error tracking
+   - Performance monitoring
+   - Logging system
 
 ## Implementation Phases
 
-### Phase 1: Bug Fixes & Production Prep (Current)
-1. Fix duplicate imports
-2. Update PR base branch
-3. Set up Redis
-4. Configure production keys
-5. Deploy to staging
+### Phase 1: Authentication (Days 1-2)
+- [ ] Create /login page component
+- [ ] Create /signup page component
+- [ ] Implement Supabase auth integration
+- [ ] Add protected route middleware
+- [ ] Handle auth redirects
+- [ ] Add password reset flow
 
-### Phase 2: Payment Integration
-1. Stripe account setup
-2. Subscription models
-3. Billing UI components
-4. Webhook handlers
-5. Usage tracking
+### Phase 2: User Management (Day 3)
+- [ ] User profile page
+- [ ] Workspace CRUD operations
+- [ ] Team member invitations
+- [ ] Permission system
 
-### Phase 3: Feature Enhancement
-1. Advanced scraping capabilities
-2. Conversation management
-3. Widget customization
-4. Analytics dashboard
+### Phase 3: Testing & Stability (Day 4)
+- [ ] Fix 34 failing UI tests
+- [ ] Add auth integration tests
+- [ ] Improve test mocking
+- [ ] Achieve 80% coverage
 
-### Phase 4: Scale & Optimize
-1. Performance optimization
-2. Caching strategies
-3. CDN integration
-4. Database optimization
+### Phase 4: Production Features (Day 5)
+- [ ] Redis rate limiting
+- [ ] Sentry error tracking
+- [ ] API documentation
+- [ ] Performance optimization
 
-## Risk Assessment
+## Risks & Mitigations
 
 ### Technical Risks
-- **Rate Limiting**: In-memory storage won't scale - Redis integration critical
-- **API Costs**: OpenAI usage could be expensive - need usage monitoring
-- **Scraping Limits**: Some sites block scrapers - need proxy support
+1. **Auth Complexity**: Supabase integration may have edge cases
+   - Mitigation: Thorough testing, follow Supabase best practices
+
+2. **Test Environment**: Mocking complexity for UI tests
+   - Mitigation: Proper test utilities, consistent mock patterns
+
+3. **Performance**: Redis/caching layer overhead
+   - Mitigation: Connection pooling, lazy loading
 
 ### Business Risks
-- **Competition**: Many chatbot solutions exist - need differentiation
-- **Pricing**: Balance between profitability and user acquisition
-- **Support**: AI responses may be incorrect - need disclaimer and human fallback
+1. **User Experience**: Auth flow disruption
+   - Mitigation: Clear UX, helpful error messages
 
-### Mitigation Strategies
-1. Implement Redis immediately for production readiness
-2. Add usage quotas and monitoring
-3. Create clear pricing tiers with limits
-4. Add content moderation and quality checks
-5. Implement user feedback system
+2. **Security**: Authentication vulnerabilities
+   - Mitigation: Security audit, OWASP compliance
 
-## Success Metrics
-- **Technical**: 99.9% uptime, <500ms response time, 0 critical bugs
-- **Business**: 100 active bots in first month, 10% conversion rate
-- **User**: <60s to create first bot, 90% satisfaction score
+## Success Criteria
+- ✅ Login/signup pages working without 404
+- ✅ All tests passing (100% success rate)
+- ✅ Clean build with no warnings
+- ✅ Auth flow complete with session management
+- ✅ Redis rate limiting in production
+- ✅ 80%+ test coverage
+- ✅ API documentation complete
 
-## Immediate Actions
-1. Fix duplicate imports in chat.ts and embeddings.ts
-2. Update PR #18 to target main branch
-3. Set up Redis for production rate limiting
-4. Configure production environment variables
-5. Deploy to Vercel staging
-
-## Resource Requirements
-- **Development**: 1 engineer full-time
-- **Infrastructure**: ~$100/month (Vercel, Supabase, Redis, Pinecone)
-- **AI Costs**: ~$200/month OpenAI API (estimated)
-- **Third-party**: Stripe processing fees
-
-## Timeline
-- **Week 1**: Fix bugs, production config, staging deployment
-- **Week 2**: Payment integration
-- **Week 3-4**: Advanced features and analytics
-- **Month 2**: Platform integrations and optimization
+## Next Steps
+1. Immediate: Implement login page to fix GitHub issue #6
+2. Next: Complete authentication flow
+3. Then: Fix remaining test failures
+4. Finally: Production infrastructure improvements

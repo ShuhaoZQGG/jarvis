@@ -12,10 +12,13 @@ export class AuthService {
     this.supabase = createClient(supabaseUrl, supabaseAnonKey)
   }
 
-  async signUp(email: string, password: string): Promise<AuthResponse> {
+  async signUp(email: string, password: string, metadata?: Record<string, any>): Promise<AuthResponse> {
     const { data, error } = await this.supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: metadata,
+      },
     })
 
     if (error) {
@@ -60,6 +63,28 @@ export class AuthService {
   async resetPassword(email: string): Promise<void> {
     const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`,
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async updateProfile(updates: { name?: string; avatar_url?: string }): Promise<User | null> {
+    const { data: { user }, error } = await this.supabase.auth.updateUser({
+      data: updates
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return user
+  }
+
+  async updatePassword(newPassword: string): Promise<void> {
+    const { error } = await this.supabase.auth.updateUser({
+      password: newPassword
     })
 
     if (error) {
