@@ -4,7 +4,7 @@
   // Configuration from script tag attributes
   const script = document.currentScript;
   const BOT_ID = script?.getAttribute('data-bot-id');
-  const API_URL = script?.getAttribute('data-api-url') || window.location.origin;
+  const API_URL = script?.getAttribute('data-api-url') || 'https://rthvdvfislxlpjeamqjn.supabase.co';
   const POSITION = script?.getAttribute('data-position') || 'bottom-right';
   const PRIMARY_COLOR = script?.getAttribute('data-primary-color') || '#0ea5e9';
   const AUTO_OPEN = script?.getAttribute('data-auto-open') === 'true';
@@ -273,14 +273,15 @@
 
     async loadBotConfig() {
       try {
-        const response = await fetch(`${API_URL}/api/bots/${BOT_ID}/config`);
-        if (response.ok) {
-          this.botConfig = await response.json();
-          // Update title if available
-          const title = this.shadow.querySelector('.jarvis-title');
-          if (title && this.botConfig.name) {
-            title.textContent = this.botConfig.name;
-          }
+        // Skip bot config for now - will be implemented with Supabase REST API
+        this.botConfig = {
+          name: 'Jarvis Assistant',
+          greeting: 'Hi! How can I help you today?'
+        };
+        // Update title if available
+        const title = this.shadow.querySelector('.jarvis-title');
+        if (title && this.botConfig.name) {
+          title.textContent = this.botConfig.name;
         }
       } catch (error) {
         console.error('Failed to load bot config:', error);
@@ -331,10 +332,11 @@
       send.disabled = true;
       
       try {
-        const response = await fetch(`${API_URL}/api/chat`, {
+        const response = await fetch(`${API_URL}/functions/v1/chat-completion`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0aHZkdmZpc2x4bHBqZWFtcWpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1OTk2ODIsImV4cCI6MjA3MjE3NTY4Mn0.gNXjyO-gpmg2jIPVmX3lmmXAetmDHmGzJNohs_rFBmQ`
           },
           body: JSON.stringify({
             botId: BOT_ID,

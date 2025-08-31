@@ -406,4 +406,52 @@ export class DatabaseService {
 
     if (error) throw new Error(error.message)
   }
+
+  // Subscription Management
+  async createSubscription(data: {
+    workspace_id: string
+    stripe_subscription_id: string
+    stripe_customer_id: string
+    stripe_price_id: string
+    status: string
+  }): Promise<void> {
+    const { error } = await this.supabase
+      .from('subscriptions')
+      .insert({
+        workspace_id: data.workspace_id,
+        stripe_subscription_id: data.stripe_subscription_id,
+        stripe_customer_id: data.stripe_customer_id,
+        stripe_price_id: data.stripe_price_id,
+        status: data.status,
+        current_period_start: new Date().toISOString(),
+        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      })
+
+    if (error) throw new Error(error.message)
+  }
+
+  async updateSubscription(subscriptionId: string, updates: {
+    status?: string
+    stripe_price_id?: string
+    current_period_end?: string
+  }): Promise<void> {
+    const { error } = await this.supabase
+      .from('subscriptions')
+      .update(updates)
+      .eq('stripe_subscription_id', subscriptionId)
+
+    if (error) throw new Error(error.message)
+  }
+
+  async cancelSubscription(subscriptionId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('subscriptions')
+      .update({ 
+        status: 'canceled',
+        canceled_at: new Date().toISOString()
+      })
+      .eq('stripe_subscription_id', subscriptionId)
+
+    if (error) throw new Error(error.message)
+  }
 }
