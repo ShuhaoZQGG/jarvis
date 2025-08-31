@@ -7,18 +7,25 @@ export async function GET(
   { params }: { params: { issueNumber: string } }
 ) {
   try {
-    // TODO: Add authentication when auth system is properly configured
-    // For now, require token in request for security
+    // Use Authorization header for token - more secure than query params
+    const authHeader = request.headers.get('Authorization');
+    const token = authHeader?.replace('Bearer ', '');
 
     const searchParams = request.nextUrl.searchParams;
     const owner = searchParams.get('owner');
     const repo = searchParams.get('repo');
-    const token = searchParams.get('token');
 
-    if (!owner || !repo || !token) {
+    if (!owner || !repo) {
       return NextResponse.json(
-        { error: 'Missing required parameters' },
+        { error: 'Missing required parameters: owner, repo' },
         { status: 400 }
+      );
+    }
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Authorization header with Bearer token is required' },
+        { status: 401 }
       );
     }
 
@@ -48,15 +55,23 @@ export async function POST(
   { params }: { params: { issueNumber: string } }
 ) {
   try {
-    // TODO: Add authentication when auth system is properly configured
-    // For now, require token in request for security
+    // Use Authorization header for token - more secure than body
+    const authHeader = request.headers.get('Authorization');
+    const token = authHeader?.replace('Bearer ', '');
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Authorization header with Bearer token is required' },
+        { status: 401 }
+      );
+    }
 
     const body = await request.json();
-    const { owner, repo, token, ...commentData } = body;
+    const { owner, repo, ...commentData } = body;
 
-    if (!owner || !repo || !token || !commentData.body) {
+    if (!owner || !repo || !commentData.body) {
       return NextResponse.json(
-        { error: 'Missing required parameters' },
+        { error: 'Missing required parameters: owner, repo, or body' },
         { status: 400 }
       );
     }
