@@ -17,6 +17,7 @@ describe('BotService', () => {
   let mockScraper: jest.Mocked<WebScraper>
 
   beforeEach(() => {
+    jest.clearAllMocks()
     mockDb = new DatabaseService('', '') as jest.Mocked<DatabaseService>
     mockEmbeddings = new EmbeddingsGenerator('') as jest.Mocked<EmbeddingsGenerator>
     mockVectorStore = new VectorStore('', '') as jest.Mocked<VectorStore>

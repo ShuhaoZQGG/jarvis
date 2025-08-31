@@ -5,6 +5,8 @@ describe('MonitoringService', () => {
 
   beforeEach(() => {
     monitoring = new MonitoringService({ flushInterval: 0 });
+    // Add a default error handler to prevent unhandled errors
+    monitoring.on('error', () => {});
     jest.spyOn(console, 'debug').mockImplementation();
     jest.spyOn(console, 'info').mockImplementation();
     jest.spyOn(console, 'warn').mockImplementation();

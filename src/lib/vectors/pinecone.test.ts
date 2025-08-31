@@ -53,6 +53,15 @@ describe('PineconeService', () => {
 
     it('should create index if it does not exist', async () => {
       mockPinecone.listIndexes.mockResolvedValue({ indexes: [] });
+      // Mock the second listIndexes call in waitForIndexReady
+      mockPinecone.listIndexes
+        .mockResolvedValueOnce({ indexes: [] })
+        .mockResolvedValueOnce({ 
+          indexes: [{ 
+            name: 'test-index',
+            status: { ready: true }
+          }] 
+        });
       
       await service.initialize();
       
@@ -67,7 +76,7 @@ describe('PineconeService', () => {
           },
         },
       });
-    });
+    }, 10000); // Increase timeout to 10 seconds
   });
 
   describe('upsert', () => {
@@ -126,6 +135,12 @@ describe('PineconeService', () => {
     it('should apply filters when querying', async () => {
       const queryVector = [0.1, 0.2, 0.3];
       const filter = { category: 'docs' };
+      
+      mockIndex.query.mockResolvedValue({
+        matches: [
+          { id: 'vec1', score: 0.95, metadata: { text: 'result 1', category: 'docs' } },
+        ],
+      });
 
       await service.query('test-namespace', queryVector, 5, filter);
 

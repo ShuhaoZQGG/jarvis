@@ -2,38 +2,37 @@ import { WebsiteCrawler } from './crawler';
 import { Page } from 'playwright';
 
 // Mock playwright
+const mockPage = {
+  goto: jest.fn(),
+  evaluate: jest.fn(),
+  close: jest.fn(),
+  waitForLoadState: jest.fn(),
+  $$eval: jest.fn(),
+  setUserAgent: jest.fn(),
+  content: jest.fn().mockResolvedValue('<html></html>'),
+};
+
+const mockBrowser = {
+  newPage: jest.fn().mockResolvedValue(mockPage),
+  close: jest.fn(),
+};
+
 jest.mock('playwright', () => ({
   chromium: {
-    launch: jest.fn().mockResolvedValue({
-      newPage: jest.fn().mockResolvedValue({
-        goto: jest.fn(),
-        evaluate: jest.fn(),
-        close: jest.fn(),
-        waitForLoadState: jest.fn(),
-        $$eval: jest.fn(),
-        setUserAgent: jest.fn(),
-        content: jest.fn().mockResolvedValue('<html></html>'),
-      }),
-      close: jest.fn(),
-    }),
+    launch: jest.fn().mockResolvedValue(mockBrowser),
   },
 }));
 
 describe('WebsiteCrawler', () => {
   let crawler: WebsiteCrawler;
-  let mockPage: any;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     crawler = new WebsiteCrawler();
-    mockPage = {
-      goto: jest.fn(),
-      evaluate: jest.fn(),
-      close: jest.fn(),
-      waitForLoadState: jest.fn(),
-      $$eval: jest.fn(),
-      setUserAgent: jest.fn(),
-      content: jest.fn().mockResolvedValue('<html></html>'),
-    };
+    // Reset mock implementations
+    mockPage.goto.mockResolvedValue(undefined);
+    mockPage.waitForLoadState.mockResolvedValue(undefined);
+    mockPage.setUserAgent.mockResolvedValue(undefined);
   });
 
   afterEach(() => {
@@ -78,11 +77,10 @@ describe('WebsiteCrawler', () => {
         title: 'Root Page',
         description: 'Root description',
         content: 'Root content',
-        links: ['https://example.com/page1'],
       };
 
       mockPage.evaluate.mockResolvedValue(mockContent);
-      mockPage.$$eval.mockResolvedValue(mockContent.links);
+      mockPage.$$eval.mockResolvedValue(['https://example.com/page1']);
 
       const results = await crawler.crawlWebsite(url, { maxDepth: 1 });
 
@@ -117,18 +115,14 @@ describe('WebsiteCrawler', () => {
       const startUrl = 'https://example.com';
       const mockPages = [
         {
-          url: startUrl,
           title: 'Home',
           description: 'Home page',
           content: 'Home content',
-          links: ['https://example.com/about'],
         },
         {
-          url: 'https://example.com/about',
           title: 'About',
           description: 'About page',
           content: 'About content',
-          links: [],
         },
       ];
 
@@ -136,8 +130,8 @@ describe('WebsiteCrawler', () => {
         .mockResolvedValueOnce(mockPages[0])
         .mockResolvedValueOnce(mockPages[1]);
       mockPage.$$eval
-        .mockResolvedValueOnce(mockPages[0].links)
-        .mockResolvedValueOnce(mockPages[1].links);
+        .mockResolvedValueOnce(['https://example.com/about'])
+        .mockResolvedValueOnce([]);
 
       const results = await crawler.crawlWebsite(startUrl);
 

@@ -1,6 +1,25 @@
+import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import DashboardPage from './page'
+
+// Mock Next.js router
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+    reload: jest.fn(),
+    forward: jest.fn(),
+    pathname: '/dashboard',
+    route: '/dashboard',
+    query: {},
+    asPath: '/dashboard',
+  }),
+  usePathname: () => '/dashboard',
+  useSearchParams: () => new URLSearchParams(),
+}))
 
 // Mock the API calls
 jest.mock('@/lib/api/bots', () => ({

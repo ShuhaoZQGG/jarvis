@@ -1,71 +1,85 @@
 # Next Cycle Tasks
 
-## Priority 1: Bug Fixes and Technical Debt
-1. **Fix Failing Tests** (Critical)
-   - 7 test failures in workspace and apikeys modules
-   - Mock/implementation mismatches need resolution
-   
-2. **Database Schema Creation** (Critical)
-   - Create Supabase tables for workspaces
-   - Add workspace_members table
-   - Create api_keys table with proper indexing
-   - Set up user_roles table for RBAC
+## Priority 1: Fix Critical Issues
+1. **Resolve PR #10 Merge Conflicts**
+   - Rebase branch with base branch (cycle-4-3-enhanced-20250830-172453)
+   - Resolve conflicts in modified files
+   - Ensure clean merge state
 
-3. **Replace Mock Data** (High)
-   - Remove hardcoded bot listings in dashboard
-   - Connect to real database queries
-   - Implement proper data fetching
+2. **Fix Remaining Test Failures**
+   - 24 tests currently failing (target: 100% pass rate)
+   - Focus on environment setup issues causing timeouts
+   - Fix mock/implementation mismatches
+   - Validate Redis and Pinecone configurations
 
-## Priority 2: Production Readiness
-1. **Integration Testing**
-   - Test with real Supabase instance
-   - Verify workspace isolation
-   - Test RBAC permissions end-to-end
-   
-2. **Production Deployment**
-   - Configure Vercel environment
-   - Set up production Supabase instance
-   - Configure environment variables
-   - Deploy and verify authentication flow
+3. **Environment Variable Validation**
+   - Add validation for all required environment variables
+   - Create .env.example with all required variables
+   - Add startup checks for API keys (OpenAI, Pinecone, Stripe)
 
-3. **Email System**
-   - Configure SMTP for invitations
-   - Implement invitation templates
-   - Add email verification flow
+## Priority 2: Production Deployment
+1. **Vercel Configuration**
+   - Set up vercel.json configuration
+   - Configure environment variables in Vercel dashboard
+   - Set up preview deployments for PRs
 
-## Priority 3: Feature Enhancements
-1. **Bot Management Backend**
-   - Connect bot UI to actual data
-   - Implement bot CRUD operations
-   - Add training status tracking
+2. **Supabase Production Setup**
+   - Configure production database
+   - Set up connection pooling
+   - Enable RLS policies
+   - Configure backup strategy
+
+3. **CI/CD Pipeline**
+   - Add GitHub Actions for tests
+   - Automated deployment on main branch
+   - Add deployment health checks
+
+## Priority 3: Integration Tasks
+1. **GitHub Service Integration**
+   - Connect GitHub issue service with bot management
+   - Add webhook handlers for issue events
+   - Implement automatic issue creation from chat
+
+2. **Complete AI Pipeline Integration**
+   - Connect crawler to bot creation flow
+   - Implement training job queue with Bull/Redis
+   - Add progress tracking for training status
+   - Create bot training dashboard UI
+
+## Technical Debt
+1. **Code Organization**
+   - Consider splitting large PR into smaller, focused changes
+   - Improve test organization and naming
+   - Add integration test suite
+
+2. **Documentation**
+   - API documentation for new endpoints
+   - Deployment guide
+   - Environment setup guide
+
+3. **Performance**
+   - Add caching layer for embeddings
+   - Optimize vector search queries
+   - Implement rate limiting for AI APIs
+
+## Feature Enhancements (Lower Priority)
+1. **Chat Widget Implementation**
+   - Create embeddable widget component
+   - Add customization options
+   - Implement real-time messaging
 
 2. **Analytics Dashboard**
-   - Implement real analytics data
-   - Add usage metrics
-   - Create export functionality
+   - Track bot usage metrics
+   - Conversation analytics
+   - Performance monitoring UI
 
-3. **Performance Optimizations**
-   - Optimize dashboard load times (target < 2s)
-   - Implement proper caching
-   - Add pagination for large datasets
+3. **Advanced Features**
+   - Multi-language support
+   - Custom training data upload
+   - A/B testing for responses
 
-## Technical Improvements
-- Add E2E testing with Playwright
-- Implement proper logging system
-- Add monitoring and alerting
-- Create API documentation
-- Add rate limiting to all endpoints
-
-## Deferred from Cycle 6
-- OAuth providers integration (Google, GitHub)
-- Stripe payment integration
-- Webhook system for external integrations
-- Custom role definitions beyond Owner/Admin/Member
-- Audit logging for compliance
-
-## Success Metrics for Next Cycle
-- 100% test pass rate
-- Successful production deployment
-- All authentication flows working
-- Dashboard load time < 2 seconds
-- Zero critical security issues
+## Notes from Review
+- PR #10 contains good foundation but needs cleanup before merge
+- Core AI infrastructure is in place but needs production hardening
+- Focus on stability and test coverage before adding new features
+- Consider implementing feature flags for gradual rollout
