@@ -233,6 +233,7 @@ describe('BillingService', () => {
           object: {
             id: 'sub_123',
             status: 'active',
+            current_period_end: 1735689600, // Unix timestamp
             metadata: {
               workspace_id: 'ws-123'
             }
