@@ -27,9 +27,12 @@ interface Message {
 
 interface ChatWidgetProps {
   botId: string
+  primaryColor?: string
+  position?: 'bottom-right' | 'bottom-left'
+  greeting?: string
 }
 
-export default function ChatWidget({ botId }: ChatWidgetProps) {
+export default function ChatWidget({ botId, primaryColor = '#0ea5e9', position = 'bottom-right', greeting = 'Hi! How can I help you today?' }: ChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')

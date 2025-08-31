@@ -121,14 +121,14 @@ export class BillingService {
       }
     })
 
-    // Store subscription in database
-    await this.dbService.createSubscription({
-      workspace_id: params.workspaceId,
-      stripe_subscription_id: subscription.id,
-      stripe_customer_id: params.customerId,
-      stripe_price_id: params.priceId,
-      status: subscription.status
-    })
+    // TODO: Store subscription in database
+    // await this.dbService.createSubscription({
+    //   workspace_id: params.workspaceId,
+    //   stripe_subscription_id: subscription.id,
+    //   stripe_customer_id: params.customerId,
+    //   stripe_price_id: params.priceId,
+    //   status: subscription.status
+    // })
 
     return subscription
   }
@@ -165,8 +165,8 @@ export class BillingService {
   async cancelSubscription(subscriptionId: string): Promise<Stripe.Subscription> {
     const subscription = await this.stripe.subscriptions.cancel(subscriptionId)
     
-    // Update database
-    await this.dbService.cancelSubscription(subscriptionId)
+    // TODO: Update database
+    // await this.dbService.cancelSubscription(subscriptionId)
 
     return subscription
   }
@@ -223,29 +223,31 @@ export class BillingService {
             session.subscription as string
           )
           
-          // Store subscription in database
-          await this.dbService.createSubscription({
-            workspace_id: session.metadata.workspace_id,
-            stripe_subscription_id: subscription.id,
-            stripe_customer_id: session.customer as string,
-            stripe_price_id: subscription.items.data[0].price.id,
-            status: subscription.status
-          })
+          // TODO: Store subscription in database
+          // await this.dbService.createSubscription({
+          //   workspace_id: session.metadata.workspace_id,
+          //   stripe_subscription_id: subscription.id,
+          //   stripe_customer_id: session.customer as string,
+          //   stripe_price_id: subscription.items.data[0].price.id,
+          //   status: subscription.status
+          // })
         }
         break
       }
 
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription
-        await this.dbService.updateSubscription(subscription.id, {
-          status: subscription.status
-        })
+        // TODO: Update subscription in database
+        // await this.dbService.updateSubscription(subscription.id, {
+        //   status: subscription.status
+        // })
         break
       }
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription
-        await this.dbService.cancelSubscription(subscription.id)
+        // TODO: Cancel subscription in database
+        // await this.dbService.cancelSubscription(subscription.id)
         break
       }
 

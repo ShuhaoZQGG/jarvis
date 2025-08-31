@@ -81,9 +81,7 @@ export async function unlinkOAuthAccount(provider: OAuthProvider['id']) {
     throw new Error(`No ${provider} account linked`);
   }
 
-  const { error } = await supabase.auth.unlinkIdentity({
-    identity_id: identity.id,
-  });
+  const { error } = await supabase.auth.unlinkIdentity(identity);
 
   if (error) {
     throw error;
