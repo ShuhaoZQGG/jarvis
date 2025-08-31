@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { BotTrainingService } from '@/lib/bot/training';
-import { createClient } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
@@ -24,17 +23,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get bot and verify user has access through workspace membership
     const { data: bot, error: botError } = await supabase
       .from('bots')
-      .select('*')
+      .select('*, workspace:workspaces!inner(*)')
       .eq('id', botId)
-      .eq('user_id', user.id)
       .single();
 
     if (botError || !bot) {
       return NextResponse.json(
-        { error: 'Bot not found or unauthorized' },
+        { error: 'Bot not found' },
         { status: 404 }
+      );
+    }
+
+    // Verify user has access to the workspace
+    const { data: member } = await supabase
+      .from('workspace_members')
+      .select('role')
+      .eq('workspace_id', bot.workspace_id)
+      .eq('user_id', user.id)
+      .single();
+
+    if (!member) {
+      return NextResponse.json(
+        { error: 'Unauthorized access to bot' },
+        { status: 403 }
       );
     }
 
@@ -74,25 +88,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await supabase
-      .from('bot_training_logs')
-      .insert({
-        bot_id: botId,
-        user_id: user.id,
-        status: 'completed',
-        documents_processed: result.documentsProcessed,
-        chunks_created: result.chunksCreated,
-        embeddings_generated: result.embeddingsGenerated,
-        duration_ms: result.duration,
-        errors: result.errors,
-        metadata: { url, urls, content: content ? 'manual' : undefined }
-      });
+    // TODO: Add bot_training_logs table to track training history
+    // await supabase
+    //   .from('bot_training_logs')
+    //   .insert({
+    //     bot_id: botId,
+    //     user_id: user.id,
+    //     status: 'completed',
+    //     documents_processed: result.documentsProcessed,
+    //     chunks_created: result.chunksCreated,
+    //     embeddings_generated: result.embeddingsGenerated,
+    //     duration_ms: result.duration,
+    //     errors: result.errors,
+    //     metadata: { url, urls, content: content ? 'manual' : undefined }
+    //   });
 
     await supabase
       .from('bots')
       .update({ 
-        trained_at: new Date().toISOString(),
-        training_status: 'trained'
+        last_trained_at: new Date().toISOString(),
+        status: 'active' // Set bot to active after training
       })
       .eq('id', botId);
 
@@ -111,7 +126,6 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = createClient();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
@@ -131,17 +145,32 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    // Get bot and verify user has access through workspace membership
     const { data: bot, error: botError } = await supabase
       .from('bots')
-      .select('*')
+      .select('*, workspace:workspaces!inner(*)')
       .eq('id', botId)
-      .eq('user_id', user.id)
       .single();
 
     if (botError || !bot) {
       return NextResponse.json(
-        { error: 'Bot not found or unauthorized' },
+        { error: 'Bot not found' },
         { status: 404 }
+      );
+    }
+
+    // Verify user has access to the workspace
+    const { data: member } = await supabase
+      .from('workspace_members')
+      .select('role')
+      .eq('workspace_id', bot.workspace_id)
+      .eq('user_id', user.id)
+      .single();
+
+    if (!member) {
+      return NextResponse.json(
+        { error: 'Unauthorized access to bot' },
+        { status: 403 }
       );
     }
 
@@ -167,8 +196,8 @@ export async function DELETE(request: NextRequest) {
     await supabase
       .from('bots')
       .update({ 
-        trained_at: null,
-        training_status: 'not_trained'
+        last_trained_at: null,
+        status: 'draft' // Set bot back to draft after clearing training data
       })
       .eq('id', botId);
 

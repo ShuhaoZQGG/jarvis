@@ -296,7 +296,16 @@ Please provide a helpful and accurate response based on the context above.`;
     query: string,
     limit: number = 5
   ): Promise<Array<{ text: string; score: number; metadata?: any }>> {
-    return this.vectorService.similaritySearch(query, limit, botId);
+    // Use botId as namespace for vector search
+    const results = await this.vectorService.similaritySearch(query, limit, botId, undefined);
+    // Filter out results without text and ensure text is not undefined
+    return results
+      .filter(r => r.text !== undefined)
+      .map(r => ({
+        text: r.text!,
+        score: r.score,
+        metadata: r.metadata
+      }));
   }
 
   getActiveSessions(): string[] {

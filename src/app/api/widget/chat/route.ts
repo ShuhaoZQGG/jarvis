@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
       conversation_id: conversationId,
       bot_id: botId,
       role: 'assistant',
-      content: response.response,
+      content: response.message,
       metadata: {
         sources: response.sources,
         model: bot.settings?.model || 'gpt-3.5-turbo',
@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
     // Return response
     return NextResponse.json(
       {
-        response: response.response,
+        response: response.message,
         sources: response.sources,
         sessionId: chatSessionId,
         conversationId,

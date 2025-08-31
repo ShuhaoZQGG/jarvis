@@ -79,7 +79,7 @@ export class WebScraper {
     const description = $('meta[name="description"]').attr('content') || 
                        $('meta[property="og:description"]').attr('content') || '';
     
-    const keywords = $('meta[name="keywords"]').attr('content')?.split(',').map(k => k.trim()) || [];
+    const keywords = $('meta[name="keywords"]').attr('content')?.split(',').map((k: string) => k.trim()) || [];
     const author = $('meta[name="author"]').attr('content') || '';
     const publishedDate = $('meta[property="article:published_time"]').attr('content') || '';
 
@@ -87,7 +87,7 @@ export class WebScraper {
     const sections: Section[] = [];
     const headings = $('h1, h2, h3, h4, h5, h6');
 
-    headings.each((_, element) => {
+    headings.each((_: number, element: any) => {
       const $heading = $(element);
       const level = parseInt(element.tagName.substring(1));
       const headingText = $heading.text().trim();
