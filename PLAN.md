@@ -1,159 +1,196 @@
-# Cycle 8: Complete AI Implementation & MVP Delivery
+# Cycle 9: Development Pipeline - Project Plan
 
 ## Executive Summary
-Cycle 8 focuses on completing the missing AI implementation from Cycle 7 and delivering a working MVP with core functionality. Based on the review feedback, Cycle 7 had solid planning but lacked actual implementation in the PR.
+Address critical review feedback from Cycle 7 by completing AI feature implementation, fixing test infrastructure, and establishing production deployment pipeline.
 
-## Critical Context
-- **Cycle 7 Status**: NEEDS_REVISION - documentation complete but implementation missing from PR
-- **Priority**: Complete AI features and ensure working end-to-end chatbot functionality
-- **Target**: Functional MVP with website crawling, embeddings, and RAG-based responses
+## Current State Analysis
+- **Backend**: Core authentication, workspace management, billing infrastructure complete
+- **Frontend**: UI/UX designed, basic dashboard implemented  
+- **AI Features**: Designed but NOT implemented (critical gap from Cycle 7)
+- **Tests**: 75/92 passing (81% rate) with environment issues
+- **Production**: Not deployed
 
 ## Requirements
 
 ### Functional Requirements
-1. **Website Crawling**
-   - Scrape and parse website content
-   - Handle JavaScript-rendered pages
-   - Respect robots.txt
-   - Extract clean text content
+1. **Complete AI Implementation** (Priority 1)
+   - Website crawler with Playwright
+   - OpenAI embeddings service
+   - Pinecone vector storage
+   - RAG engine for context retrieval
+   - Integration with bot management APIs
 
-2. **Vector Processing**
-   - Generate embeddings using OpenAI
-   - Store vectors in Pinecone
-   - Enable similarity search
-   - Manage bot-specific namespaces
+2. **Fix Test Infrastructure** (Priority 1)
+   - Resolve timeout issues
+   - Fix mock/implementation mismatches
+   - Achieve 100% test pass rate
 
-3. **RAG Engine**
-   - Retrieve relevant context
-   - Generate contextual responses
-   - Manage conversation history
-   - Implement response caching
-
-4. **API Integration**
-   - Connect AI components to existing bot endpoints
-   - Add proper error handling
-   - Implement rate limiting
-   - Validate environment variables
+3. **Production Deployment** (Priority 2)
+   - Vercel deployment configuration
+   - Supabase production setup
+   - Environment variable management
+   - CI/CD pipeline
 
 ### Non-Functional Requirements
-- Response time < 2 seconds
-- 99.5% uptime for chat service
-- Support 100 concurrent conversations
-- < 50KB widget bundle size
-- All tests passing (100% green)
+- Performance: Dashboard load < 2s
+- Security: WCAG 2.1 AA compliance
+- Reliability: 99.9% uptime target
+- Scalability: Support 10,000+ bots
 
-## Architecture
+## Architecture Decisions
 
-### Tech Stack
-- **Backend**: Node.js, TypeScript, Next.js 14
-- **Database**: Supabase (PostgreSQL)
-- **Vector DB**: Pinecone
-- **AI/ML**: OpenAI (GPT-4, Ada-002)
-- **Queue**: BullMQ + Redis
-- **Web Scraping**: Playwright
-- **Testing**: Jest, Playwright (E2E)
-
-### Component Architecture
+### AI Pipeline Architecture
 ```
-┌─────────────────────────────────────────┐
-│           API Gateway (Next.js)         │
-├─────────────────────────────────────────┤
-│     Authentication & Rate Limiting      │
-├──────────┬──────────┬──────────────────┤
-│ Crawler  │ Embeddings│    RAG Engine   │
-│ Service  │  Service  │                 │
-├──────────┴──────────┴──────────────────┤
-│  Pinecone  │ OpenAI API │   Supabase   │
-└────────────┴────────────┴──────────────┘
+Website → Crawler → HTML → Embeddings → Pinecone
+                           ↓
+User Query → RAG Engine → Context Retrieval → LLM Response
 ```
+
+### Technology Stack
+- **Crawler**: Playwright (browser automation)
+- **Embeddings**: OpenAI text-embedding-3-small
+- **Vector DB**: Pinecone (serverless)
+- **RAG**: Custom implementation with hybrid search
+- **Queue**: Bull/Redis for async processing
+
+### Integration Points
+1. Bot creation triggers crawl job
+2. Crawl completion triggers embedding
+3. Chat API queries vector DB
+4. Results enhance LLM context
 
 ## Implementation Phases
 
-### Phase 1: Complete Missing AI Implementation (Priority 1)
-**Files to implement:**
-1. `src/lib/crawler/crawler.ts`
-   - Playwright setup
-   - URL discovery
-   - Content extraction
-   - Text cleaning
+### Phase 1: Fix Critical Issues (Days 1-2)
+1. Complete missing AI implementation from Cycle 7
+2. Fix all test failures and timeouts
+3. Verify PR contains actual code changes
+4. Ensure environment variables configured
 
-2. `src/lib/embeddings/embeddings.ts`
-   - OpenAI client setup
-   - Text chunking (512 tokens)
-   - Batch processing
-   - Error retry logic
+### Phase 2: Integration & Testing (Days 3-4)
+1. Connect AI pipeline to bot management
+2. Add comprehensive unit tests
+3. Create integration test suite
+4. Load testing for performance validation
 
-3. `src/lib/vectors/pinecone.ts`
-   - Index initialization
-   - Namespace management
-   - Upsert operations
-   - Similarity search
+### Phase 3: Production Setup (Days 5-6)
+1. Configure Vercel deployment
+2. Set up production Supabase
+3. Implement monitoring/logging
+4. Create deployment documentation
 
-4. `src/lib/rag/rag.ts`
-   - Context retrieval
-   - Prompt construction
-   - Response generation
-   - Cache management
-
-### Phase 2: API Integration (Priority 2)
-1. Update bot endpoints to use AI services
-2. Add training endpoint for website crawling
-3. Implement chat endpoint with RAG
-4. Add status/progress tracking
-
-### Phase 3: Testing & Quality (Priority 3)
-1. Fix test infrastructure issues
-2. Add unit tests for all components
-3. Integration tests for API flows
-4. E2E test for complete chat flow
+### Phase 4: MVP Launch (Day 7)
+1. Deploy to production
+2. Run smoke tests
+3. Monitor performance metrics
+4. Prepare hotfix procedures
 
 ## Risk Mitigation
 
 ### Technical Risks
-1. **Missing Dependencies**
-   - Risk: Package.json not updated
-   - Mitigation: Audit and add all required packages
+- **AI API Costs**: Implement usage limits and caching
+- **Vector DB Scaling**: Use Pinecone serverless tier
+- **Test Flakiness**: Add retry logic and better mocks
+- **Deployment Issues**: Create rollback procedures
 
-2. **Test Failures**
-   - Risk: Tests timing out
-   - Mitigation: Fix mock setup and async handling
+### Mitigation Strategies
+1. Rate limiting on all external APIs
+2. Circuit breakers for service failures
+3. Comprehensive error handling
+4. Automated rollback on failures
 
-3. **API Rate Limits**
-   - Risk: OpenAI/Pinecone throttling
-   - Mitigation: Implement exponential backoff
+## Success Metrics
+- ✅ 100% test pass rate achieved
+- ✅ AI features fully integrated
+- ✅ Production deployment successful
+- ✅ Dashboard performance < 2s
+- ✅ Zero critical bugs in production
 
-### Operational Risks
-1. **Cost Overruns**
-   - Risk: High API usage costs
-   - Mitigation: Implement caching, batch processing
+## Technical Specifications
 
-2. **Performance Issues**
-   - Risk: Slow response times
-   - Mitigation: Optimize vector search, add caching
+### Crawler Service
+```typescript
+interface CrawlerConfig {
+  maxPages: number;
+  maxDepth: number;
+  timeout: number;
+  excludePatterns: string[];
+}
+```
 
-## Success Criteria
-- [ ] All AI components implemented and in PR
-- [ ] 100% test pass rate
-- [ ] < 2s chat response time
-- [ ] Successful website crawl demo
-- [ ] Working end-to-end chat flow
-- [ ] PR approved and merged
+### Embedding Service
+```typescript
+interface EmbeddingService {
+  generateEmbedding(text: string): Promise<number[]>;
+  batchEmbed(texts: string[]): Promise<number[][]>;
+}
+```
 
-## Dependencies
-- OpenAI API key (GPT-4, Ada-002)
-- Pinecone API key and environment
-- Playwright for web scraping
-- Redis for queue management
+### Vector Storage
+```typescript
+interface VectorStore {
+  upsert(vectors: Vector[]): Promise<void>;
+  query(embedding: number[], topK: number): Promise<Match[]>;
+  delete(namespace: string): Promise<void>;
+}
+```
+
+### RAG Engine
+```typescript
+interface RAGEngine {
+  search(query: string, botId: string): Promise<Context[]>;
+  generateResponse(query: string, context: Context[]): Promise<string>;
+}
+```
+
+## Database Schema Updates
+```sql
+-- Bot training status
+ALTER TABLE bots ADD COLUMN training_status ENUM('pending', 'crawling', 'embedding', 'ready', 'failed');
+ALTER TABLE bots ADD COLUMN last_trained_at TIMESTAMP;
+ALTER TABLE bots ADD COLUMN page_count INTEGER DEFAULT 0;
+ALTER TABLE bots ADD COLUMN vector_count INTEGER DEFAULT 0;
+
+-- Training jobs
+CREATE TABLE training_jobs (
+  id UUID PRIMARY KEY,
+  bot_id UUID REFERENCES bots(id),
+  status VARCHAR(50),
+  started_at TIMESTAMP,
+  completed_at TIMESTAMP,
+  error_message TEXT,
+  metadata JSONB
+);
+```
+
+## API Endpoints
+
+### Training Management
+- `POST /api/bots/{id}/train` - Start training
+- `GET /api/bots/{id}/training-status` - Check status
+- `DELETE /api/bots/{id}/vectors` - Clear training data
+
+### Chat Interface
+- `POST /api/bots/{id}/chat` - Send message
+- `GET /api/bots/{id}/conversations` - List conversations
+- `GET /api/conversations/{id}/messages` - Get messages
+
+## Deliverables
+1. Complete AI implementation with tests
+2. Fixed test infrastructure (100% pass)
+3. Production deployment on Vercel
+4. API documentation
+5. Monitoring dashboard
 
 ## Timeline
-- Implementation: 4 hours
-- Testing: 2 hours
-- Integration: 2 hours
-- Total: 8 hours
+- **Day 1-2**: Fix critical issues from Cycle 7
+- **Day 3-4**: Integration and testing
+- **Day 5-6**: Production setup
+- **Day 7**: MVP launch
 
-## Next Steps After Cycle 8
-1. Frontend UI implementation
-2. Widget development
-3. Production deployment
-4. Performance optimization
-5. Platform integrations
+## Dependencies
+- OpenAI API key configured
+- Pinecone API key configured
+- Playwright browsers installed
+- Redis instance available
+- Stripe webhooks configured
