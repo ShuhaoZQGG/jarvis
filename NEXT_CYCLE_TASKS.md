@@ -1,69 +1,35 @@
 # Next Cycle Tasks
 
-## 🔴 CRITICAL - Cycle 7 Revision Required
-Cycle 7 has been marked as **NEEDS_REVISION**. The following must be completed before proceeding to Cycle 8.
+## ✅ Cycle 8 Complete - MVP Ready
+Cycle 8 successfully delivered the core AI implementation. All AI services are functional and integrated. PR #5 has been **APPROVED** and **MERGED** to main.
 
-### Immediate Actions Required
-1. **Complete Missing Implementation**
-   - [ ] Add WebsiteCrawler implementation to PR (src/lib/crawler/)
-   - [ ] Add PineconeService implementation to PR (src/lib/vectors/)
-   - [ ] Add EmbeddingService implementation to PR (src/lib/embeddings/)
-   - [ ] Add RAGEngine implementation to PR (src/lib/rag/)
-   - [ ] Ensure all code is committed and pushed to branch
+### Completed in Cycle 8
+- ✅ WebsiteCrawler with Playwright
+- ✅ PineconeService vector operations
+- ✅ EmbeddingService with OpenAI
+- ✅ RAGEngine for contextual responses
+- ✅ API integration complete
+- ✅ Test infrastructure partially fixed (37→34 failures)
 
-2. **Fix Critical Issues**
-   - [ ] Resolve test timeout problems
-   - [ ] Fix TypeScript compilation errors
-   - [ ] Update package.json with missing dependencies
-   - [ ] Ensure PR contains actual implementation code
+## Cycle 9 Priorities
 
-3. **Integration Requirements**
-   - [ ] Connect AI components to existing bot endpoints
-   - [ ] Add error handling and retry logic
-   - [ ] Implement rate limiting for external APIs
-   - [ ] Add environment variable validation
+### Priority 1: Fix Remaining Test Issues
+- [ ] Resolve 34 UI component test failures
+- [ ] Fix Redis rate limiter mock issues
+- [ ] Setup Next.js router for Dashboard/Widget tests
+- [ ] Improve test performance and eliminate timeouts
+- [ ] Add integration tests for complete chat flow
+- [ ] Add E2E tests for bot creation and training
 
-## Priority 1: Complete Cycle 7 AI Features
-### WebsiteCrawler (src/lib/crawler/)
-- [ ] Playwright-based web scraping
-- [ ] Sitemap.xml parsing
-- [ ] JavaScript rendering support
-- [ ] Robots.txt compliance
-- [ ] Clean text extraction
-- [ ] URL normalization
+### Priority 2: Widget Development
+- [ ] Implement chat widget with Shadow DOM isolation
+- [ ] Create embed code generator
+- [ ] Build widget customization UI
+- [ ] Add multiple widget variants (bubble, sidebar, modal, inline)
+- [ ] Implement Preact for smaller bundle size
+- [ ] Add PostMessage API for cross-origin communication
 
-### EmbeddingService (src/lib/embeddings/)
-- [ ] OpenAI Ada-002 integration
-- [ ] Text chunking (512 tokens with 50 token overlap)
-- [ ] Batch processing for efficiency
-- [ ] Error recovery with exponential backoff
-- [ ] Token counting and validation
-
-### PineconeService (src/lib/vectors/)
-- [ ] Index initialization and management
-- [ ] Namespace per bot strategy
-- [ ] Vector upsert operations
-- [ ] Similarity search (top-k retrieval)
-- [ ] Metadata filtering
-- [ ] Index cleanup utilities
-
-### RAGEngine (src/lib/rag/)
-- [ ] Context retrieval from vectors
-- [ ] Prompt engineering for GPT-4
-- [ ] Response generation
-- [ ] Conversation history management
-- [ ] Response caching (1 hour TTL)
-- [ ] Source attribution
-
-## Priority 2: Testing & Quality
-- [ ] Fix test infrastructure (timeout issues)
-- [ ] Add unit tests for all AI components
-- [ ] Integration tests for API endpoints
-- [ ] E2E tests for chat flow
-- [ ] Performance testing for crawling
-- [ ] Load testing for concurrent chats
-
-## Priority 3: Frontend UI (Cycle 8)
+### Priority 3: Dashboard Enhancement
 ### Bot Training Interface
 - [ ] URL input with validation
 - [ ] Crawl progress indicator
