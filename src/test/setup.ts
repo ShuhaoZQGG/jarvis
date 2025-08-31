@@ -2,7 +2,7 @@
 import { TextEncoder, TextDecoder } from 'util'
 
 // Add TextEncoder/TextDecoder to global
-global.TextEncoder = TextEncoder
+global.TextEncoder = TextEncoder as any
 global.TextDecoder = TextDecoder as any
 
 // Mock URL if not available

@@ -46,14 +46,14 @@ export async function POST(request: NextRequest) {
     
     const documents = await Promise.all(
       chunks.map(async (chunk, index) => {
-        const embedding = await embeddingsGenerator.generateEmbedding(chunk)
+        const embedding = await embeddingsGenerator.generateEmbedding(chunk.text)
         return {
           id: `${generatedBotId}-${index}`,
           embedding,
           metadata: {
             url: scrapedPage.url,
             title: scrapedPage.title,
-            content: chunk,
+            content: chunk.text,
             timestamp: new Date().toISOString(),
           },
         }

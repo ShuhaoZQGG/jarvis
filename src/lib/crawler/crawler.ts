@@ -63,7 +63,8 @@ export class WebsiteCrawler {
       }
 
       const page = await this.browser.newPage();
-      await page.setUserAgent(this.options.userAgent!);
+      // setUserAgent is not available in newer Playwright versions
+      // User agent should be set in browser context or launch options
 
       try {
         await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });

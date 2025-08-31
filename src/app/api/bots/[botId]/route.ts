@@ -18,24 +18,25 @@ const UpdateBotSchema = z.object({
   }).optional()
 })
 
-export const GET = withAuth(async (
+export async function GET(
   request: NextRequest,
-  context: AuthContext & { params: { botId: string } }
-) => {
-  try {
-    const { user, dbService, params } = context
+  { params }: { params: { botId: string } }
+) {
+  return withAuth(async (req: NextRequest, context: AuthContext) => {
+    try {
+      const { user, dbService } = context
 
-    const botService = new BotService(
-      dbService,
-      new EmbeddingsGenerator(process.env.OPENAI_API_KEY!),
-      new VectorStore({
-        apiKey: process.env.PINECONE_API_KEY!,
-        indexName: process.env.PINECONE_INDEX_NAME!
-      }),
-      new WebScraper()
-    )
+      const botService = new BotService(
+        dbService,
+        new EmbeddingsGenerator(process.env.OPENAI_API_KEY!),
+        new VectorStore({
+          apiKey: process.env.PINECONE_API_KEY!,
+          indexName: process.env.PINECONE_INDEX_NAME!
+        }),
+        new WebScraper()
+      )
 
-    const bot = await botService.getBot(params.botId)
+      const bot = await botService.getBot(params.botId)
     
     if (!bot) {
       return NextResponse.json({ error: 'Bot not found' }, { status: 404 })
@@ -47,22 +48,24 @@ export const GET = withAuth(async (
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    return NextResponse.json({ bot })
-  } catch (error) {
-    console.error('Error fetching bot:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch bot' },
-      { status: 500 }
-    )
-  }
-})
+      return NextResponse.json({ bot })
+    } catch (error) {
+      console.error('Error fetching bot:', error)
+      return NextResponse.json(
+        { error: 'Failed to fetch bot' },
+        { status: 500 }
+      )
+    }
+  })(request)
+}
 
-export const PUT = withAuth(async (
+export async function PUT(
   request: NextRequest,
-  context: AuthContext & { params: { botId: string } }
-) => {
-  try {
-    const { user, dbService, params } = context
+  { params }: { params: { botId: string } }
+) {
+  return withAuth(async (req: NextRequest, context: AuthContext) => {
+    try {
+      const { user, dbService } = context
 
     // Parse and validate request body
     const body = await request.json()
@@ -99,22 +102,24 @@ export const PUT = withAuth(async (
     // Update bot
     const updatedBot = await botService.updateBot(params.botId, validationResult.data)
     
-    return NextResponse.json({ bot: updatedBot })
-  } catch (error) {
-    console.error('Error updating bot:', error)
-    return NextResponse.json(
-      { error: 'Failed to update bot' },
-      { status: 500 }
-    )
-  }
-})
+      return NextResponse.json({ bot: updatedBot })
+    } catch (error) {
+      console.error('Error updating bot:', error)
+      return NextResponse.json(
+        { error: 'Failed to update bot' },
+        { status: 500 }
+      )
+    }
+  })(request)
+}
 
-export const DELETE = withAuth(async (
+export async function DELETE(
   request: NextRequest,
-  context: AuthContext & { params: { botId: string } }
-) => {
-  try {
-    const { user, dbService, params } = context
+  { params }: { params: { botId: string } }
+) {
+  return withAuth(async (req: NextRequest, context: AuthContext) => {
+    try {
+      const { user, dbService } = context
 
     const botService = new BotService(
       dbService,
@@ -140,12 +145,13 @@ export const DELETE = withAuth(async (
     // Delete bot
     await botService.deleteBot(params.botId)
     
-    return NextResponse.json({ message: 'Bot deleted successfully' })
-  } catch (error) {
-    console.error('Error deleting bot:', error)
-    return NextResponse.json(
-      { error: 'Failed to delete bot' },
-      { status: 500 }
-    )
-  }
-})
+      return NextResponse.json({ message: 'Bot deleted successfully' })
+    } catch (error) {
+      console.error('Error deleting bot:', error)
+      return NextResponse.json(
+        { error: 'Failed to delete bot' },
+        { status: 500 }
+      )
+    }
+  })(request)
+}

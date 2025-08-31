@@ -1,29 +1,35 @@
 # Next Cycle Tasks
 
-## 🔴 CRITICAL - Cycle 7 Revision Required
-Cycle 7 has been marked as **NEEDS_REVISION**. The following must be completed before proceeding to Cycle 8.
+## 🔴 CRITICAL - Cycle 10 Revision Required
+Cycle 10 has been marked as **NEEDS_REVISION** due to build failures and test issues.
 
-### Immediate Actions Required
-1. **Complete Missing Implementation**
-   - [ ] Add WebsiteCrawler implementation to PR (src/lib/crawler/)
-   - [ ] Add PineconeService implementation to PR (src/lib/vectors/)
-   - [ ] Add EmbeddingService implementation to PR (src/lib/embeddings/)
-   - [ ] Add RAGEngine implementation to PR (src/lib/rag/)
-   - [ ] Ensure all code is committed and pushed to branch
+### Immediate Actions Required for Cycle 10 Revision
+1. **Fix Build-Breaking Issues**
+   - [ ] **CRITICAL**: Fix TypeScript error in `/src/app/api/bots/[botId]/route.ts:21:29`
+     - AuthContext type incompatibility with params
+     - Preventing production deployment
+   - [ ] Ensure `npm run build` completes without errors
 
-2. **Fix Critical Issues**
-   - [ ] Resolve test timeout problems
-   - [ ] Fix TypeScript compilation errors
-   - [ ] Update package.json with missing dependencies
-   - [ ] Ensure PR contains actual implementation code
+2. **Fix Test Infrastructure**
+   - [ ] **CRITICAL**: Debug and fix test timeout issue (hangs after 2 minutes)
+   - [ ] Fix 34 failing UI/mock tests from Cycle 8
+   - [ ] Ensure `npm test` runs to completion
+   - [ ] Achieve minimum 80% test coverage
 
-3. **Integration Requirements**
-   - [ ] Connect AI components to existing bot endpoints
-   - [ ] Add error handling and retry logic
-   - [ ] Implement rate limiting for external APIs
-   - [ ] Add environment variable validation
+3. **Complete Authentication Features**
+   - [ ] Verify login/signup/reset-password pages work end-to-end
+   - [ ] Test session management and redirects
+   - [ ] Close GitHub Issue #6 after verification
+   - [ ] Add integration tests for auth flow
 
-## Priority 1: Complete Cycle 7 AI Features
+## Priority 2: Deferred Features from Cycle 10
+### Production Infrastructure
+- [ ] Redis-based rate limiting with ioredis
+- [ ] Sentry error tracking integration
+- [ ] API documentation generation
+- [ ] OAuth provider integration (Google, GitHub)
+
+## Priority 3: Complete AI Features (from earlier cycles)
 ### WebsiteCrawler (src/lib/crawler/)
 - [ ] Playwright-based web scraping
 - [ ] Sitemap.xml parsing
