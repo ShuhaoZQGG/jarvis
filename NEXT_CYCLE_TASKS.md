@@ -1,65 +1,46 @@
 # Next Cycle Tasks
 
-## Summary
-Cycle 19 successfully implemented OAuth and API key management features. Core functionality is complete with proper security and testing. UI integration and configuration tasks remain for next cycle.
+## Priority 1: GitHub Integration Enhancements
+- Integrate GitHub issue management with proper authentication system
+- Implement webhook support for real-time issue updates
+- Add issue templates functionality
+- Support bulk operations for managing multiple issues
+- Move token handling from URL params to secure headers
+- Add GitHub Actions integration
+- Implement environment-based configuration for GitHub tokens
 
-## Completed in Cycle 19
+## Priority 2: Complete Test Suite Stabilization
+- Fix remaining 15 failing tests in service layers
+- Update service mocks to match new architecture  
+- Resolve compilation errors from duplicate declarations
+- Target: 100% test pass rate
 
-### P0 - Build Fixes (RESOLVED)
-- ✅ Moved all `/lib` files to `/src/lib` to match tsconfig paths
-- ✅ Created Supabase server module with SSR support
-- ✅ Fixed all module resolution errors
-- ✅ Reused existing rate limiting implementation
+## Priority 3: Service Layer Updates
+- Fix env-validator test warnings
+- Update monitoring service tests
+- Fix billing service tests  
+- Update auth middleware tests (6 failures)
+- Fix github service tests
+- Fix crawler service tests
 
-### P1 - Core Implementation (DONE)
-- ✅ Added database migrations for API keys table with RLS
-- ✅ Implemented API routes for key management
-- ✅ Created OAuth provider configurations
-- ✅ Added comprehensive tests (59 passing)
-
-## Remaining Tasks for Next Cycle
-
-### P0 - Critical Issues
-- ❌ Fix missing ChatWidget component (pre-existing issue)
-- ❌ Address Sentry configuration warnings
-
-### P1 - UI Integration
-- ❌ Integrate OAuth buttons into login/signup pages
-- ❌ Add API key management UI to dashboard
-- ❌ Connect API key component to backend API routes
-
-### P2 - Configuration & Deployment
-- ❌ Configure OAuth apps in provider dashboards (Google, GitHub, Discord)
-- ❌ Set up OAuth redirect URLs in Supabase dashboard
-- ❌ Configure production Redis instance
-- ❌ Deploy to Vercel with proper environment variables
-
-### P3 - Testing & Quality
-- ❌ Add E2E tests for OAuth flow
-- ❌ Add integration tests for API key management
-- ❌ Implement CSRF protection
-- ❌ Add comprehensive input validation
+## Priority 4: Test Coverage Improvements  
+- Achieve 80% test coverage target
+- Add missing integration tests
+- Improve E2E test scenarios
 
 ## Technical Debt
-- ChatWidget component needs to be created or removed from imports
-- Sentry config files need migration to new instrumentation pattern
-- React act() warnings in tests should be resolved
+- Refactor duplicate mock declarations in test files
+- Standardize test mocking patterns across all modules
+- Consider reverting email inputs to type="email" with proper HTML5 handling
 
-## Architectural Notes
-- ✅ File structure now follows project conventions (/src/lib)
-- ✅ Proper integration with existing modules achieved
-- ✅ Import paths match tsconfig configuration
-- ✅ Security best practices implemented (SHA-256 hashing, RLS)
+## Feature Enhancements
+- Implement remaining auth features (OAuth, MFA)
+- Complete user management dashboard
+- Add admin panel functionality
 
-## Recommended Approach for Next Cycle
-1. **Fix ChatWidget issue first** - it's blocking the build
-2. **Focus on UI integration** - backend is ready
-3. **Configure external services** - OAuth providers, Redis
-4. **Deploy incrementally** - test in staging first
-5. **Add E2E tests** - validate full user flows
-
-## Notes
-- Cycle 18 had good security practices but poor integration
-- Build must be green before any PR can be merged
-- Consider smaller, incremental changes
-- Focus on integration over new features
+## Documentation Needs
+- Update testing documentation with new patterns
+- Document auth context usage in tests
+- Create testing best practices guide
+- Document GitHub integration setup and configuration
+- Add API documentation for GitHub issue endpoints

@@ -76,8 +76,8 @@ describe('ResetPasswordPage', () => {
 
     await waitFor(() => {
       expect(mockResetPassword).toHaveBeenCalledWith('test@example.com')
-      expect(screen.getByText(/check your email/i)).toBeInTheDocument()
-      expect(screen.getByText(/we've sent a password reset link/i)).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /check your email/i })).toBeInTheDocument()
+      expect(screen.getByText(/we've sent a password reset link to/i)).toBeInTheDocument()
     })
   })
 

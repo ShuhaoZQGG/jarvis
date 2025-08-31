@@ -1,139 +1,135 @@
-# Cycle 10: GitHub Issues & Authentication Implementation
+# Cycle 24: GitHub Issue Workflow & Test Stabilization
 
 ## Vision
-Work on GitHub issues and continue building the project with focus on authentication, improved testing, and production readiness.
+Continue building project by working on GitHub issues and stabilizing the test suite while maintaining the secure authentication improvements from Cycle 23.
 
-## Requirements
+## Requirements Analysis
 
-### Priority 1: Critical Authentication Issue (#6)
-- **Login Page Implementation**: Create missing /login page to fix 404 error
-- **Authentication Flow**: Implement complete auth flow with Supabase
-- **Session Management**: Handle user sessions and redirects
-- **Registration**: Add signup capability
+### Functional Requirements
+1. **GitHub Integration Enhancements**
+   - Webhook support for real-time issue updates
+   - Issue templates functionality
+   - Bulk operations for multiple issues
+   - GitHub Actions integration
+   - Environment-based configuration for tokens
 
-### Priority 2: Build & Test Stability
-- **Fix Remaining Test Failures**: Resolve 34 UI/mock test failures
-- **Build Verification**: Ensure clean builds without warnings
-- **Test Coverage**: Improve coverage to >80%
+2. **Test Suite Stabilization**
+   - Fix 15 failing service layer tests
+   - Resolve duplicate mock declarations
+   - Achieve 100% test pass rate
+   - Reach 80% test coverage
 
-### Priority 3: Production Features
-- **Multi-Tenant Architecture**: Workspace isolation and permissions
-- **API Key Management**: Secure API key generation and validation
-- **Rate Limiting**: Redis-based production rate limiting
-- **Error Tracking**: Sentry integration for production monitoring
+3. **Service Layer Updates**
+   - Fix env-validator warnings
+   - Update monitoring service tests
+   - Fix billing service tests
+   - Update auth middleware tests (6 failures)
+   - Fix github & crawler service tests
 
-## Architecture Decisions
+### Non-Functional Requirements
+- Maintain security improvements from Cycle 23
+- No breaking changes to existing APIs
+- Performance: <2.5s page load times
+- Accessibility: WCAG 2.1 AA compliance
 
-### AI Pipeline Architecture
-```
-Website → Crawler → HTML → Embeddings → Pinecone
-                           ↓
-User Query → RAG Engine → Context Retrieval → LLM Response
-```
-### Tech Stack
-- **Frontend**: Next.js 14, React 18, Tailwind CSS, Radix UI
-- **Backend**: Next.js API Routes, TypeScript
-- **Auth**: Supabase Auth
-- **Database**: Supabase (PostgreSQL)
-- **Vector DB**: Pinecone
-- **AI**: OpenAI API
-- **Payments**: Stripe
-- **Caching**: Redis (ioredis)
+## Architecture Overview
+
+### Current Stack
+- **Frontend**: Next.js 14 App Router, Tailwind CSS, Radix UI
+- **Backend**: Node.js, Express middleware patterns
+- **Database**: PostgreSQL with Prisma ORM
+- **Auth**: NextAuth.js with JWT tokens
 - **Testing**: Jest, React Testing Library
+- **CI/CD**: GitHub Actions
 
-### System Components
-1. **Authentication Module**
-   - Login/Signup pages
-   - OAuth providers
-   - Session management
-   - Protected routes
+### Key Architectural Decisions
+1. **Modular Service Architecture**: Separate services for auth, GitHub, billing, monitoring
+2. **API Security**: Bearer token authentication in headers (implemented Cycle 23)
+3. **Test Organization**: Unit tests alongside components, integration tests in __tests__
+4. **State Management**: React Context for auth, SWR for data fetching
 
-2. **User Management**
-   - Profile settings
-   - Workspace management
-   - Team invitations
+## Development Phases
 
-3. **API Security**
-   - API key generation
-   - Rate limiting per tier
-   - Request validation
+### Phase 1: Test Suite Stabilization (Priority)
+**Goal**: Achieve 100% test pass rate
+- Fix service layer test failures
+- Resolve duplicate mock declarations
+- Standardize mocking patterns
+- Update outdated test expectations
 
-4. **Production Infrastructure**
-   - Error tracking
-   - Performance monitoring
-   - Logging system
+### Phase 2: GitHub Webhook Integration
+**Goal**: Real-time issue updates
+- Implement webhook endpoint
+- Add webhook signature verification
+- Create event processing queue
+- Update UI for real-time updates
 
-### Technology Stack
-- **Crawler**: Playwright (browser automation)
-- **Embeddings**: OpenAI text-embedding-3-small
-- **Vector DB**: Pinecone (serverless)
-- **RAG**: Custom implementation with hybrid search
-- **Queue**: Bull/Redis for async processing
+### Phase 3: Issue Templates & Bulk Operations
+**Goal**: Enhanced issue management
+- Create issue template system
+- Implement bulk selection UI
+- Add batch API endpoints
+- Support bulk status updates
 
-### Integration Points
-1. Bot creation triggers crawl job
-2. Crawl completion triggers embedding
-3. Chat API queries vector DB
-4. Results enhance LLM context
+### Phase 4: GitHub Actions Integration
+**Goal**: CI/CD pipeline improvements
+- Create workflow dispatch API
+- Add workflow status monitoring
+- Implement artifact management
+- Create deployment automation
 
-## Implementation Phases
+## Tech Stack Decisions
 
-### Phase 1: Authentication (Days 1-2)
-- [ ] Create /login page component
-- [ ] Create /signup page component
-- [ ] Implement Supabase auth integration
-- [ ] Add protected route middleware
-- [ ] Handle auth redirects
-- [ ] Add password reset flow
+### Testing Strategy
+- **Unit Tests**: Jest + React Testing Library
+- **Integration**: API route testing
+- **E2E**: Playwright for critical paths
+- **Mocking**: Standardized mock factory pattern
 
-### Phase 2: User Management (Day 3)
-- [ ] User profile page
-- [ ] Workspace CRUD operations
-- [ ] Team member invitations
-- [ ] Permission system
+### GitHub Integration
+- **API**: GitHub REST API v3
+- **Webhooks**: Express middleware for verification
+- **Auth**: Personal Access Tokens via env vars
+- **Rate Limiting**: Built-in retry logic
 
-### Phase 3: Testing & Stability (Day 4)
-- [ ] Fix 34 failing UI tests
-- [ ] Add auth integration tests
-- [ ] Improve test mocking
-- [ ] Achieve 80% coverage
-
-### Phase 4: Production Features (Day 5)
-- [ ] Redis rate limiting
-- [ ] Sentry error tracking
-- [ ] API documentation
-- [ ] Performance optimization
-
-## Risks & Mitigations
+## Risk Assessment
 
 ### Technical Risks
-1. **Auth Complexity**: Supabase integration may have edge cases
-   - Mitigation: Thorough testing, follow Supabase best practices
+1. **Test Flakiness**: Intermittent failures due to async operations
+   - Mitigation: Proper async handling, consistent timeouts
+2. **GitHub API Rate Limits**: May hit limits during bulk operations
+   - Mitigation: Request batching, caching layer
+3. **Webhook Security**: Potential for unauthorized requests
+   - Mitigation: Signature verification, IP allowlisting
 
-2. **Test Environment**: Mocking complexity for UI tests
-   - Mitigation: Proper test utilities, consistent mock patterns
+### Project Risks
+1. **Scope Creep**: Features expanding beyond cycle capacity
+   - Mitigation: Strict prioritization, defer non-critical items
+2. **Breaking Changes**: Updates affecting existing functionality
+   - Mitigation: Comprehensive test coverage, careful refactoring
 
-3. **Performance**: Redis/caching layer overhead
-   - Mitigation: Connection pooling, lazy loading
+## Success Metrics
+- Test pass rate: 100%
+- Test coverage: >80%
+- GitHub webhook latency: <500ms
+- Bulk operation performance: <2s for 50 issues
+- Zero security vulnerabilities
 
-### Business Risks
-1. **User Experience**: Auth flow disruption
-   - Mitigation: Clear UX, helpful error messages
+## Implementation Priority
+1. Fix failing tests (blocks all development)
+2. Implement webhook support (enables real-time)
+3. Add bulk operations (user efficiency)
+4. Create issue templates (user experience)
+5. GitHub Actions integration (automation)
 
-2. **Security**: Authentication vulnerabilities
-   - Mitigation: Security audit, OWASP compliance
+## Dependencies
+- GitHub API access with appropriate scopes
+- Environment variables for configuration
+- PostgreSQL database running
+- Redis for webhook queue (optional)
 
-## Success Criteria
-- ✅ Login/signup pages working without 404
-- ✅ All tests passing (100% success rate)
-- ✅ Clean build with no warnings
-- ✅ Auth flow complete with session management
-- ✅ Redis rate limiting in production
-- ✅ 80%+ test coverage
-- ✅ API documentation complete
-
-## Next Steps
-1. Immediate: Implement login page to fix GitHub issue #6
-2. Next: Complete authentication flow
-3. Then: Fix remaining test failures
-4. Finally: Production infrastructure improvements
+## Constraints
+- Must maintain backward compatibility
+- Cannot expose tokens in URLs/logs
+- Must support existing auth system
+- Performance budget: <50KB JS bundle increase

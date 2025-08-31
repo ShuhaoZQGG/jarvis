@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, Mail, Lock } from 'lucide-react'
-import { AuthService } from '@/lib/auth/auth'
-import { publicEnv } from '@/lib/public-env'
+import { useAuth } from '@/contexts/auth-context'
 
 interface FormErrors {
   email?: string
@@ -14,29 +13,17 @@ interface FormErrors {
 
 export default function LoginPage() {
   const router = useRouter()
+  const { user, loading, signIn } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
 
   useEffect(() => {
-    checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
-    try {
-      const authService = new AuthService(
-        publicEnv.NEXT_PUBLIC_SUPABASE_URL,
-        publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
-      )
-      const user = await authService.getCurrentUser()
-      if (user) {
-        router.push('/dashboard')
-      }
-    } catch (error) {
-      // User not authenticated, stay on login page
+    if (!loading && user) {
+      router.push('/dashboard')
     }
-  }
+  }, [user, loading, router])
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -68,17 +55,21 @@ export default function LoginPage() {
     setErrors({})
 
     try {
-      const authService = new AuthService(
-        publicEnv.NEXT_PUBLIC_SUPABASE_URL,
-        publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
-      )
-      await authService.signIn(email, password)
+      await signIn(email, password)
       router.push('/dashboard')
     } catch (error) {
       setErrors({ general: 'Invalid email or password' })
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin h-8 w-8" />
+      </div>
+    )
   }
 
   return (
@@ -104,7 +95,7 @@ export default function LoginPage() {
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -134,15 +125,11 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                 />
               </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
             </div>
           </div>
-          
-          {errors.email && (
-            <p className="text-sm text-red-600">{errors.email}</p>
-          )}
-          {errors.password && (
-            <p className="text-sm text-red-600">{errors.password}</p>
-          )}
 
           {errors.general && (
             <div className="rounded-md bg-red-50 p-4">
@@ -179,7 +166,7 @@ export default function LoginPage() {
 
           <div className="text-center">
             <span className="text-sm text-gray-600">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <button
                 type="button"
                 onClick={() => router.push('/signup')}

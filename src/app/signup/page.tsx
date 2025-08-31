@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, Mail, Lock, User, Check } from 'lucide-react'
-import { AuthService } from '@/lib/auth/auth'
-import { publicEnv } from '@/lib/public-env'
+import { useAuth } from '@/contexts/auth-context'
 
 interface FormErrors {
   name?: string
@@ -17,6 +16,7 @@ interface FormErrors {
 
 export default function SignupPage() {
   const router = useRouter()
+  const { user, loading, signUp } = useAuth()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,23 +26,10 @@ export default function SignupPage() {
   const [errors, setErrors] = useState<FormErrors>({})
 
   useEffect(() => {
-    checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
-    try {
-      const authService = new AuthService(
-        publicEnv.NEXT_PUBLIC_SUPABASE_URL,
-        publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
-      )
-      const user = await authService.getCurrentUser()
-      if (user) {
-        router.push('/dashboard')
-      }
-    } catch (error) {
-      // User not authenticated, stay on signup page
+    if (!loading && user) {
+      router.push('/dashboard')
     }
-  }
+  }, [user, loading, router])
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -90,11 +77,7 @@ export default function SignupPage() {
     setErrors({})
 
     try {
-      const authService = new AuthService(
-        publicEnv.NEXT_PUBLIC_SUPABASE_URL,
-        publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
-      )
-      await authService.signUp(email, password, {
+      await signUp(email, password, {
         full_name: name,
       })
       router.push('/dashboard')
@@ -107,6 +90,14 @@ export default function SignupPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin h-8 w-8" />
+      </div>
+    )
   }
 
   return (
@@ -154,7 +145,7 @@ export default function SignupPage() {
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

@@ -9,6 +9,7 @@ describe('EnvValidator', () => {
     process.env = { ...originalEnv };
     // Get fresh instance
     validator = EnvValidator.getInstance();
+    // Reset validator state before each test
     validator.reset();
   });
 
@@ -91,22 +92,23 @@ describe('EnvValidator', () => {
     });
 
     it('should allow optional environment variables', () => {
-      process.env = {
-        ...process.env,
-        DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
-        NEXTAUTH_SECRET: 'a-very-long-secret-key-that-is-at-least-32-chars',
-        NEXTAUTH_URL: 'http://localhost:3000',
-        NEXT_PUBLIC_SUPABASE_URL: 'https://project.supabase.co',
-        NEXT_PUBLIC_SUPABASE_ANON_KEY: 'anon-key',
-        SUPABASE_SERVICE_ROLE_KEY: 'service-key',
-        OPENAI_API_KEY: 'sk-test123',
-        PINECONE_API_KEY: 'pinecone-key',
-        STRIPE_SECRET_KEY: 'sk_test_123',
-        STRIPE_WEBHOOK_SECRET: 'whsec_123',
-        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: 'pk_test_123',
-        NODE_ENV: 'test',
-        // Omit optional: REDIS_URL, GITHUB_TOKEN
-      };
+      // Clear the environment first and only set required variables
+      process.env = {};
+      process.env.DATABASE_URL = 'postgresql://user:pass@localhost:5432/db';
+      process.env.NEXTAUTH_SECRET = 'a-very-long-secret-key-that-is-at-least-32-chars';
+      process.env.NEXTAUTH_URL = 'http://localhost:3000';
+      process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://project.supabase.co';
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'anon-key';
+      process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-key';
+      process.env.OPENAI_API_KEY = 'sk-test123';
+      process.env.PINECONE_API_KEY = 'pinecone-key';
+      process.env.STRIPE_SECRET_KEY = 'sk_test_123';
+      process.env.STRIPE_WEBHOOK_SECRET = 'whsec_123';
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = 'pk_test_123';
+      process.env.NODE_ENV = 'test';
+      // Explicitly ensure optional vars are not set
+      delete process.env.REDIS_URL;
+      delete process.env.GITHUB_TOKEN;
 
       const config = validator.validate();
       expect(config).toBeDefined();
