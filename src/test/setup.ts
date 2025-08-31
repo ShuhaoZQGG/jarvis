@@ -1,5 +1,6 @@
 // Setup test environment for Next.js
 import { TextEncoder, TextDecoder } from 'util'
+import '@testing-library/jest-dom'
 
 // Add TextEncoder/TextDecoder to global
 global.TextEncoder = TextEncoder as any

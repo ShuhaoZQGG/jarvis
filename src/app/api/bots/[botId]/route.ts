@@ -22,9 +22,10 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { botId: string } }
 ) {
-  return withAuth(async (req: NextRequest, context: AuthContext) => {
+  return withAuth<{ botId: string }>(async (req: NextRequest, context: AuthContext & { params?: { botId: string } }) => {
     try {
-      const { user, dbService } = context
+      const { user, dbService, params: routeParams } = context
+      const botId = routeParams?.botId || params.botId
 
       const botService = new BotService(
         dbService,
@@ -36,7 +37,7 @@ export async function GET(
         new WebScraper()
       )
 
-      const bot = await botService.getBot(params.botId)
+      const bot = await botService.getBot(botId)
     
     if (!bot) {
       return NextResponse.json({ error: 'Bot not found' }, { status: 404 })
@@ -56,16 +57,17 @@ export async function GET(
         { status: 500 }
       )
     }
-  })(request)
+  })(request, { params })
 }
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: { botId: string } }
 ) {
-  return withAuth(async (req: NextRequest, context: AuthContext) => {
+  return withAuth<{ botId: string }>(async (req: NextRequest, context: AuthContext & { params?: { botId: string } }) => {
     try {
-      const { user, dbService } = context
+      const { user, dbService, params: routeParams } = context
+      const botId = routeParams?.botId || params.botId
 
     // Parse and validate request body
     const body = await request.json()
@@ -89,7 +91,7 @@ export async function PUT(
     )
 
     // Verify bot exists and user has access
-    const existingBot = await botService.getBot(params.botId)
+    const existingBot = await botService.getBot(botId)
     if (!existingBot) {
       return NextResponse.json({ error: 'Bot not found' }, { status: 404 })
     }
@@ -100,7 +102,7 @@ export async function PUT(
     }
 
     // Update bot
-    const updatedBot = await botService.updateBot(params.botId, validationResult.data)
+    const updatedBot = await botService.updateBot(botId, validationResult.data)
     
       return NextResponse.json({ bot: updatedBot })
     } catch (error) {
@@ -110,16 +112,17 @@ export async function PUT(
         { status: 500 }
       )
     }
-  })(request)
+  })(request, { params })
 }
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { botId: string } }
 ) {
-  return withAuth(async (req: NextRequest, context: AuthContext) => {
+  return withAuth<{ botId: string }>(async (req: NextRequest, context: AuthContext & { params?: { botId: string } }) => {
     try {
-      const { user, dbService } = context
+      const { user, dbService, params: routeParams } = context
+      const botId = routeParams?.botId || params.botId
 
     const botService = new BotService(
       dbService,
@@ -132,7 +135,7 @@ export async function DELETE(
     )
 
     // Verify bot exists and user has access
-    const existingBot = await botService.getBot(params.botId)
+    const existingBot = await botService.getBot(botId)
     if (!existingBot) {
       return NextResponse.json({ error: 'Bot not found' }, { status: 404 })
     }
@@ -143,7 +146,7 @@ export async function DELETE(
     }
 
     // Delete bot
-    await botService.deleteBot(params.botId)
+    await botService.deleteBot(botId)
     
       return NextResponse.json({ message: 'Bot deleted successfully' })
     } catch (error) {
@@ -153,5 +156,5 @@ export async function DELETE(
         { status: 500 }
       )
     }
-  })(request)
+  })(request, { params })
 }

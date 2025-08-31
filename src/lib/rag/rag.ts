@@ -1,3 +1,4 @@
+import 'openai/shims/node';
 import OpenAI from 'openai';
 import { PineconeService } from '../vectors/pinecone';
 import { EmbeddingService } from '../embeddings/embeddings';
