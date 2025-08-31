@@ -33,11 +33,11 @@ export function CreateIssueForm({ owner, repo, token, onSuccess }: CreateIssueFo
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           owner,
           repo,
-          token,
           ...formData,
         }),
       });

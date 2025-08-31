@@ -32,7 +32,6 @@ export function IssueList({ owner, repo, token }: IssueListProps) {
       const params = new URLSearchParams({
         owner,
         repo,
-        token,
         ...Object.entries(filters).reduce((acc, [key, value]) => {
           if (value !== undefined && value !== null) {
             acc[key] = String(value);
@@ -41,7 +40,11 @@ export function IssueList({ owner, repo, token }: IssueListProps) {
         }, {} as Record<string, string>),
       });
 
-      const response = await fetch(`/api/github/issues?${params}`);
+      const response = await fetch(`/api/github/issues?${params}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch issues');
       }
