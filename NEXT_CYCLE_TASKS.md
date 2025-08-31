@@ -1,16 +1,24 @@
 # Next Cycle Tasks
 
-## Immediate Priority
-1. **Resolve PR #12 Merge Conflicts**
-   - PR is approved but has conflicts with base branch
-   - Manually resolve conflicts and merge to main
-   - Create new branch for cycle 13
+## Immediate Priority (Cycle 14)
+1. **Fix Remaining 34 Test Failures**
+   - Authentication component tests (priority)
+   - UI validation timing issues
+   - Auth service test updates for options parameter
+   - Pinecone mock fixes for listIndexes
+
+2. **Complete Authentication Implementation**
+   - Ensure login/signup pages work without errors
+   - Fix session management tests
+   - Complete auth flow integration
+   - Validate redirects and protected routes
 
 ## Technical Debt
-1. **Test Infrastructure (43 tests failing)**
-   - Fix remaining UI component test mocks
-   - Investigate integration test timeout issue
-   - Achieve 80%+ test coverage target
+1. **Test Infrastructure**
+   - Achieve 100% test pass rate (currently 82%)
+   - Improve test coverage to >80%
+   - Fix async/await issues in remaining tests
+   - Resolve validation timing in UI components
 
 ## Feature Implementation
 1. **User Management (Phase 2)**

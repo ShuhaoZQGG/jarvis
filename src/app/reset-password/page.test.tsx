@@ -32,7 +32,7 @@ describe('ResetPasswordPage', () => {
   it('renders reset password form with all required elements', () => {
     render(<ResetPasswordPage />)
 
-    expect(screen.getByText(/reset your password/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /reset your password/i })).toBeInTheDocument()
     expect(screen.getByText(/enter your email address/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /send reset link/i })).toBeInTheDocument()

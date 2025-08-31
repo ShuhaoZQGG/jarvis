@@ -70,6 +70,28 @@ export class AuthService {
     }
   }
 
+  async updateProfile(updates: { name?: string; avatar_url?: string }): Promise<User | null> {
+    const { data: { user }, error } = await this.supabase.auth.updateUser({
+      data: updates
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return user
+  }
+
+  async updatePassword(newPassword: string): Promise<void> {
+    const { error } = await this.supabase.auth.updateUser({
+      password: newPassword
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+  }
+
   getSupabaseClient(): SupabaseClient {
     return this.supabase
   }
