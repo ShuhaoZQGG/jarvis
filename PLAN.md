@@ -1,155 +1,153 @@
-# Cycle 6: Development Pipeline
+# Cycle 6 Project Plan
 
-## Project Vision
-Continue building the project while working on GitHub issues, focusing on user dashboard, multi-tenancy, and production deployment.
+## Vision
+Work on GitHub issues and continue building the Jarvis AI chatbot SaaS platform.
 
-## Requirements Analysis
+## Current State Analysis
+- **Core Features**: Implemented and working (chat API, web scraper, auth, dashboard, widget)
+- **Build Status**: Successful with all tests passing
+- **Technical Debt**: Duplicate imports need fixing, in-memory rate limiting needs Redis
+- **PR Status**: #18 needs base branch update and duplicate import fixes
 
-### Functional Requirements
-1. **User Dashboard** (High Priority)
-   - Authenticated user workspace with bot management
-   - User profile and settings management
-   - Session persistence and secure logout
-   - Bot creation/deletion/editing interface
+## Requirements
 
-2. **Multi-tenancy Architecture** (High Priority)
-   - Workspace isolation and management
-   - Per-workspace API key generation
-   - Role-based access control (Owner, Admin, Member)
-   - Bot isolation per workspace
+### Immediate (Cycle 6)
+1. **Code Fixes**
+   - Remove duplicate OpenAI imports in chat.ts and embeddings.ts
+   - Update PR #18 base branch to main
+   - Verify all tests pass after fixes
 
-3. **Production Deployment** (High Priority)
-   - Deploy to Vercel with production configurations
-   - Configure Supabase production instance
-   - Set up environment variables securely
-   - Verify authentication flow in production
+2. **Production Configuration**
+   - Set up Redis for rate limiting
+   - Configure production API keys (OpenAI, Pinecone, Supabase)
+   - Set up error tracking with Sentry
 
-### Non-Functional Requirements
-- **Performance**: Dashboard load < 2s, API response < 500ms
-- **Security**: Secure session management, API key encryption
-- **Scalability**: Support 1000+ concurrent users
-- **Reliability**: 99.9% uptime target
+3. **Deployment Preparation**
+   - Configure Vercel staging environment
+   - Set up environment variables
+   - Configure custom domain and SSL
 
-## System Architecture
+### Short-term (Cycles 7-8)
+1. **Payment System**
+   - Stripe integration with subscription tiers
+   - Billing dashboard and webhook handling
+   - Usage limits based on subscription
 
-### Frontend Architecture
+2. **Advanced Features**
+   - Multi-page crawling with sitemap support
+   - JavaScript-rendered content scraping
+   - Conversation persistence and export
+   - Custom widget branding
+
+3. **Analytics**
+   - Usage metrics dashboard
+   - Bot performance monitoring
+   - Real-time system health monitoring
+
+## Architecture
+
+### System Components
 ```
-src/
-├── app/
-│   ├── dashboard/
-│   │   ├── page.tsx          # Main dashboard
-│   │   ├── bots/             # Bot management
-│   │   ├── settings/         # User settings
-│   │   └── workspace/        # Workspace management
-│   ├── api/
-│   │   ├── workspaces/       # Workspace API routes
-│   │   └── bots/             # Bot API routes
-├── components/
-│   ├── dashboard/            # Dashboard components
-│   └── workspace/            # Workspace components
-└── lib/
-    ├── workspace/            # Workspace utilities
-    └── rbac/                 # Role-based access control
+┌─────────────────────────────────────────────────┐
+│                   Frontend                       │
+│  Next.js App Router + TypeScript + Tailwind     │
+├─────────────────────────────────────────────────┤
+│                    API Layer                     │
+│        REST APIs + Rate Limiting + Auth         │
+├─────────────────────────────────────────────────┤
+│                   Services                       │
+│  ┌─────────────┬──────────────┬──────────────┐ │
+│  │   Scraper   │   Embeddings │     Chat     │ │
+│  │   (JSDOM)   │   (OpenAI)   │  (GPT + RAG) │ │
+│  └─────────────┴──────────────┴──────────────┘ │
+├─────────────────────────────────────────────────┤
+│                  Data Layer                      │
+│  ┌─────────────┬──────────────┬──────────────┐ │
+│  │  Supabase   │   Pinecone   │    Redis     │ │
+│  │   (Auth)    │   (Vectors)  │   (Cache)    │ │
+│  └─────────────┴──────────────┴──────────────┘ │
+└─────────────────────────────────────────────────┘
 ```
 
-### Backend Architecture
-- **Database Schema Updates**:
-  - `workspaces` table: Multi-tenancy support
-  - `workspace_members` table: User-workspace relationships
-  - `api_keys` table: Per-workspace API keys
-  - `user_roles` table: RBAC implementation
-
-### Data Flow
-1. User Authentication → Session Creation
-2. Workspace Selection → Context Loading
-3. Bot Management → Isolated Operations
-4. API Requests → Workspace-scoped validation
-
-## Technology Stack
-- **Frontend**: Next.js 14.2.32, React 18, TypeScript
-- **UI**: Tailwind CSS, Radix UI, Lucide Icons
-- **Backend**: Next.js API Routes, Supabase
-- **Database**: PostgreSQL (via Supabase)
-- **Authentication**: Supabase Auth
-- **Deployment**: Vercel
-- **Monitoring**: Vercel Analytics
+### Technology Stack
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS, Radix UI
+- **Backend**: Node.js, Next.js API Routes
+- **Database**: Supabase (PostgreSQL)
+- **Vector Store**: Pinecone
+- **Cache**: Redis (to be added)
+- **AI/ML**: OpenAI GPT-4, Embeddings API
+- **Auth**: Supabase Auth
+- **Payments**: Stripe (to be integrated)
+- **Monitoring**: Sentry, Vercel Analytics
+- **Testing**: Jest, React Testing Library
 
 ## Implementation Phases
 
-### Phase 1: Dashboard Foundation (2 days)
-- [ ] Create dashboard layout with sidebar navigation
-- [ ] Implement authenticated route protection
-- [ ] Add session management and logout
-- [ ] Create basic dashboard homepage with stats
+### Phase 1: Bug Fixes & Production Prep (Current)
+1. Fix duplicate imports
+2. Update PR base branch
+3. Set up Redis
+4. Configure production keys
+5. Deploy to staging
 
-### Phase 2: Workspace Management (2 days)
-- [ ] Design workspace database schema
-- [ ] Implement workspace CRUD operations
-- [ ] Add workspace switching UI
-- [ ] Create workspace settings page
+### Phase 2: Payment Integration
+1. Stripe account setup
+2. Subscription models
+3. Billing UI components
+4. Webhook handlers
+5. Usage tracking
 
-### Phase 3: Bot Management UI (2 days)
-- [ ] Create bot listing page with filters
-- [ ] Implement bot creation wizard
-- [ ] Add bot configuration interface
-- [ ] Build bot analytics dashboard
+### Phase 3: Feature Enhancement
+1. Advanced scraping capabilities
+2. Conversation management
+3. Widget customization
+4. Analytics dashboard
 
-### Phase 4: Multi-tenancy & RBAC (3 days)
-- [ ] Implement workspace isolation
-- [ ] Add role-based permissions
-- [ ] Create API key management
-- [ ] Add member invitation system
+### Phase 4: Scale & Optimize
+1. Performance optimization
+2. Caching strategies
+3. CDN integration
+4. Database optimization
 
-### Phase 5: Production Deployment (1 day)
-- [ ] Configure Vercel deployment
-- [ ] Set up production environment variables
-- [ ] Configure Supabase production
-- [ ] Verify authentication and features
-
-## Risk Analysis
+## Risk Assessment
 
 ### Technical Risks
-1. **Database Migration Complexity**
-   - Risk: Schema changes could break existing functionality
-   - Mitigation: Use Supabase migrations, test thoroughly
-
-2. **Session Management**
-   - Risk: Security vulnerabilities in session handling
-   - Mitigation: Use Supabase's built-in session management
-
-3. **Performance at Scale**
-   - Risk: Dashboard slow with many bots/workspaces
-   - Mitigation: Implement pagination, lazy loading
+- **Rate Limiting**: In-memory storage won't scale - Redis integration critical
+- **API Costs**: OpenAI usage could be expensive - need usage monitoring
+- **Scraping Limits**: Some sites block scrapers - need proxy support
 
 ### Business Risks
-1. **User Adoption**
-   - Risk: Complex UI might deter users
-   - Mitigation: Progressive disclosure, intuitive UX
+- **Competition**: Many chatbot solutions exist - need differentiation
+- **Pricing**: Balance between profitability and user acquisition
+- **Support**: AI responses may be incorrect - need disclaimer and human fallback
 
-2. **Production Stability**
-   - Risk: Bugs in production environment
-   - Mitigation: Staged rollout, monitoring
+### Mitigation Strategies
+1. Implement Redis immediately for production readiness
+2. Add usage quotas and monitoring
+3. Create clear pricing tiers with limits
+4. Add content moderation and quality checks
+5. Implement user feedback system
 
 ## Success Metrics
-- Dashboard load time < 2 seconds
-- Zero critical security vulnerabilities
-- All authentication flows working in production
-- 100% test coverage for critical paths
-- Successful deployment to Vercel
+- **Technical**: 99.9% uptime, <500ms response time, 0 critical bugs
+- **Business**: 100 active bots in first month, 10% conversion rate
+- **User**: <60s to create first bot, 90% satisfaction score
 
-## Dependencies
-- Supabase production instance setup
-- Vercel account and configuration
-- Environment variables for production
-- GitHub issue #6 closure verification
+## Immediate Actions
+1. Fix duplicate imports in chat.ts and embeddings.ts
+2. Update PR #18 to target main branch
+3. Set up Redis for production rate limiting
+4. Configure production environment variables
+5. Deploy to Vercel staging
+
+## Resource Requirements
+- **Development**: 1 engineer full-time
+- **Infrastructure**: ~$100/month (Vercel, Supabase, Redis, Pinecone)
+- **AI Costs**: ~$200/month OpenAI API (estimated)
+- **Third-party**: Stripe processing fees
 
 ## Timeline
-- **Week 1**: Dashboard Foundation + Workspace Management
-- **Week 2**: Bot Management UI + Multi-tenancy
-- **Week 3**: RBAC + Production Deployment
-
-## Next Cycle Considerations
-- OAuth providers integration
-- Advanced analytics features
-- Stripe payment integration
-- E2E testing implementation
+- **Week 1**: Fix bugs, production config, staging deployment
+- **Week 2**: Payment integration
+- **Week 3-4**: Advanced features and analytics
+- **Month 2**: Platform integrations and optimization

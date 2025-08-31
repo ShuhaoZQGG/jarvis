@@ -1,290 +1,233 @@
 # UI/UX Design Specifications
 
-## Design System
-
-### Colors
-- **Primary**: #6366F1 (Indigo-500)
-- **Secondary**: #10B981 (Emerald-500)
-- **Background**: #FFFFFF / #0F172A (dark mode)
-- **Surface**: #F8FAFC / #1E293B
-- **Text**: #1E293B / #F1F5F9
-- **Border**: #E2E8F0 / #334155
-- **Error**: #EF4444
-- **Success**: #10B981
-- **Warning**: #F59E0B
-
-### Typography
-- **Font**: Inter (primary), system-ui (fallback)
-- **Headings**: 600-700 weight
-- **Body**: 400-500 weight
-- **Code**: 'Fira Code', monospace
-
-### Spacing
-- Base unit: 4px
-- Padding: 16px (standard), 24px (large)
-- Margins: 8px (tight), 16px (normal), 32px (loose)
-- Border radius: 6px (small), 12px (medium), 16px (large)
-
 ## User Journeys
 
 ### 1. New User Onboarding
 ```
-Landing → Sign Up → Email Verify → Dashboard → Add Website → Configure Bot → Get Code → Install
+Landing → Sign Up → Email Verification → Dashboard → Create First Bot → Install Widget → Test Chat
 ```
 
-### 2. Returning User
+### 2. Bot Creation Flow
 ```
-Login → Dashboard → Select Bot → View Analytics → Manage Conversations → Update Settings
-```
-
-### 3. End User (Website Visitor)
-```
-Visit Site → See Widget → Click to Open → Type Question → Get Response → Follow Up → Rate
+Dashboard → New Bot → Configure Settings → Train with URL → Test Preview → Get Embed Code → Deploy
 ```
 
-## Page Layouts
-
-### Landing Page
+### 3. Analytics Review
 ```
-┌──────────────────────────────────┐
-│        Navigation Bar            │
-├──────────────────────────────────┤
-│                                  │
-│     Hero Section                 │
-│   "AI Chatbot in 60 Seconds"    │
-│   [Try Demo] [Get Started]       │
-│                                  │
-├──────────────────────────────────┤
-│   How It Works (3 steps)         │
-│   1. Add URL  2. Train  3. Embed │
-├──────────────────────────────────┤
-│   Features Grid (2x3)            │
-├──────────────────────────────────┤
-│   Pricing Cards                  │
-├──────────────────────────────────┤
-│   Footer                         │
-└──────────────────────────────────┘
+Dashboard → Select Bot → View Metrics → Export Data → Adjust Settings → Save Changes
 ```
 
-### Dashboard
+### 4. Subscription Management
 ```
-┌─────────┬────────────────────────┐
-│ Sidebar │    Main Content Area    │
-│         │                         │
-│ Bots    │  Stats Cards (4)        │
-│ Chats   │  ┌────┬────┬────┬────┐ │
-│ Train   │  │    │    │    │    │ │
-│ Embed   │  └────┴────┴────┴────┘ │
-│ Billing │                         │
-│ Settings│  Recent Conversations    │
-│         │  ┌─────────────────────┐│
-│ [User]  │  │ Table with actions  ││
-│ [Logout]│  └─────────────────────┘│
-└─────────┴────────────────────────┘
+Account → Billing → View Plans → Select Tier → Enter Payment → Confirm → Updated Limits
+```
+
+## Interface Mockups
+
+### Dashboard Layout
+```
+┌─────────────────────────────────────────────────────────┐
+│ Logo  Dashboard  Bots  Analytics  Billing  [User Menu] │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  Welcome back, {username}                              │
+│                                                          │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │
+│  │ Active Bots  │ │ Conversations│ │ API Calls    │   │
+│  │     12       │ │    1,234     │ │   45,678     │   │
+│  └──────────────┘ └──────────────┘ └──────────────┘   │
+│                                                          │
+│  Your Bots                                    [+ New]   │
+│  ┌────────────────────────────────────────────────┐    │
+│  │ Bot Name    Status    Conversations   Actions  │    │
+│  │ Support Bot  Active      523         [•••]    │    │
+│  │ Sales Bot    Active      312         [•••]    │    │
+│  │ FAQ Bot      Paused       89         [•••]    │    │
+│  └────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ### Bot Configuration
 ```
-┌──────────────────────────────────┐
-│     Bot Name & Status Toggle     │
-├──────────────────────────────────┤
-│  Tabs: General | Training | Style│
-├──────────────────────────────────┤
-│                                  │
-│  Tab Content                     │
-│  - URL Input                     │
-│  - Crawl Settings                │
-│  - Training Status               │
-│  - Preview Window                │
-│                                  │
-│  [Save Changes] [Train Now]      │
-└──────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│ ← Back to Dashboard                                     │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  Bot Configuration                                      │
+│                                                          │
+│  General Settings                                       │
+│  ┌────────────────────────────────────────────────┐    │
+│  │ Bot Name: [___________________]                │    │
+│  │ Description: [_________________]               │    │
+│  │ Welcome Message: [______________]              │    │
+│  └────────────────────────────────────────────────┘    │
+│                                                          │
+│  Training Data                                          │
+│  ┌────────────────────────────────────────────────┐    │
+│  │ Website URL: [___________________] [Crawl]     │    │
+│  │ Pages Found: 24  |  Indexed: 24                │    │
+│  │ Last Updated: 2 hours ago                      │    │
+│  └────────────────────────────────────────────────┘    │
+│                                                          │
+│  Appearance                                             │
+│  ┌────────────────────────────────────────────────┐    │
+│  │ Theme: [Light ▼]  Primary Color: [#____]       │    │
+│  │ Position: [Bottom Right ▼]                     │    │
+│  │ [x] Show avatar  [x] Show typing indicator     │    │
+│  └────────────────────────────────────────────────┘    │
+│                                                          │
+│  [Save Changes]  [Preview]  [Get Code]                  │
+└─────────────────────────────────────────────────────────┘
 ```
 
-## Component Specifications
-
-### Chat Widget (Embedded)
+### Chat Widget
 ```
-Minimized State (60x60px):
-┌────┐
-│ 💬 │ <- Floating button
-└────┘
+┌─────────────────┐
+│ 💬 Chat with us │  (Collapsed State)
+└─────────────────┘
 
-Expanded State (380x600px):
-┌──────────────────────┐
-│ 🤖 Jarvis Bot    ✕  │ <- Header
-├──────────────────────┤
-│                      │
-│  Chat Messages       │ <- Scrollable
-│                      │
-│  [Suggested Q1]      │ <- Quick actions
-│  [Suggested Q2]      │
-│                      │
-├──────────────────────┤
-│ Type message...  [↑] │ <- Input
-└──────────────────────┘
+┌─────────────────┐
+│ Support Bot  ✕ │  (Expanded State)
+├─────────────────┤
+│ Hello! How can  │
+│ I help today?   │
+│                 │
+│ User: Question? │
+│                 │
+│ Bot: Answer...  │
+│ ───────────     │
+├─────────────────┤
+│ Type message... │
+│           [Send]│
+└─────────────────┘
 ```
 
-### Mobile Responsive Breakpoints
-- **Mobile**: < 640px (single column, bottom nav)
-- **Tablet**: 640-1024px (collapsible sidebar)
-- **Desktop**: > 1024px (full layout)
+## Responsive Design
 
-### Mobile Dashboard
-```
-┌──────────────────┐
-│   ☰  Dashboard   │ <- Hamburger menu
-├──────────────────┤
-│  Stats Cards     │ <- Stackable
-│  ┌──────────────┐│
-│  └──────────────┘│
-│  ┌──────────────┐│
-│  └──────────────┘│
-├──────────────────┤
-│  Recent Chats    │ <- Simplified list
-│  ┌──────────────┐│
-│  └──────────────┘│
-├──────────────────┤
-│ [+] [📊] [💬] [⚙]│ <- Bottom nav
-└──────────────────┘
-```
+### Breakpoints
+- Mobile: 320px - 768px
+- Tablet: 768px - 1024px  
+- Desktop: 1024px+
 
-## Interaction Patterns
+### Mobile Adaptations
+- Hamburger menu for navigation
+- Stack cards vertically on dashboard
+- Full-width forms and buttons
+- Swipeable bot list
+- Bottom sheet for chat widget
 
-### Form Validation
-- Real-time validation on blur
-- Clear error messages below fields
-- Success checkmarks for valid inputs
-- Loading states during submission
+### Tablet Adaptations
+- Collapsible sidebar navigation
+- 2-column grid for bot cards
+- Modal overlays for forms
+- Floating action buttons
 
-### Loading States
-- Skeleton screens for content areas
-- Spinner for button actions
-- Progress bars for training/crawling
-- Shimmer effects for cards
-
-### Animations
-- Page transitions: 200ms fade
-- Modal open/close: 300ms slide
-- Button hover: scale(1.05)
-- Widget expand: 400ms spring
-
-## Accessibility Requirements
+## Accessibility Specifications
 
 ### WCAG 2.1 AA Compliance
-- Color contrast: 4.5:1 minimum
-- Focus indicators: 2px outline
-- Keyboard navigation: Tab order logical
-- Screen reader: ARIA labels on all interactive elements
-- Skip links: "Skip to main content"
+- **Color Contrast**: 4.5:1 for normal text, 3:1 for large text
+- **Focus Indicators**: Visible outline on all interactive elements
+- **Keyboard Navigation**: Tab order follows visual hierarchy
+- **Screen Reader Support**: ARIA labels on all controls
 
-### Keyboard Shortcuts
-- `Esc`: Close modals/widget
-- `Ctrl+K`: Quick search
-- `Tab`: Navigate elements
-- `Enter`: Submit forms
-- `Space`: Toggle checkboxes
+### Interaction Requirements
+- **Target Size**: Minimum 44x44px touch targets
+- **Error Messages**: Clear, actionable error text
+- **Form Labels**: Associated with inputs, visible at all times
+- **Loading States**: Announced to screen readers
+- **Skip Links**: "Skip to main content" on all pages
 
-## Widget Customization Options
+### Component Specifications
 
-### Appearance Settings
-```json
-{
-  "position": "bottom-right",
-  "theme": {
-    "primaryColor": "#6366F1",
-    "fontFamily": "Inter",
-    "borderRadius": "12px"
-  },
-  "greeting": "Hi! How can I help?",
-  "placeholder": "Type your question...",
-  "showSuggestions": true,
-  "autoOpen": false,
-  "openDelay": 3000
-}
+#### Buttons
+- Primary: Filled background, high contrast
+- Secondary: Outlined, medium emphasis
+- Disabled: 40% opacity, cursor not-allowed
+- Loading: Spinner icon with "Loading..." text
+
+#### Forms
+- Input height: 48px minimum
+- Label position: Above input
+- Error state: Red border, icon, descriptive text
+- Success state: Green checkmark
+- Helper text: Below input, smaller font
+
+#### Navigation
+- Sticky header on desktop
+- Bottom navigation on mobile
+- Breadcrumbs for deep navigation
+- Clear active state indicators
+
+#### Modals
+- Overlay background: rgba(0,0,0,0.5)
+- Close button: Top right, 44x44px
+- Focus trap: Tab cycles within modal
+- Escape key: Closes modal
+
+## Design System
+
+### Typography
+- Headings: Inter, 600 weight
+- Body: Inter, 400 weight
+- Code: JetBrains Mono
+- Scale: 14px, 16px, 20px, 24px, 32px
+
+### Colors
+```
+Primary:    #3B82F6 (Blue)
+Secondary:  #10B981 (Green)
+Error:      #EF4444 (Red)
+Warning:    #F59E0B (Amber)
+Neutral:    #6B7280 (Gray)
+Background: #FFFFFF / #1F2937 (Dark)
 ```
 
-### Widget Positions
-- bottom-right (default)
-- bottom-left
-- top-right
-- top-left
-- inline (embedded in page)
+### Spacing
+- Base unit: 8px
+- Padding: 8px, 16px, 24px, 32px
+- Margin: 0, 8px, 16px, 24px, 48px
 
-## Error States
+### Shadows
+- sm: 0 1px 2px rgba(0,0,0,0.05)
+- md: 0 4px 6px rgba(0,0,0,0.1)
+- lg: 0 10px 15px rgba(0,0,0,0.1)
 
-### Empty States
-- No bots: "Create your first bot" CTA
-- No conversations: "Waiting for first chat"
-- No training data: "Add URLs to train"
+## Animation Guidelines
 
-### Error Messages
-- Network error: "Connection lost. Retrying..."
-- Rate limit: "Too many requests. Please wait."
-- Invalid input: "Please enter a valid URL"
-- Training failed: "Training error. Try again."
+### Transitions
+- Duration: 200ms for micro, 300ms for standard
+- Easing: cubic-bezier(0.4, 0, 0.2, 1)
+- Properties: transform, opacity, color
 
-## Success Metrics
+### Loading States
+- Skeleton screens for content
+- Progress bars for operations
+- Spinners for indeterminate loads
 
-### User Experience KPIs
-- Time to first bot: < 60 seconds
-- Widget load time: < 200ms
-- Chat response time: < 500ms
-- Mobile performance score: > 90
-- Accessibility score: 100%
+### Feedback
+- Toast notifications: Slide in from top
+- Success: Green with checkmark
+- Error: Red with X icon
+- Info: Blue with i icon
 
-## Design Implementation Notes
+## Frontend Framework Recommendations
 
-### CSS Framework
-- Tailwind CSS for utility classes
-- CSS modules for component styles
-- PostCSS for optimization
+### Primary Stack
+- **Next.js 14**: App Router for SEO and performance
+- **TypeScript**: Type safety across components
+- **Tailwind CSS**: Utility-first styling
+- **Radix UI**: Accessible component primitives
+- **Framer Motion**: Smooth animations
 
-### Component Library
-- Radix UI for accessible primitives
-- Framer Motion for animations
-- React Hook Form for forms
-- Recharts for analytics
+### Component Architecture
+- Atomic design methodology
+- Storybook for component documentation
+- CSS Modules for component styles
+- Custom hooks for business logic
+- Context API for global state
 
-### Icon Set
-- Lucide React for consistent icons
-- Custom bot avatar system
-- Emoji support in chat
-
-## Responsive Grid System
-```css
-/* Mobile First */
-.container {
-  width: 100%;
-  padding: 0 16px;
-}
-
-/* Tablet */
-@media (min-width: 640px) {
-  .container { max-width: 640px; }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-  .container { max-width: 1024px; }
-}
-
-/* Wide */
-@media (min-width: 1280px) {
-  .container { max-width: 1280px; }
-}
-```
-
-## Dark Mode Support
-- System preference detection
-- Manual toggle in settings
-- Persistent user preference
-- Smooth theme transitions
-- Proper contrast ratios
-
-## Performance Optimizations
-- Lazy load chat history
-- Virtual scrolling for long lists
-- Image optimization with next/image
-- Code splitting by route
-- Prefetch on hover
+### Performance Targets
+- Lighthouse score: 90+
+- First Contentful Paint: <1.5s
+- Time to Interactive: <3s
+- Cumulative Layout Shift: <0.1
