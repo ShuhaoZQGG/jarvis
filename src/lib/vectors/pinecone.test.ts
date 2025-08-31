@@ -52,7 +52,15 @@ describe('PineconeService', () => {
     });
 
     it('should create index if it does not exist', async () => {
-      mockPinecone.listIndexes.mockResolvedValue({ indexes: [] });
+      // First call returns no indexes, subsequent calls return the created index as ready
+      mockPinecone.listIndexes
+        .mockResolvedValueOnce({ indexes: [] })
+        .mockResolvedValue({ 
+          indexes: [{ 
+            name: 'test-index',
+            status: { ready: true }
+          }] 
+        });
       
       await service.initialize();
       

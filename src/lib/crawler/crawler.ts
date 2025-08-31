@@ -136,7 +136,7 @@ export class WebsiteCrawler {
     while (queue.length > 0 && pages.length < crawlOptions.maxPages!) {
       const { url, depth } = queue.shift()!;
 
-      if (this.crawledUrls.has(url) || depth > crawlOptions.maxDepth!) {
+      if (this.crawledUrls.has(url) || depth >= crawlOptions.maxDepth!) {
         continue;
       }
 

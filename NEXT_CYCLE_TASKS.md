@@ -1,64 +1,71 @@
 # Next Cycle Tasks
 
-## Immediate Priority (Cycle 14)
-1. **Fix Remaining 34 Test Failures**
-   - Authentication component tests (priority)
-   - UI validation timing issues
-   - Auth service test updates for options parameter
-   - Pinecone mock fixes for listIndexes
+## Summary
+Cycle 18 attempted to implement production features but encountered critical build failures. Files were created in wrong locations and the build is completely broken. Needs significant revision before merging.
 
-2. **Complete Authentication Implementation**
-   - Ensure login/signup pages work without errors
-   - Fix session management tests
-   - Complete auth flow integration
-   - Validate redirects and protected routes
+## Critical Issues from Cycle 18 (Must Fix First)
 
-## Technical Debt
-1. **Test Infrastructure**
-   - Achieve 100% test pass rate (currently 82%)
-   - Improve test coverage to >80%
-   - Fix async/await issues in remaining tests
-   - Resolve validation timing in UI components
+### P0 - Build Failures (BLOCKING)
+- ❌ Move all `/lib` files to `/src/lib` to match tsconfig paths
+- ❌ Create or integrate Supabase server module (missing dependency)
+- ❌ Fix module resolution errors preventing compilation
+- ❌ Remove duplicate rate limiting (already exists in src/lib/ratelimit.ts)
 
-## Feature Implementation
-1. **User Management (Phase 2)**
-   - User profile page
-   - Workspace CRUD operations
-   - Team member invitations
-   - Permission system
+### P1 - Complete Implementation
+- ❌ Add database migrations for API keys table
+- ❌ Implement API routes for key management (/api/settings/api-keys)
+- ❌ Integrate OAuth buttons into existing auth pages
+- ❌ Write tests for new features (currently 0 tests)
 
-2. **Production Infrastructure (Phase 4)**
-   - Redis rate limiting implementation
-   - Sentry error tracking setup
-   - API documentation
-   - Performance optimization
+## Technical Debt from Cycle 18
+- Files created outside project structure conventions
+- Duplicate implementations violating DRY principle
+- No integration with existing database module
+- Import paths don't match tsconfig configuration
+- Tests timing out after 2+ minutes
 
-## Environment Setup
-1. **Production Credentials**
-   - Configure production OpenAI API key
-   - Setup production Pinecone index
-   - Verify Supabase production settings
+## Deferred Production Features
 
-## Documentation Needs
-1. **Authentication Flow**
-   - Document login/signup process
-   - API authentication guide
-   - Session management details
+### Authentication & Security
+- Complete OAuth provider integration (buttons not added to UI)
+- Configure OAuth apps in provider dashboards (Google, GitHub, Discord)
+- Implement CSRF protection
+- Add comprehensive input validation
 
-## Testing Requirements
-1. **Manual Testing**
-   - Verify authentication flow in browser
-   - Test workspace creation and management
-   - Validate API key generation
+### API Management
+- Complete API key management system
+- Create database schema for API keys
+- Build API routes for CRUD operations
+- Add permission-based access control
 
-## Performance Optimization
-1. **Build Optimization**
-   - Reduce bundle size
-   - Implement code splitting
-   - Optimize image loading
+### Infrastructure
+- Set up Redis instance for production (Redis Cloud or Upstash)
+- Configure rate limiting properly (use existing implementation)
+- Deploy to Vercel with proper environment variables
+- Add Sentry error tracking
 
-## Security Enhancements
-1. **Authentication Security**
-   - Add rate limiting to auth endpoints
-   - Implement CSRF protection
-   - Add security headers
+### Testing & Quality
+- Add tests for ALL new features (minimum 80% coverage)
+- Fix test timeout issues (Jest configuration)
+- Add integration tests for OAuth flow
+- Add E2E tests for API key management
+
+## Architectural Improvements Needed
+1. **File Organization**: Follow src/ structure consistently
+2. **Module Integration**: Use existing modules, don't duplicate
+3. **Import Paths**: Ensure all imports match tsconfig paths
+4. **Database**: Integrate with existing database module
+5. **Testing**: TDD approach - write tests first
+
+## Recommended Approach for Next Cycle
+1. **Fix the build FIRST** - nothing else matters if it doesn't compile
+2. **Move files to correct locations** before adding any new code
+3. **Integrate with existing code** - study what's already there
+4. **One feature at a time** - complete fully before moving on
+5. **Test everything** - no code without tests
+
+## Notes
+- Cycle 18 had good security practices but poor integration
+- Build must be green before any PR can be merged
+- Consider smaller, incremental changes
+- Focus on integration over new features

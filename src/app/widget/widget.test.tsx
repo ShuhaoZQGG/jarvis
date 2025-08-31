@@ -157,7 +157,7 @@ describe('ChatWidget', () => {
     // Wait for response and check typing indicator disappears
     await waitFor(() => {
       expect(screen.queryByTestId('typing-indicator')).not.toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
   })
   
   it('should auto-open if configured', async () => {

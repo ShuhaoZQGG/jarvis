@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
 import LoginPage from './page'
 import { AuthService } from '@/lib/auth/auth'
@@ -58,14 +58,15 @@ describe('LoginPage', () => {
     const emailInput = screen.getByLabelText(/email/i)
     const passwordInput = screen.getByLabelText(/password/i)
     
-    fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
+    fireEvent.change(emailInput, { target: { value: 'notanemail' } })
     fireEvent.change(passwordInput, { target: { value: 'password123' } })
 
     const submitButton = screen.getByRole('button', { name: /sign in/i })
+    
     fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/please enter a valid email/i)).toBeInTheDocument()
+      expect(screen.getByText('Please enter a valid email')).toBeInTheDocument()
     })
   })
 
