@@ -18,7 +18,6 @@ describe('BotService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    
     mockDb = new DatabaseService('', '') as jest.Mocked<DatabaseService>
     mockEmbeddings = new EmbeddingsGenerator('') as jest.Mocked<EmbeddingsGenerator>
     mockVectorStore = new VectorStore({ apiKey: '', indexName: '' }) as jest.Mocked<VectorStore>

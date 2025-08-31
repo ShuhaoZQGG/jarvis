@@ -1,0 +1,320 @@
+import { GitHubService } from '../github/github';
+import { BotService } from './bot';
+import { DatabaseService } from '../database/database';
+
+export interface GitHubBotConfig {
+  repository: string; // owner/repo format
+  issueTemplates?: {
+    bug?: string;
+    feature?: string;
+    question?: string;
+  };
+  autoResponse?: boolean;
+  assignees?: string[];
+  labels?: string[];
+}
+
+export interface BotGitHubIntegration {
+  botId: string;
+  githubConfig: GitHubBotConfig;
+  enabled: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class GitHubBotIntegration {
+  constructor(
+    private botService: BotService,
+    private githubService: GitHubService,
+    private db: DatabaseService
+  ) {}
+
+  /**
+   * Enable GitHub integration for a bot
+   */
+  async enableGitHubIntegration(
+    botId: string,
+    config: GitHubBotConfig
+  ): Promise<BotGitHubIntegration> {
+    // Validate bot exists
+    const bot = await this.botService.getBot(botId);
+    if (!bot) {
+      throw new Error('Bot not found');
+    }
+
+    // Validate repository format
+    const [owner, repo] = config.repository.split('/');
+    if (!owner || !repo) {
+      throw new Error('Invalid repository format. Use owner/repo');
+    }
+
+    // Store integration config
+    const integration = await this.db.createBotIntegration({
+      bot_id: botId,
+      platform: 'github',
+      config: config,
+      enabled: true,
+    });
+
+    return {
+      botId,
+      githubConfig: config,
+      enabled: true,
+      createdAt: new Date(integration.created_at),
+      updatedAt: new Date(integration.updated_at),
+    };
+  }
+
+  /**
+   * Create an issue from bot conversation
+   */
+  async createIssueFromConversation(
+    botId: string,
+    conversationId: string,
+    issueType: 'bug' | 'feature' | 'question' = 'question'
+  ): Promise<number> {
+    // Get integration config
+    const integration = await this.db.getBotIntegration(botId, 'github');
+    if (!integration || !integration.enabled) {
+      throw new Error('GitHub integration not enabled for this bot');
+    }
+
+    const config = integration.config as GitHubBotConfig;
+    const [owner, repo] = config.repository.split('/');
+
+    // Get conversation details
+    const conversation = await this.db.getConversation(conversationId);
+    if (!conversation) {
+      throw new Error('Conversation not found');
+    }
+
+    // Build issue content
+    const title = this.generateIssueTitle(conversation);
+    const body = await this.generateIssueBody(conversation, issueType, config);
+
+    // Create issue
+    const issue = await this.githubService.createIssue(owner, repo, {
+      title,
+      body,
+      labels: this.getLabelsForType(issueType, config.labels),
+      assignees: config.assignees,
+    });
+
+    // Store issue reference
+    await this.db.linkConversationToIssue(conversationId, issue.number);
+
+    return issue.number;
+  }
+
+  /**
+   * Sync bot responses to GitHub issue comments
+   */
+  async syncBotResponseToIssue(
+    botId: string,
+    issueNumber: number,
+    response: string
+  ): Promise<void> {
+    const integration = await this.db.getBotIntegration(botId, 'github');
+    if (!integration || !integration.enabled) {
+      return; // Silently skip if not enabled
+    }
+
+    const config = integration.config as GitHubBotConfig;
+    if (!config.autoResponse) {
+      return; // Auto-response disabled
+    }
+
+    const [owner, repo] = config.repository.split('/');
+
+    // Add comment to issue
+    await this.githubService.addComment(owner, repo, issueNumber, 
+      `🤖 **Bot Response:**\n\n${response}`
+    );
+  }
+
+  /**
+   * Search for relevant issues based on user query
+   */
+  async searchRelatedIssues(
+    botId: string,
+    query: string,
+    limit: number = 5
+  ): Promise<Array<{ number: number; title: string; state: string; url: string }>> {
+    const integration = await this.db.getBotIntegration(botId, 'github');
+    if (!integration || !integration.enabled) {
+      return [];
+    }
+
+    const config = integration.config as GitHubBotConfig;
+    const [owner, repo] = config.repository.split('/');
+
+    // Search issues
+    const issues = await this.githubService.searchIssues(
+      `repo:${owner}/${repo} ${query}`,
+      limit
+    );
+
+    return issues.map(issue => ({
+      number: issue.number,
+      title: issue.title,
+      state: issue.state,
+      url: issue.html_url,
+    }));
+  }
+
+  /**
+   * Create a bug report from error in bot conversation
+   */
+  async reportBugFromError(
+    botId: string,
+    error: Error,
+    context?: Record<string, any>
+  ): Promise<number> {
+    const integration = await this.db.getBotIntegration(botId, 'github');
+    if (!integration || !integration.enabled) {
+      throw new Error('GitHub integration not enabled for this bot');
+    }
+
+    const config = integration.config as GitHubBotConfig;
+    const [owner, repo] = config.repository.split('/');
+
+    const title = `[Bot Error] ${error.message}`;
+    const body = this.formatBugReport(error, context, config);
+
+    const issue = await this.githubService.createIssue(owner, repo, {
+      title,
+      body,
+      labels: ['bug', 'bot-generated', ...(config.labels || [])],
+      assignees: config.assignees,
+    });
+
+    return issue.number;
+  }
+
+  /**
+   * Get integration status for a bot
+   */
+  async getIntegrationStatus(botId: string): Promise<BotGitHubIntegration | null> {
+    const integration = await this.db.getBotIntegration(botId, 'github');
+    if (!integration) {
+      return null;
+    }
+
+    return {
+      botId,
+      githubConfig: integration.config as GitHubBotConfig,
+      enabled: integration.enabled,
+      createdAt: new Date(integration.created_at),
+      updatedAt: new Date(integration.updated_at),
+    };
+  }
+
+  /**
+   * Update integration configuration
+   */
+  async updateIntegration(
+    botId: string,
+    updates: Partial<GitHubBotConfig>
+  ): Promise<BotGitHubIntegration> {
+    const current = await this.getIntegrationStatus(botId);
+    if (!current) {
+      throw new Error('Integration not found');
+    }
+
+    const newConfig = { ...current.githubConfig, ...updates };
+    
+    await this.db.updateBotIntegration(botId, 'github', {
+      config: newConfig,
+    });
+
+    return {
+      ...current,
+      githubConfig: newConfig,
+      updatedAt: new Date(),
+    };
+  }
+
+  /**
+   * Disable GitHub integration
+   */
+  async disableIntegration(botId: string): Promise<void> {
+    await this.db.updateBotIntegration(botId, 'github', {
+      enabled: false,
+    });
+  }
+
+  // Helper methods
+  private generateIssueTitle(conversation: any): string {
+    const messages = conversation.messages || [];
+    const firstUserMessage = messages.find((m: any) => m.role === 'user');
+    
+    if (firstUserMessage) {
+      // Truncate to reasonable length
+      const text = firstUserMessage.content;
+      return text.length > 100 ? text.substring(0, 97) + '...' : text;
+    }
+    
+    return `Conversation ${conversation.id}`;
+  }
+
+  private async generateIssueBody(
+    conversation: any,
+    issueType: string,
+    config: GitHubBotConfig
+  ): Promise<string> {
+    const template = config.issueTemplates?.[issueType as keyof typeof config.issueTemplates];
+    const messages = conversation.messages || [];
+
+    let body = `## Conversation Summary\n\n`;
+    body += `**Bot:** ${conversation.bot_name || 'Unknown'}\n`;
+    body += `**Date:** ${new Date(conversation.created_at).toISOString()}\n`;
+    body += `**Type:** ${issueType}\n\n`;
+
+    if (template) {
+      body += `## Template\n\n${template}\n\n`;
+    }
+
+    body += `## Conversation\n\n`;
+    messages.forEach((msg: any) => {
+      body += `**${msg.role === 'user' ? 'User' : 'Bot'}:** ${msg.content}\n\n`;
+    });
+
+    body += `---\n*This issue was automatically created from a bot conversation*`;
+
+    return body;
+  }
+
+  private getLabelsForType(
+    issueType: string,
+    additionalLabels?: string[]
+  ): string[] {
+    const labels = [issueType];
+    
+    if (additionalLabels) {
+      labels.push(...additionalLabels);
+    }
+
+    return labels;
+  }
+
+  private formatBugReport(
+    error: Error,
+    context?: Record<string, any>,
+    config?: GitHubBotConfig
+  ): string {
+    let body = config?.issueTemplates?.bug || '';
+    
+    body += `\n## Error Details\n\n`;
+    body += `**Message:** ${error.message}\n`;
+    body += `**Stack:**\n\`\`\`\n${error.stack}\n\`\`\`\n\n`;
+
+    if (context) {
+      body += `## Context\n\n`;
+      body += `\`\`\`json\n${JSON.stringify(context, null, 2)}\n\`\`\`\n\n`;
+    }
+
+    body += `---\n*This bug report was automatically generated*`;
+
+    return body;
+  }
+}
