@@ -16,6 +16,7 @@ describe('RedisRateLimiter', () => {
       get: jest.fn(),
       del: jest.fn(),
       ttl: jest.fn(),
+      on: jest.fn(),
     } as any
     
     ;(Redis as any).mockImplementation(() => mockRedis)

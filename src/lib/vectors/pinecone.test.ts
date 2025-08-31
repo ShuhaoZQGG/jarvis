@@ -23,7 +23,9 @@ describe('PineconeService', () => {
     mockPinecone = {
       index: jest.fn().mockReturnValue(mockIndex),
       createIndex: jest.fn(),
-      listIndexes: jest.fn(),
+      listIndexes: jest.fn().mockResolvedValue({ 
+        indexes: [{ name: 'test-index' }] 
+      }),
     };
 
     (Pinecone as jest.MockedClass<typeof Pinecone>).mockImplementation(() => mockPinecone);
