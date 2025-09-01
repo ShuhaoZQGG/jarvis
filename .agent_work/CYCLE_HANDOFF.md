@@ -1,64 +1,55 @@
-# Cycle 28 Handoff Document
+# Cycle 29 Handoff Document
 
-Generated: Sun 31 Aug 2025 21:08:00 EDT
+Generated: Sun 31 Aug 2025 22:05:54 EDT
 
 ## Current State
-- Cycle Number: 28
-- Branch: cycle-28-✅-core-20250831-205339
+- Cycle Number: 29
+- Branch: cycle-29-core-features-20250831-220554
 - Phase: development (attempt 2)
 
 ## Completed Work
-### Development Phase
-- **Issue #33 Resolution**: Confirmed authentication issue is already fixed (closed)
-- **Core Service Verification**: All MVP services are already implemented:
-  - ✅ PlaywrightScraper for web scraping with advanced features
-  - ✅ EmbeddingService with OpenAI integration
-  - ✅ PineconeService for vector database operations
-  - ✅ VectorSearchService for RAG functionality
-  - ✅ Scrape API endpoint with full pipeline integration
-- **Integration Tests**: Created comprehensive MVP integration test suite
-- **Test Fixes**: Fixed import issues, improved test configuration
-- **Test Coverage**: 353 of 375 tests passing (94% pass rate)
+### Database Optimizations (via Supabase MCP)
+- ✅ Added 12 missing foreign key indexes for performance
+- ✅ Removed 4 unused indexes to free storage
+- ✅ Consolidated duplicate RLS policies (reduced from ~15 to 7)
+- ✅ Fixed auth.uid() performance issues in RLS policies
+- ✅ Created comprehensive documentation of optimizations
+
+### Test Infrastructure Fixes
+- ✅ Fixed Cheerio ESM/CJS compatibility issues
+- ✅ Created mock for Cheerio module
+- ✅ Updated Jest configuration
 
 ## Pending Items
-### Minor Issues
-- 22 failing tests related to cheerio module imports (non-critical)
-- Some mock service alignment issues in tests
-
-### Future Enhancements
-- Stripe billing integration (partially complete)
-- Redis rate limiting (placeholder exists)
-- WebSocket/SSE for real-time features
-- Analytics dashboard implementation
+### Security Configuration (Dashboard-Level)
+- MFA needs to be enabled in Supabase dashboard
+- Leaked password protection needs to be enabled in Supabase dashboard
+- Note: These are configuration items, not code changes
 
 ## Technical Decisions
-### Architecture
-- Confirmed all core services are properly integrated
-- Web scraping → Embeddings → Vector storage pipeline is functional
-- API endpoints properly secured with Supabase auth
-- CORS configuration for widget integration
+### Database Performance
+- Used SELECT wrapper for auth.uid() calls to prevent re-evaluation
+- Consolidated multiple permissive policies into single policies per action
+- Added indexes on all foreign key columns for join optimization
+- Removed unused indexes based on Supabase advisor recommendations
 
-### Testing Approach
-- Comprehensive integration test coverage for MVP flow
-- Proper mocking of external services
-- Performance benchmarks included in tests
+### Testing Strategy
+- Mocked Cheerio to avoid ESM/CJS issues in Jest
+- Simplified transformIgnorePatterns in Jest config
 
 ## Known Issues
-### Non-Critical
-- Cheerio import issues in Jest environment (ESM/CJS compatibility)
-- Some test mocks need alignment with updated services
-- Rate limiting is placeholder only (needs Redis in production)
+- None critical. All database optimizations successfully applied.
+- Security warnings are configuration-only (not code issues)
 
 ## Next Steps
 ### For Review Phase
-1. Verify all core MVP features are functional
-2. Check integration test coverage
-3. Confirm API endpoints are properly secured
-4. Review code quality and architecture
+1. Verify all database optimizations are working
+2. Check performance improvements via Supabase dashboard
+3. Confirm test suite is running properly
+4. Review PR targeting main branch (not feature branch)
 
-### For Next Cycle
-1. Complete Stripe billing integration
-2. Implement Redis for production rate limiting
-3. Add WebSocket support for real-time chat
-4. Build analytics dashboard UI
-5. Optimize widget bundle size
+### For Production
+1. Enable MFA in Supabase dashboard
+2. Enable leaked password protection
+3. Monitor query performance post-deployment
+4. Consider adding Redis for production rate limiting
