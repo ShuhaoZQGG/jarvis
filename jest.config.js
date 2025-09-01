@@ -21,8 +21,10 @@ const customJestConfig = {
     '<rootDir>/**/*.{spec,test}.{js,jsx,ts,tsx}',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(uuid|@octokit|cheerio)/)',
+    'node_modules/(?!(uuid|@octokit|cheerio|htmlparser2|domhandler|dom-serializer|entities|domutils)/)',
   ],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
 }
 
 module.exports = createJestConfig(customJestConfig)
