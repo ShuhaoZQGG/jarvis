@@ -1,81 +1,68 @@
-# Cycle 26 Handoff Document
+# Cycle 27 Handoff Document
 
-Generated: Sun 31 Aug 2025 17:54:55 EDT
+Generated: Sun 31 Aug 2025 20:26:21 EDT
 
 ## Current State
-- Cycle Number: 26
-- Branch: cycle-26-✅-completed-20250831-175458
-- Phase: planning → design
+- Cycle Number: 27
+- Branch: cycle-27-✅-completed-20250831-202621
+- Phase: planning ✅ → design
 
 ## Completed Work
-<!-- Updated by each agent as they complete their phase -->
+### Planning Phase
 - **Planning**: Created architectural plan and requirements
-
-### Planning Phase (Completed)
-- ✅ Updated README.md with comprehensive Core Features tracking
-- ✅ Created detailed PLAN.md with 3-phase implementation strategy
-- ✅ Analyzed current infrastructure and identified critical gaps
-- ✅ Defined technical architecture for MVP integration
-- ✅ Created and pushed branch with planning documents
-- ✅ PR URL saved for manual creation
+- Analyzed GitHub Issue #33 (sign-up endpoint failure)
+- Created comprehensive PLAN.md with phased approach
+- Updated README.md with critical bug priority
+- Established 10-day timeline to MVP completion
+- Defined clear success metrics and risk mitigation
 
 ## Pending Items
-<!-- Items that need attention in the next phase or cycle -->
+### Critical (P0)
+- Fix sign-up endpoint authentication issue (#33)
+- Resolve 27 failing tests
+- Fix React act warnings in tests
 
-### For Design Phase
-- Detail UI/UX specifications for web scraping status display
-- Design chat widget customization interface
-- Create mockups for analytics dashboard
-- Define user flows for bot training process
-- Specify loading states and error handling
+### High Priority
+- Pinecone vector database integration
+- OpenAI API integration
+- Web scraping engine completion
+- Embedding pipeline implementation
 
 ## Technical Decisions
-<!-- Important technical decisions made during this cycle -->
+### Architecture
+- Confirmed Next.js 14 + Supabase stack
+- Selected Pinecone for vector search
+- Prioritized bug fixes over new features
+- Deferred Redis deployment to Phase 3
 
-### Architecture Choices
-- **Web Scraping**: Playwright + Cheerio for dynamic content
-- **Vector Database**: Pinecone Cloud (serverless option)
-- **AI Model**: OpenAI GPT-4 with streaming support
-- **CDN**: Cloudflare/Vercel Edge for widget distribution
-- **Rate Limiting**: Redis Cloud for production
-- **Monitoring**: Sentry for error tracking
-
-### Implementation Strategy
-1. Phase 1: Core AI Pipeline (Days 1-3)
-2. Phase 2: Chat Integration (Days 4-5)
-3. Phase 3: Production Deployment (Days 6-7)
+### Development Approach
+- Phase 1: Critical fixes (Days 1-2)
+- Phase 2: Core integrations (Days 3-5)
+- Phase 3: Production features (Days 6-8)
+- Phase 4: Testing & optimization (Days 9-10)
 
 ## Known Issues
-<!-- Issues discovered but not yet resolved -->
+### Authentication
+- Sign-up endpoint returning TypeError
+- Supabase auth client fetch failing
+- Possible CORS or environment variable issue
 
-### Critical Gaps Identified
-1. No web scraping capability implemented
-2. Missing Pinecone/vector search integration
-3. OpenAI API not connected
-4. Widget CDN not deployed
-5. Stripe webhooks incomplete
-
-### Infrastructure Needs
-- OpenAI API key required
-- Pinecone API key required
-- Redis Cloud instance needed
-- Cloudflare account for CDN
+### Testing
+- 27 tests failing (86% pass rate)
+- React act warnings in widget tests
+- Mock service alignment issues
 
 ## Next Steps
-<!-- Clear action items for the next agent/cycle -->
+### For Design Phase
+1. Create UI mockups for error states in auth flow
+2. Design loading states for scraping process
+3. Plan analytics dashboard layout
+4. Design embedding status indicators
+5. Create vector search result display
 
-### For Design Agent
-1. Read PLAN.md to understand technical requirements
-2. Create UI/UX specifications for new features
-3. Design scraping progress indicators
-4. Create chat widget customization mockups
-5. Define analytics dashboard layout
-6. Update DESIGN.md with new specifications
-
-### For Implementation Agent
-1. Start with web scraping engine using Playwright
-2. Implement OpenAI embeddings generation
-3. Set up Pinecone vector database
-4. Build RAG chat pipeline
-5. Deploy widget to CDN
+### For Implementation Phase
+1. Start with sign-up endpoint debugging
+2. Check Supabase environment variables
+3. Test auth flow with proper error handling
+4. Fix failing tests before new features
 
