@@ -41,7 +41,13 @@ export class EmbeddingService {
   private costPerToken = 0.0000001; // Ada-002 pricing
 
   constructor(config: EmbeddingConfig) {
-    this.openai = new OpenAI({ apiKey: config.apiKey });
+    // Check if we're in a test environment
+    const isTestEnv = process.env.NODE_ENV === 'test' || process.env.JEST_WORKER_ID;
+    
+    this.openai = new OpenAI({ 
+      apiKey: config.apiKey,
+      dangerouslyAllowBrowser: isTestEnv 
+    });
     this.model = config.model || 'text-embedding-ada-002';
     this.maxRetries = config.maxRetries || 3;
     this.retryDelay = config.retryDelay || 1000;
