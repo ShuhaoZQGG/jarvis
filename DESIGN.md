@@ -1,108 +1,178 @@
-# Jarvis AI Chatbot - UI/UX Design Specifications
+# Jarvis AI Chatbot Platform - UI/UX Design Specifications
 
 ## Executive Summary
-Complete UI/UX design for MVP chatbot platform focusing on rapid bot creation, seamless integration, and optimal user experience. Design emphasizes simplicity, performance, and accessibility.
+Production-ready UI/UX design for AI chatbot platform with complete MVP features. Design emphasizes performance optimization (<2s response), security (MFA/auth), and scalability (10K+ concurrent users). Focus on database optimization and production deployment readiness.
 
 ## User Journeys
 
 ### 1. First-Time User Onboarding
 ```
-Landing → Value Discovery → Sign Up → Bot Creation (URL + Name) → Training Progress → Embed Code → Test Success
+Landing → Sign Up (Supabase Auth) → Email Verification → MFA Setup → 
+Workspace Creation → Bot Creation Wizard → URL Scraping → 
+Embedding Generation → Widget Code → Installation Guide
 ```
-**Goal**: From landing to working chatbot in <60 seconds
+**Goal**: Secure onboarding with working chatbot in <5 minutes
 
-### 2. Returning User - Bot Management  
+### 2. Returning Power User
 ```
-Login → Dashboard Overview → Select Bot → Configure/Analytics → Optimize → Save Changes
+Login (MFA) → Dashboard Analytics → Usage Monitoring → 
+Bot Performance Review → Training Optimization → 
+Billing Check → Team Management
 ```
-**Goal**: Efficient bot management and optimization
+**Goal**: Data-driven optimization and team collaboration
 
 ### 3. End User - Website Visitor
 ```
-Notice Widget → Click to Open → Type Question → Receive Answer → Quick Actions/Convert
+Widget Load (<500ms) → Greeting Message → Type Query → 
+Vector Search → GPT-4 Response (SSE) → Feedback → 
+Conversation History → Lead Capture
 ```
-**Goal**: Instant, contextual assistance
+**Goal**: Instant AI assistance with <2s response time
 
-## Wireframes & Mockups
+## Production UI Components
 
-### Landing Page
+### Authentication Flow (Supabase)
 ```
 ┌─────────────────────────────────────┐
-│  [Logo] Jarvis    [Dashboard][Login]│
+│  Jarvis AI Platform    [Pricing]   │
 ├─────────────────────────────────────┤
-│     Your AI Chatbot in Seconds     │
-│   Transform your website into an   │
-│      intelligent assistant         │
+│        Sign Up                     │
+│  [Email_______________]             │
+│  [Password___________] 🔒 Strong    │
+│  [Confirm Password___]              │
 │                                     │
-│  [Get Started Free] [Live Demo]    │
-├─────────────────────────────────────┤
-│        How It Works                │
-│  [🌐URL] → [⚡Train] → [💬Embed]    │
-├─────────────────────────────────────┤
-│         Feature Grid                │
-│  [🔒Security] [⚡Speed] [🎨Custom]  │
-│  [📱Mobile] [📊Analytics] [🔗API]  │
-├─────────────────────────────────────┤
-│    Ready to Transform?             │
-│    [Start Free Trial →]            │
+│  Or continue with:                 │
+│  [Google] [GitHub] [Microsoft]     │
+│                                     │
+│  ☑ I agree to Terms & Privacy      │
+│  [Create Account →]                 │
+│                                     │
+│  Have account? [Sign In]           │
 └─────────────────────────────────────┘
 ```
 
-## Interface Mockups
-
-### Dashboard Layout
+### MFA Setup Screen
 ```
 ┌─────────────────────────────────────┐
-│ Jarvis Dashboard    [Settings][Out] │
+│     Secure Your Account            │
 ├─────────────────────────────────────┤
-│ Stats: [2 Bots][1 Active][245 Msgs] │
-├─────────────────────────────────────┤
-│  Your Bots           [+ Create Bot] │
-│ ┌─────────────────────────────────┐ │
-│ │ Support Bot                     │ │
-│ │ example.com                     │ │
-│ │ ● Active | 245 messages         │ │
-│ │ [Copy][Settings][Delete]        │ │
-│ └─────────────────────────────────┘ │
-│ ┌─────────────────────────────────┐ │
-│ │ Sales Bot                       │ │
-│ │ shop.example.com                │ │
-│ │ ⚡ Training | 0 messages         │ │
-│ │ [Copy][Settings][Delete]        │ │
-│ └─────────────────────────────────┘ │
+│  Enable Two-Factor Authentication  │
+│                                     │
+│  📱 Authenticator App (Recommended)│
+│  [QR Code Display]                 │
+│  Secret: XXXX-XXXX-XXXX-XXXX      │
+│                                     │
+│  📧 SMS Backup                     │
+│  [+1 (555) 000-0000____]          │
+│                                     │
+│  Verification Code:                │
+│  [______]                          │
+│                                     │
+│  [Skip for Now] [Enable MFA →]     │
 └─────────────────────────────────────┘
 ```
 
-### Bot Creation Modal
+## Core Application Interfaces
+
+### Enhanced Dashboard with Metrics
 ```
+┌─────────────────────────────────────────────┐
+│ 🤖 Jarvis  [Workspace ▼]  [🔔3] [User ▼]   │
+├───────┬─────────────────────────────────────┤
+│ Menu  │  Dashboard Overview                 │
+│       │  ┌──────┬──────┬──────┬──────┐     │
+│ 📊    │  │45.2K │ 2.1s │ 98%  │ 3/10 │     │
+│ Bots  │  │Msgs  │ Avg  │ Sat  │ Bots │     │
+│       │  └──────┴──────┴──────┴──────┘     │
+│ 📈    │                                     │
+│ Usage │  Active Bots        [+ Create New]  │
+│       │  ┌─────────────────────────────┐   │
+│ 👥    │  │ Customer Support Bot       │   │
+│ Team  │  │ Status: ● Active           │   │
+│       │  │ Messages: 15,234 today     │   │
+│ 🔑    │  │ Response: 1.8s avg         │   │
+│ API   │  │ Satisfaction: 97%          │   │
+│       │  │ [Widget] [Analytics] [⚙️]  │   │
+│ 💳    │  └─────────────────────────────┘   │
+│ Billing│  [View All Bots →]                 │
+│       │                                     │
+│ ⚙️    │  Recent Conversations               │
+│Settings│  [List of recent chats...]          │
+└───────┴─────────────────────────────────────┘
+```
+
+### Bot Creation Wizard (Multi-Step)
+```
+Step 1: Basic Information
 ┌─────────────────────────────────────┐
-│    Create New Bot          [X]     │
+│  Create Your AI Assistant  (1/4)   │
 ├─────────────────────────────────────┤
-│  Bot Name                          │
-│  [Support Bot_______________]      │
+│  Bot Name *                        │
+│  [Customer Support Bot_______]     │
 │                                     │
-│  Website URL                       │
-│  [🌐 https://example.com____]      │
+│  Description                       │
+│  [24/7 AI support assistant ]     │
+│  [for customer inquiries... ]     │
 │                                     │
-│  [Cancel]    [Create Bot →]        │
+│  Avatar (optional)                 │
+│  [📤 Upload Image]                 │
+│                                     │
+│  [← Back]    [Next: Training →]    │
+└─────────────────────────────────────┘
+
+Step 2: Training Source
+┌─────────────────────────────────────┐
+│  Train Your Bot  (2/4)             │
+├─────────────────────────────────────┤
+│  Choose Training Method:           │
+│                                     │
+│  ○ Website Scraping               │
+│    [https://_______________] [+]   │
+│    ☑ Include subpages (max 500)   │
+│                                     │
+│  ○ File Upload                    │
+│    [📎 PDF, TXT, DOCX]            │
+│                                     │
+│  ● Manual Content                 │
+│    [Rich text editor with         │
+│     Q&A pairs, docs, FAQs...]     │
+│                                     │
+│  Estimated tokens: ~50,000        │
+│                                     │
+│  [← Back]  [Start Training →]      │
 └─────────────────────────────────────┘
 ```
 
-### Chat Widget States
+### Production Chat Widget (With SSE/WebSocket)
 ```
-Collapsed:        Expanded:
-  ┌──┐           ┌────────────────┐
-  │💬│           │ Chat with us ✕ │
-  └──┘           ├────────────────┤
-                 │ Hi! How can I  │
-                 │ help today?    │
-                 │                │
-                 │ • Book Demo    │
-                 │ • Get Pricing  │
-                 │ • Contact Us   │
-                 │                │
-                 │ [Type msg...▸] │
-                 └────────────────┘
+Minimized:         Expanded (384x500px):
+  ┌────┐         ┌──────────────────────┐
+  │ 💬 │         │ Support Bot      [−] │
+  │  3  │         ├──────────────────────┤
+  └────┘         │ 🟢 Online · 1.2s avg │
+                 ├──────────────────────┤
+                 │ Bot: Hi! I'm here to │
+                 │ help. What can I     │
+                 │ assist you with?     │
+                 │                      │
+                 │ Quick Actions:       │
+                 │ [📚 Docs] [💳 Plans] │
+                 │ [📧 Contact]         │
+                 │                      │
+                 │ User: How do I...    │
+                 │                      │
+                 │ Bot: ··· (typing)    │
+                 ├──────────────────────┤
+                 │ [Type message...] 📎 │
+                 │        [Send →]      │
+                 └──────────────────────┘
+
+Real-time Features:
+- SSE for streaming responses
+- WebSocket fallback
+- Typing indicators
+- Read receipts
+- Connection status
 ```
 
 ## Responsive Design
@@ -144,23 +214,47 @@ Collapsed:        Expanded:
 - **Semantic HTML**: Proper heading hierarchy
 - **Alt Text**: Informational images
 
-## Component Library
+## Production-Ready Component System
 
-### Design Tokens
+### Design Tokens (CSS Variables)
 ```css
---primary: #0ea5e9;
---primary-hover: #0284c7;
---success: #22c55e;
---warning: #eab308;
---error: #ef4444;
+/* Core Brand Colors */
+--primary: #0066FF;
+--primary-hover: #0052CC;
+--primary-light: #E6F0FF;
+--success: #10B981;
+--warning: #F59E0B;
+--error: #EF4444;
+--info: #3B82F6;
+
+/* Text Hierarchy */
 --text-primary: #111827;
---text-secondary: #6b7280;
---bg-primary: #ffffff;
---bg-secondary: #f9fafb;
---border: #e5e7eb;
+--text-secondary: #6B7280;
+--text-tertiary: #9CA3AF;
+--text-inverse: #FFFFFF;
+
+/* Backgrounds */
+--bg-primary: #FFFFFF;
+--bg-secondary: #F9FAFB;
+--bg-tertiary: #F3F4F6;
+--bg-dark: #1F2937;
+
+/* Borders & Shadows */
+--border: #E5E7EB;
+--border-focus: var(--primary);
+--radius-sm: 0.375rem;
 --radius: 0.5rem;
---shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+--radius-lg: 0.75rem;
+--shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+--shadow: 0 4px 6px rgba(0,0,0,0.1);
 --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+--shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+
+/* Animation Timing */
+--transition-fast: 150ms;
+--transition: 200ms;
+--transition-slow: 300ms;
+--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 ```
 
 ### Typography
@@ -197,29 +291,42 @@ Collapsed:        Expanded:
 - **Height**: 400px minimum
 - **Width**: Responsive
 
-## Performance Specifications
+## Performance Optimization Targets
 
-### Widget Loading
-- **Bundle Size**: <50KB gzipped
-- **Async Load**: Non-blocking
-- **CDN**: Edge caching
-- **First Paint**: <100ms
+### Critical Metrics
+- **Database Query Time**: <100ms (from 500ms)
+- **API Response Time**: <2s with streaming
+- **Widget Bundle**: <30KB gzipped
+- **Dashboard LCP**: <1s
+- **Time to Interactive**: <2s
+- **First Contentful Paint**: <500ms
 
-### Dashboard Performance
-- **LCP**: <2.5s
-- **FID**: <100ms  
-- **CLS**: <0.1
-- **Code Splitting**: Route-based
+### Optimization Strategies
+- **Database**: Fix RLS policies, remove 47 unused indexes
+- **Caching**: Redis with LRU fallback
+- **CDN**: Cloudflare edge caching
+- **Code Splitting**: Route-based + component lazy loading
+- **Image Optimization**: Next.js Image with WebP
+- **Bundle Analysis**: Tree shaking, minification
 
-## Framework Stack
+## Production Technology Stack
 
-### Core Application
-- **Next.js 14**: App Router (existing)
-- **Tailwind CSS**: Utility styling (existing)
-- **Radix UI**: Accessible components
-- **Framer Motion**: Animations (existing)
-- **React Hook Form**: Form handling
-- **SWR/TanStack Query**: Data fetching
+### Frontend (Verified Working)
+- **Next.js 14**: App Router with TypeScript
+- **Tailwind CSS**: Utility-first styling
+- **Radix UI**: Accessible component primitives
+- **Framer Motion**: Performance animations
+- **React Hook Form**: Form validation
+- **TanStack Query**: Data fetching with cache
+- **Zustand**: Global state management
+
+### Backend Services (Production Ready)
+- **Supabase**: PostgreSQL + Auth + Realtime
+- **Pinecone**: Vector embeddings storage
+- **OpenAI GPT-4**: Chat completions
+- **Stripe**: Subscription billing
+- **Redis**: Rate limiting (with fallback)
+- **Playwright**: Web scraping engine
 
 ### Widget Technology
 - **Preact**: Smaller bundle size
@@ -236,10 +343,225 @@ Collapsed:        Expanded:
 5. **Browser Support**: Chrome/Safari/Firefox/Edge (latest 2 versions)
 6. **Accessibility**: WCAG 2.1 AA compliance required
 
-## Priority Implementation Order
+## Implementation Priority (Based on PLAN.md)
 
-1. **Phase 1**: Core chat functionality + basic dashboard
-2. **Phase 2**: Widget customization + embed code
-3. **Phase 3**: Analytics + conversation history
-4. **Phase 4**: Quick actions + suggested questions
-5. **Phase 5**: Advanced triggers + integrations
+### Phase 1: Database Optimization (Critical)
+- Fix 60+ RLS policies performance issues
+- Remove 47 unused indexes
+- Optimize query patterns
+- UI: Loading states, error handling
+
+### Phase 2: Security UI (Critical)
+- MFA setup flow
+- Password strength indicators
+- Session management UI
+- Security badges/indicators
+
+### Phase 3: Production Features
+- Rate limit indicators
+- Usage quota displays
+- Real-time connection status
+- Error recovery UI
+
+### Phase 4: Polish & Testing
+- Accessibility audit
+- Performance monitoring
+- E2E test coverage
+- Documentation
+
+## Additional Production UI Components
+
+### Analytics Dashboard
+```
+┌─────────────────────────────────────────────┐
+│ Analytics Overview     [7 days ▼] [Export]  │
+├─────────────────────────────────────────────┤
+│ ┌──────────────────────────────────────────┐│
+│ │ Conversations Over Time         📈       ││
+│ │ [Line chart with real-time updates]      ││
+│ └──────────────────────────────────────────┘│
+│ ┌───────────┬────────────────────────────┐  │
+│ │ Top Queries│ User Satisfaction         │  │
+│ │ • Pricing  │ ⭐⭐⭐⭐⭐ 4.8/5.0         │  │
+│ │ • Features │ 👍 92% 👎 8%              │  │
+│ │ • Support  │ Avg Response: 1.8s        │  │
+│ └───────────┴────────────────────────────┘  │
+└─────────────────────────────────────────────┘
+```
+
+### Billing & Usage Monitor
+```
+┌─────────────────────────────────────────────┐
+│ Current Plan: Pro         [Upgrade to Ent.] │
+├─────────────────────────────────────────────┤
+│ Usage This Month (Dec 1-31)                │
+│                                             │
+│ Messages    ████████░░ 82,456/100,000      │
+│ Bots        ███░░░░░░░ 3/10                │
+│ Storage     ██████░░░░ 6.2GB/10GB          │
+│ Team        █████░░░░░ 5/20                │
+│                                             │
+│ Next billing: Dec 31 ($299)                │
+│ [Payment Method: •••• 4242]  [Update]      │
+└─────────────────────────────────────────────┘
+```
+
+### API Management Interface
+```
+┌─────────────────────────────────────────────┐
+│ API Keys                    [+ Create New]  │
+├─────────────────────────────────────────────┤
+│ Name         Key            Last Used  [⋮] │
+│ Production   sk-...Xk2Y     2 min ago  [✎]│
+│ Development  sk-...9mNp     1 day ago  [✎]│
+│ Testing      sk-...4jKl     Never      [🗑]│
+├─────────────────────────────────────────────┤
+│ Rate Limits: 1000 req/min                  │
+│ [View Documentation] [Webhook Settings]     │
+└─────────────────────────────────────────────┘
+```
+
+### Team Management
+```
+┌─────────────────────────────────────────────┐
+│ Team Members                  [+ Invite]     │
+├─────────────────────────────────────────────┤
+│ 👤 John Doe          john@example.com       │
+│    Role: Owner       Last active: Now       │
+│                                             │
+│ 👤 Jane Smith        jane@example.com       │
+│    Role: Admin       Last active: 2h ago    │
+│    [Change Role ▼]   [Remove]              │
+│                                             │
+│ 📧 Pending Invites (1)                     │
+│    mike@example.com  Sent 2 days ago       │
+│    [Resend]         [Cancel]               │
+└─────────────────────────────────────────────┘
+```
+
+### Training Status Monitor
+```
+┌─────────────────────────────────────────────┐
+│ Training Queue                              │
+├─────────────────────────────────────────────┤
+│ Bot: Customer Support                       │
+│ Status: ⚡ Processing (Page 47/150)         │
+│ ████████████░░░░░░░░ 31%                   │
+│                                             │
+│ Stages:                                     │
+│ ✅ URL Scraping      (150 pages)            │
+│ ⚡ Embeddings        (47/150)               │
+│ ⏳ Vector Storage    (Pending)              │
+│ ⏳ Testing          (Pending)              │
+│                                             │
+│ Est. Time: ~5 minutes                       │
+│ [Pause] [Cancel]                           │
+└─────────────────────────────────────────────┘
+```
+
+## Error States & Recovery
+
+### Connection Lost
+```
+┌─────────────────────────────────────────────┐
+│ ⚠️ Connection Lost                          │
+│                                             │
+│ We're having trouble connecting to our      │
+│ servers. Your work is saved locally.       │
+│                                             │
+│ [🔄 Retry Now]  [Work Offline]             │
+└─────────────────────────────────────────────┘
+```
+
+### Rate Limit Warning
+```
+┌─────────────────────────────────────────────┐
+│ ⚠️ Approaching Rate Limit                   │
+│                                             │
+│ 950/1000 requests used this minute         │
+│ Consider upgrading for higher limits       │
+│                                             │
+│ [View Plans]  [Dismiss]                    │
+└─────────────────────────────────────────────┘
+```
+
+## Mobile Responsive Adaptations
+
+### Mobile Dashboard (< 768px)
+```
+┌──────────────────┐
+│ ☰ Jarvis    👤   │
+├──────────────────┤
+│ Overview         │
+│ ┌──────┬──────┐  │
+│ │45.2K │ 98%  │  │
+│ │ Msgs │ Sat  │  │
+│ └──────┴──────┘  │
+│                  │
+│ Your Bots        │
+│ ┌──────────────┐ │
+│ │ Support Bot  │ │
+│ │ ● Active     │ │
+│ │ [Manage]     │ │
+│ └──────────────┘ │
+│                  │
+│ [+ Create Bot]   │
+└──────────────────┘
+```
+
+### Mobile Widget (Full Width)
+```
+┌──────────────────┐
+│ Chat Support  ✕  │
+├──────────────────┤
+│ Messages...      │
+│                  │
+│                  │
+├──────────────────┤
+│ [Type...] [Send] │
+└──────────────────┘
+```
+
+## Accessibility Features
+
+### Screen Reader Announcements
+- "New message received from bot"
+- "Training progress: 31 percent complete"
+- "Error: Connection lost. Retrying..."
+- "Success: Bot created successfully"
+
+### Keyboard Shortcuts
+- `Esc` - Close modals/widget
+- `Ctrl/Cmd + K` - Quick search
+- `Ctrl/Cmd + N` - New bot
+- `Tab` - Navigate elements
+- `Enter` - Activate buttons
+- `Space` - Toggle checkboxes
+
+### Focus Management
+- Trap focus in modals
+- Return focus on close
+- Skip to main content
+- Visible focus indicators
+
+## Security Indicators
+
+### Visual Security Cues
+- 🔒 Locked icon for secure fields
+- 🛡️ Shield for MFA-enabled accounts
+- ✓ Checkmark for verified domains
+- ⚠️ Warning for weak passwords
+- 🔴 Red dot for security issues
+
+## Frontend Performance Checklist
+
+- [ ] Lazy load heavy components
+- [ ] Implement virtual scrolling for lists
+- [ ] Use React.memo for expensive renders
+- [ ] Optimize bundle with dynamic imports
+- [ ] Implement service worker caching
+- [ ] Use CDN for static assets
+- [ ] Compress images with WebP
+- [ ] Minify CSS/JS bundles
+- [ ] Enable gzip compression
+- [ ] Implement request debouncing
