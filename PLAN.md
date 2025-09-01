@@ -1,186 +1,184 @@
-# Cycle 26: Critical MVP Integration Plan
+# Cycle 27 Development Plan
 
 ## Executive Summary
-Focus on integrating core AI capabilities and production deployment to complete the MVP chatbot platform. Priority on web scraping, vector search, and widget CDN deployment.
+Cycle 27 focuses on fixing critical authentication bug (#33) and advancing MVP features for production deployment. Priority is sign-up endpoint restoration and completing core integrations.
 
-## Current State Analysis
+## Critical Issue Resolution
 
-### ✅ Completed Infrastructure
-- Supabase authentication system with full user management
-- Complete database schema with 16 tables and RLS policies
-- Widget CDN bundle ready for deployment
-- CORS-enabled chat and customization APIs
-- 326 passing tests with comprehensive coverage
-- Dashboard UI with bot management interface
+### GitHub Issue #33: Sign-up Endpoint Failure
+**Priority**: P0 - CRITICAL
+**Impact**: Blocks all new user onboarding
+**Root Cause**: TypeError in Supabase auth fetch request
+**Resolution Path**:
+1. Verify Supabase environment variables
+2. Check CORS configuration for auth endpoints
+3. Test auth client initialization
+4. Validate network connectivity to Supabase
+5. Fix error handling in auth-context.tsx
 
-### 🔴 Critical Gaps
-1. **No Web Scraping**: Cannot ingest website content
-2. **No Vector Search**: Missing Pinecone/embeddings integration
-3. **No AI Responses**: OpenAI API not connected
-4. **No CDN Deployment**: Widget not distributed
-5. **Incomplete Billing**: Stripe webhooks partially implemented
+## Requirements Analysis
 
-## Phase 1: Core AI Pipeline (Days 1-3)
+### Functional Requirements (MVP)
+1. **Authentication System** ✅ (needs bug fix)
+2. **Bot Management Dashboard** ✅ 
+3. **Web Scraping Engine** 🚧
+4. **Vector Search Integration** 🚧
+5. **Widget Deployment** ✅
+6. **Chat API with RAG** ✅
+7. **Billing Integration** 🚧
+8. **Analytics Dashboard** 📋
 
-### 1.1 Web Scraping Engine
-**Tech**: Playwright + Cheerio
-- Dynamic JavaScript rendering support
-- Content extraction and cleaning
-- Batch processing with queue system
-- Rate limiting and retry logic
-- Store in `scraped_content` table
-
-### 1.2 Embedding Generation
-**Tech**: OpenAI Embeddings API
-- Text chunking strategy (500 tokens)
-- Batch processing for efficiency
-- Content deduplication via hash
-- Store in `embeddings` table (vector type)
-
-### 1.3 Vector Search Integration
-**Tech**: Pinecone Cloud
-- Index creation and management
-- Similarity search implementation
-- Hybrid search with metadata filters
-- Response ranking algorithm
-
-## Phase 2: AI Chat Integration (Days 4-5)
-
-### 2.1 OpenAI Integration
-- GPT-4 API setup with streaming
-- Context window management
-- Prompt engineering for chatbot
-- Token usage tracking
-- Error handling and fallbacks
-
-### 2.2 RAG Pipeline
-- Query → Embedding → Vector Search
-- Context retrieval and ranking
-- Prompt construction with context
-- Response generation and formatting
-- Conversation memory management
-
-## Phase 3: Production Deployment (Days 6-7)
-
-### 3.1 Widget CDN Setup
-**Platform**: Cloudflare/Vercel Edge
-- Bundle optimization and minification
-- Global edge distribution
-- Cache headers configuration
-- Version management system
-- Analytics tracking
-
-### 3.2 Infrastructure Hardening
-- Redis for rate limiting
-- Environment variable management
-- Error monitoring (Sentry)
-- Performance monitoring
-- Security headers
+### Non-Functional Requirements
+- Response time < 2s
+- 99.9% uptime target
+- Support 10K concurrent users
+- WCAG 2.1 AA compliance
+- Mobile responsive
 
 ## Technical Architecture
+
+### Core Stack (Confirmed)
+- **Frontend**: Next.js 14 + TypeScript + Tailwind
+- **Backend**: Next.js API Routes + Supabase Edge Functions
+- **Database**: Supabase PostgreSQL with RLS
+- **Vector DB**: Pinecone (pending integration)
+- **AI**: OpenAI GPT-4 API
+- **CDN**: Cloudflare/AWS CloudFront
+- **Payments**: Stripe
 
 ### System Components
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   Web Scraper   │────▶│ Embedding Gen   │────▶│  Vector Store   │
-│   (Playwright)  │     │  (OpenAI API)   │     │   (Pinecone)    │
+│   Web Client    │────▶│   API Gateway   │────▶│    Supabase     │
 └─────────────────┘     └─────────────────┘     └─────────────────┘
-                                                          │
-┌─────────────────┐     ┌─────────────────┐              ▼
-│  Chat Widget    │────▶│   Chat API      │◀────────────────────────
-│  (CDN Bundle)   │     │  (Next.js API)  │
-└─────────────────┘     └─────────────────┘
-                                │
-                                ▼
-                        ┌─────────────────┐
-                        │   GPT-4 API     │
-                        │  (OpenAI)       │
-                        └─────────────────┘
+                               │                         │
+                               ▼                         ▼
+                        ┌─────────────────┐     ┌─────────────────┐
+                        │    Pinecone     │     │   OpenAI API    │
+                        └─────────────────┘     └─────────────────┘
 ```
 
-### Data Flow
-1. **Training**: URL → Scrape → Chunk → Embed → Store
-2. **Query**: User Input → Embed → Search → Context → GPT-4 → Response
-3. **Analytics**: Events → Supabase → Dashboard
+## Development Phases
 
-## Implementation Tasks
+### Phase 1: Critical Fixes (Days 1-2)
+- [ ] Fix sign-up endpoint (Issue #33)
+- [ ] Resolve failing tests (27 failures)
+- [ ] Fix React act warnings
+- [ ] Verify auth flow end-to-end
 
-### Priority 1: Core Functionality
-- [ ] Implement Playwright scraper with queue
-- [ ] Setup OpenAI API integration
-- [ ] Configure Pinecone vector database
-- [ ] Build RAG chat pipeline
-- [ ] Deploy widget to CDN
+### Phase 2: Core Integrations (Days 3-5)
+- [ ] Pinecone vector database setup
+- [ ] OpenAI API integration
+- [ ] Web scraping engine completion
+- [ ] Embedding pipeline
 
-### Priority 2: Production Ready
-- [ ] Add Redis rate limiting
-- [ ] Implement Stripe webhook handlers
-- [ ] Setup error monitoring
-- [ ] Configure production environment
-- [ ] Create deployment documentation
+### Phase 3: Production Features (Days 6-8)
+- [ ] Stripe billing integration
+- [ ] Redis rate limiting
+- [ ] CDN deployment configuration
+- [ ] WebSocket/SSE for real-time
 
-### Priority 3: Optimizations
-- [ ] Implement response caching
-- [ ] Add WebSocket support
-- [ ] Optimize embedding generation
-- [ ] Improve search relevance
-- [ ] Bundle size optimization
+### Phase 4: Testing & Optimization (Days 9-10)
+- [ ] Performance optimization
+- [ ] Security audit
+- [ ] Load testing
+- [ ] Documentation update
 
-## Risk Mitigation
+## Implementation Strategy
 
-### Technical Risks
-1. **Vector Search Performance**
-   - Mitigation: Implement caching layer
-   - Fallback: Use PostgreSQL pgvector
+### Immediate Actions (Today)
+1. Debug and fix sign-up endpoint
+2. Run full test suite
+3. Verify Supabase configuration
+4. Test auth flow locally
 
-2. **Scraping Reliability**
-   - Mitigation: Retry logic and queue system
-   - Fallback: Manual content upload
+### Database Schema Updates
+```sql
+-- Verify auth schema
+SELECT * FROM auth.users LIMIT 1;
+-- Check RLS policies
+SELECT * FROM pg_policies WHERE tablename IN ('bots', 'conversations');
+```
 
-3. **API Rate Limits**
-   - Mitigation: Request batching and caching
-   - Fallback: Queue overflow handling
+### API Endpoints Priority
+1. `/api/auth/signup` - FIX CRITICAL
+2. `/api/scrape` - Complete implementation
+3. `/api/embeddings` - New endpoint
+4. `/api/billing/subscribe` - Stripe integration
 
-### Security Considerations
-- API key rotation system
-- Rate limiting per domain
-- Input sanitization
-- CORS policy enforcement
-- Content security policy
+## Risk Assessment
+
+### High Priority Risks
+1. **Auth System Failure** - Currently blocking new users
+2. **Vector Search Latency** - May impact chat response time
+3. **Rate Limiting Gap** - Redis not yet implemented
+4. **Test Coverage Gaps** - 27 failing tests
+
+### Mitigation Strategies
+1. Implement fallback auth mechanism
+2. Cache vector search results
+3. Deploy Redis before production
+4. Fix all tests before deployment
 
 ## Success Metrics
-- Widget loads < 100ms
-- Chat response < 2 seconds
-- 99.9% uptime target
-- Support 10K concurrent users
-- < 0.1% error rate
+- Sign-up flow working (0 errors)
+- 95%+ test pass rate
+- <2s chat response time
+- Successfully deploy widget to 1 test site
+- Process 1000+ messages without errors
 
-## Next Cycle Priorities
-1. Analytics dashboard development
-2. Advanced customization UI
-3. Webhook system implementation
-4. Multi-language support
-5. Performance optimizations
+## Resource Requirements
 
-## Dependencies
-- OpenAI API key
-- Pinecone API key
-- Redis Cloud instance
-- Cloudflare account
-- Stripe webhook endpoint
+### External Services
+- Supabase (configured) ✅
+- Pinecone (needs API key)
+- OpenAI (needs API key)
+- Stripe (needs configuration)
+- Redis (needs deployment)
+
+### Environment Variables Required
+```
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+PINECONE_API_KEY
+PINECONE_ENVIRONMENT
+OPENAI_API_KEY
+STRIPE_SECRET_KEY
+STRIPE_PUBLISHABLE_KEY
+REDIS_URL
+```
+
+## Next Cycle Preparation
+1. Complete all Phase 1-2 items
+2. Deploy to staging environment
+3. User acceptance testing
+4. Performance benchmarking
+5. Security audit completion
+
+## Decision Points
+- [ ] Pinecone vs Qdrant for vectors
+- [ ] Cloudflare vs AWS CloudFront for CDN
+- [ ] Redis vs Upstash for rate limiting
+- [ ] Vercel vs self-hosted deployment
+
+## Deliverables
+1. Working authentication system
+2. Complete web scraping pipeline
+3. Integrated vector search
+4. Production-ready widget
+5. Basic billing integration
+6. 95%+ test coverage
 
 ## Timeline
-- Days 1-3: Core AI pipeline
-- Days 4-5: Chat integration
-- Days 6-7: Production deployment
-- Day 8: Testing and documentation
+- **Day 1-2**: Critical fixes
+- **Day 3-5**: Core integrations  
+- **Day 6-8**: Production features
+- **Day 9-10**: Testing & optimization
+- **Total**: 10 days to MVP completion
 
-## Validation Checklist
-- [ ] Scraper processes test URLs
-- [ ] Embeddings generated successfully
-- [ ] Vector search returns relevant results
-- [ ] Chat responses are contextual
-- [ ] Widget loads on external sites
-- [ ] Rate limiting works correctly
-- [ ] Billing webhooks process events
-- [ ] All tests pass (maintain 100%)
+## Notes
+- Priority is fixing auth bug before any new features
+- Focus on core MVP functionality over nice-to-haves
+- Ensure all tests pass before moving to next phase
+- Document all API changes for frontend team

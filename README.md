@@ -16,6 +16,7 @@ AI-powered chatbot builder enabling instant website integration through URL scra
 - ✅ **Analytics Events**: User tracking and bot usage metrics
 
 ### 🚧 In Progress
+- 🔴 **Critical Bug Fix**: Sign-up endpoint authentication issue (#33)
 - ⏳ **Web Scraping Engine**: Playwright-based content extraction
 - ⏳ **Vector Search**: Pinecone integration for embeddings
 - ⏳ **Stripe Billing**: Subscription management and usage tracking
