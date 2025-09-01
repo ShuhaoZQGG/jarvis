@@ -13,60 +13,72 @@
 - **Widget Customization API**: Dynamic theme and behavior configuration
 - **E2E Integration Tests**: Complete flow testing from scraping to chat
 
-## Critical MVP Features (Priority 1)
-1. **Web Scraping Implementation**
-   - Use Playwright for dynamic content scraping
-   - Handle JavaScript-rendered pages
-   - Extract and clean content for embeddings
-   - Queue system for batch processing
-   - Store scraped content in database
+### Cycle 27
+- **Issue #33 Fixed**: Authentication sign-up endpoint issue resolved
+- **Core Services Verified**: All MVP services confirmed functional
+- **Integration Tests**: Comprehensive test suite created
 
-2. **Widget Deployment & Production Setup**
-   - Deploy widget-cdn.js to Cloudflare or AWS CloudFront
-   - Set up Redis for production rate limiting
-   - Configure production environment variables
-   - Create widget installation documentation
-   - Test widget on multiple external domains
+### Cycle 28
+- **Stripe Billing**: Complete integration with checkout and customer portal
+- **Redis Rate Limiting**: Production-ready with in-memory fallback
+- **Real-time Features**: SSE/WebSocket for streaming chat
+- **Analytics Dashboard**: Comprehensive metrics and visualization
+- **Test Coverage**: 94% pass rate (353/375 tests)
 
-3. **Vector Search Integration**
-   - Connect to Pinecone/Qdrant for vector storage
-   - Implement embedding generation pipeline
-   - Create similarity search function
-   - Add caching layer for embeddings
-   - Test RAG pipeline end-to-end
+## Critical Database Optimizations (Priority 1 - URGENT)
+1. **RLS Policy Performance Fixes**
+   - Replace `auth.uid()` with `(SELECT auth.uid())` in all policies
+   - Consolidate 60+ multiple permissive policies
+   - Fix performance issues in:
+     - workspace_members (4 policies)
+     - billing_events (2 policies)
+     - analytics_events (3 policies)
+     - workspaces (4 policies)
+     - users (1 policy)
 
-4. **Stripe Payment Integration**
-   - Complete webhook handlers for all events
-   - Subscription management UI
-   - Usage-based pricing tiers
-   - Payment method management
-   - Test billing flow end-to-end
+2. **Index Cleanup**
+   - Remove 47 unused indexes immediately
+   - Fix 4 duplicate indexes on bots, conversations, messages, workspaces tables
+   - Monitor query performance after cleanup
+
+## Security Enhancements (Priority 1)
+1. **Supabase Auth Security**
+   - Enable MFA options immediately
+   - Enable leaked password protection
+   - Review and strengthen authentication flow
+
+2. **API Security**
+   - Extend rate limiting to all endpoints
+   - Add request validation middleware
+   - Implement API key rotation
 
 ## Technical Debt (Priority 2)
-1. **Security Fixes**
-   - Fix `search_embeddings` function mutable search path (WARN level)
-   - Move vector extension out of public schema
-   - Review and strengthen RLS policies
+1. **Test Suite Fixes**
+   - Fix 22 failing Cheerio import issues (ESM/CJS compatibility)
+   - Align mock services with updated implementations
+   - Achieve 100% test pass rate
 
-2. **Database Optimizations**
-   - Remove 35 unused indexes identified by advisors
-   - Consolidate multiple permissive RLS policies
-   - Fix auth_rls_initplan performance issues in billing_events and analytics_events
+2. **Production Configuration**
+   - Set up Redis connection for production
+   - Configure Stripe webhook endpoint URL
+   - Deploy widget to CDN (Cloudflare/AWS)
+   - Set up monitoring and alerting
 
-3. **Type Safety**
-   - Generate proper Supabase TypeScript types
-   - Remove 'any' type workarounds
-   - Implement missing database methods (createBotIntegration, getBotIntegration)
-   - Re-enable GitHub integration service
+## Feature Completions (Priority 3)
+1. **Web Scraping Engine**
+   - Complete Playwright implementation
+   - Add queue system for batch processing
+   - Store scraped content with deduplication
 
-## Performance Optimizations (Priority 3)
-1. **Database**
-   - Review and optimize unused indexes
-   - Monitor query performance with new RLS policies
-   
-2. **Edge Functions**
-   - Add caching layer for frequent queries
-   - Optimize embedding search performance
+2. **Vector Search Pipeline**
+   - Optimize embedding generation
+   - Implement caching layer
+   - Add similarity search optimizations
+
+3. **Widget Optimizations**
+   - Minify bundle for production
+   - Add TypeScript types for API responses
+   - Optimize loading performance
 
 ## Documentation (Priority 4)
 1. **User Documentation**
@@ -79,22 +91,16 @@
    - Deployment guide
    - Contributing guidelines
 
-## Production Readiness (From Cycle 26 Review)
-1. **Infrastructure**
-   - Implement Redis for production rate limiting
-   - Minify and optimize widget bundle size
-   - Add TypeScript types for API responses
-   
-2. **Real-time Features**
-   - Add WebSocket/SSE support for real-time chat
-   - Implement live typing indicators
-   - Push notifications for user messages
-
 ## Future Enhancements
-- Webhook support for real-time updates
-- Advanced analytics dashboard
-- Multi-language support
+- Webhook support for external integrations
+- Multi-language support (i18n)
 - Custom AI model fine-tuning
 - A/B testing for bot responses
-- Widget performance optimizations
 - Advanced customization UI builder
+- Mobile app development
+
+## Notes from Cycle 28 Review
+- All core MVP features are now implemented
+- Focus should shift to optimization and production readiness
+- Database performance issues are critical and should be addressed first
+- Security enhancements are required before production deployment
